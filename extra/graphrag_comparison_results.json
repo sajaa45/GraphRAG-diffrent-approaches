@@ -1,0 +1,265 @@
+{
+  "metadata": {
+    "timestamp": "2026-03-27 11:40:38",
+    "model_used": "mistral:latest",
+    "neo4j_uri": "bolt://neo4j:7687",
+    "ollama_url": "http://host.docker.internal:11434",
+    "total_queries": 5,
+    "approaches": [
+      {
+        "id": "approach_1",
+        "name": "Single Chunk",
+        "description": "Uses only the most similar chunk"
+      },
+      {
+        "id": "approach_2",
+        "name": "Sequential Chunks",
+        "description": "Uses the most similar chunk + next chunk"
+      },
+      {
+        "id": "approach_3",
+        "name": "Context Window",
+        "description": "Uses previous + current + next chunk"
+      }
+    ]
+  },
+  "queries": {
+    "query_1": {
+      "query": "What are the main financial highlights?",
+      "results": {
+        "approach_1": {
+          "response": " The main financial highlights from the provided document excerpt for the Group's financial period ended on 30 June 2023 are as follows:\n\n1. Trade receivables have been reduced by RM 14,020,985.\n2. Other current assets have been reduced by RM 840,341.\n3. Other receivables have been increased by RM 14,861,326.\n4. Deposits, cash and bank balance has been reduced by RM 444,301.\n5. Other investments have been increased by RM 444,301.\n6. Loans and borrowings have been reclassified, resulting in a decrease of RM 85,314,506 in non-current liabilities and an increase of RM 85,314,506 in current liabilities. This effectively results in a net reduction of RM 85,314,506 in total liabilities.\n7. The total current assets have been reduced by RM 14,862,327 (72,746,485 - 58,725,500 - 4,857,144 - 38,383,000 + 37,284,256 - 36,839,955).\n8. The total non-current liabilities have been increased by RM 285,829,504 (383,147,472 - 468,461,978).\n9. The total liabilities have been reduced by RM 200,515,000 (total non-current liabilities + total current liabilities: 285,829,504 - 440,664,485).",
+          "model": "mistral:latest",
+          "response_time": 421.52,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.4646735191345215,
+          "source_pages": "184",
+          "chunk_ids": [
+            "chunk_0300"
+          ]
+        },
+        "approach_2": {
+          "response": " The main financial highlights from the provided document excerpts for the Group's and Company's financial statements as of June 30, 2023, include the following reclassifications:\n\n1. Trade receivables have been reduced by RM 14,020,985. The new amount is RM 58,725,500.\n2. Other current assets have been reduced by RM 840,341. The new amount is RM 4,857,144.\n3. Other receivables have been increased by RM 14,861,326. The new amount is RM 53,244,326.\n4. Deposits, cash and bank balance has been reduced by RM 444,301. The new amount is RM 36,839,955.\n5. Other investments have been increased by RM 444,301. The new amount is RM 444,301.\n6. Non-Current Liabilities - Loans and borrowings have been increased by RM 85,314,506. The new amount is RM (468,461,978).\n7. Current Liabilities - Loans and borrowings have been reduced by RM 525,978,991. The new amount is RM (-440,664,485).",
+          "model": "mistral:latest",
+          "response_time": 356.94,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.4646735191345215,
+          "source_pages": "184",
+          "chunk_ids": [
+            "chunk_0300"
+          ]
+        },
+        "approach_3": {
+          "response": " The main financial highlights from the provided document excerpts for the Group's and Company's financial statements as of June 30, 2023, include the following reclassifications:\n\n1. Trade receivables have been reduced by RM 14,020,985 (from RM 72,746,485 to RM 58,725,500).\n2. Other current assets have been reduced by RM 840,341 (from RM 5,697,485 to RM 4,857,144).\n3. Other receivables have been increased by RM 14,861,326 (from RM 38,383,000 to RM 53,244,326).\n4. Deposits, cash and bank balance have remained the same (RM 37,284,256). However, there is an adjustment of RM 444,301 from other investments to deposits, cash and bank.\n5. Non-current liabilities have increased by RM 85,314,506 (from loans and borrowings being reduced from RM 383,147,472 to RM 468,461,978).\n6. Current liabilities have been reduced by RM 525,978,991 (from RM 525,978,991 to RM 440,664,485) due to a change in loans and borrowings.",
+          "model": "mistral:latest",
+          "response_time": 388.4,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.4646735191345215,
+          "source_pages": "184, 184",
+          "chunk_ids": [
+            "chunk_0299",
+            "chunk_0300"
+          ],
+          "has_previous": true,
+          "has_next": false
+        }
+      }
+    },
+    "query_2": {
+      "query": "Who are the directors of the company?",
+      "results": {
+        "approach_1": {
+          "response": " The document provided does not specify who the directors of the company are.",
+          "model": "mistral:latest",
+          "response_time": 18.06,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.5305728316307068,
+          "source_pages": "4",
+          "chunk_ids": [
+            "chunk_0006"
+          ]
+        },
+        "approach_2": {
+          "response": " The document provided does not specify who the directors of the company are. To find that information, you would need to refer to other parts of the corporate structure or official company documents such as articles of incorporation or board meeting minutes.",
+          "model": "mistral:latest",
+          "response_time": 29.92,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.5305728316307068,
+          "source_pages": "4",
+          "chunk_ids": [
+            "chunk_0006"
+          ]
+        },
+        "approach_3": {
+          "response": " The document provided does not explicitly mention who the directors of the company are. To find out, you would need to refer to other parts or documents that detail the corporate structure, such as articles of incorporation, bylaws, or board meeting minutes.",
+          "model": "mistral:latest",
+          "response_time": 33.5,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 1,
+          "similarity_score": 0.5305728316307068,
+          "source_pages": "4",
+          "chunk_ids": [
+            "chunk_0006"
+          ],
+          "has_previous": false,
+          "has_next": false
+        }
+      }
+    },
+    "query_3": {
+      "query": "What is the company's registered office address?",
+      "results": {
+        "approach_1": {
+          "response": " The company's registered office address is B-21-1, Level 21, Tower B Northpoint Mid Valley City No. 1, Medan Syed Putra Utara 59200 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur.",
+          "model": "mistral:latest",
+          "response_time": 180.39,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.45057913661003113,
+          "source_pages": "3",
+          "chunk_ids": [
+            "chunk_0004"
+          ]
+        },
+        "approach_2": {
+          "response": " The company's registered office address is B-21-1, Level 21, Tower B Northpoint Mid Valley City No. 1, Medan Syed Putra Utara 59200 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur.",
+          "model": "mistral:latest",
+          "response_time": 255.32,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.45057913661003113,
+          "source_pages": "3, 3",
+          "chunk_ids": [
+            "chunk_0004",
+            "chunk_0005"
+          ]
+        },
+        "approach_3": {
+          "response": " The company's registered office address is B-21-1, Level 21, Tower B Northpoint Mid Valley City No. 1, Medan Syed Putra Utara 59200 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur.",
+          "model": "mistral:latest",
+          "response_time": 402.99,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.45057913661003113,
+          "source_pages": "3, 3, 3",
+          "chunk_ids": [
+            "chunk_0003",
+            "chunk_0004",
+            "chunk_0005"
+          ],
+          "has_previous": true,
+          "has_next": true
+        }
+      }
+    },
+    "query_4": {
+      "query": "What are the key business segments?",
+      "results": {
+        "approach_1": {
+          "response": " The key business segments for this group, according to the provided document excerpt, are Property development and Hotel and hospitality.",
+          "model": "mistral:latest",
+          "response_time": 86.02,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.5787874460220337,
+          "source_pages": "173",
+          "chunk_ids": [
+            "chunk_0280"
+          ]
+        },
+        "approach_2": {
+          "response": " The key business segments for this group are Property development and Hotel and hospitality, as per the information provided in the document excerpts.",
+          "model": "mistral:latest",
+          "response_time": 86.03,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.5787874460220337,
+          "source_pages": "173, 173",
+          "chunk_ids": [
+            "chunk_0280",
+            "chunk_0281"
+          ]
+        },
+        "approach_3": {
+          "response": " The key business segments for this group, as per the provided document excerpts, are Property development and Hotel and hospitality. These segments were formed by aggregating relevant operational units within the group that exhibit similar economic characteristics.",
+          "model": "mistral:latest",
+          "response_time": 89.12,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.5787874460220337,
+          "source_pages": "173, 173",
+          "chunk_ids": [
+            "chunk_0280",
+            "chunk_0281"
+          ],
+          "has_previous": false,
+          "has_next": true
+        }
+      }
+    },
+    "query_5": {
+      "query": "What sustainability initiatives does the company have?",
+      "results": {
+        "approach_1": {
+          "response": " The document provided does not explicitly detail any specific sustainability initiatives that the company has. However, it mentions that a comprehensive overview of the Group's daily business activities related to sustainability is provided in the Sustainability Statement included in this Annual Report. To find out about the specific sustainability initiatives, one would need to refer to the Sustainability Statement or the Corporate Governance Report available on the company's website.",
+          "model": "mistral:latest",
+          "response_time": 83.45,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6412343382835388,
+          "source_pages": "20",
+          "chunk_ids": [
+            "chunk_0040"
+          ]
+        },
+        "approach_2": {
+          "response": " The document provided does not explicitly detail any specific sustainability initiatives that the company has. However, it mentions that a comprehensive overview of the Group's daily business activities related to sustainability is provided in the Sustainability Statement included in this Annual Report. To find out about the specific sustainability initiatives, one would need to refer to the Sustainability Statement or the Corporate Governance Report available on the company's website.",
+          "model": "mistral:latest",
+          "response_time": 89.66,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.6412343382835388,
+          "source_pages": "20",
+          "chunk_ids": [
+            "chunk_0040"
+          ]
+        },
+        "approach_3": {
+          "response": " The document provided does not explicitly list specific sustainability initiatives that the company has. However, it mentions that the Group is dedicated to establishing a sustainable business model that takes into account the environment, community, workplace, and marketplace. A comprehensive overview of the Group's daily business activities related to sustainability is provided in the Sustainability Statement included in the Annual Report.",
+          "model": "mistral:latest",
+          "response_time": 201.14,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.6412343382835388,
+          "source_pages": "20, 20",
+          "chunk_ids": [
+            "chunk_0039",
+            "chunk_0040"
+          ],
+          "has_previous": true,
+          "has_next": false
+        }
+      }
+    }
+  }
+}

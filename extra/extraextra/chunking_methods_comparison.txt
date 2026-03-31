@@ -1,0 +1,76 @@
+CHUNKING METHODS COMPARISON SUMMARY
+================================================================================
+Generated on: 2026-03-26 14:43:05
+
+PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+Method                              Chunks   Avg Len  Time(s)  Min    Max   
+--------------------------------------------------------------------------------
+LangChain RecursiveCharacterTextSplitter 1713     357.62   0.093    1      512   
+LlamaIndex SemanticSplitterNodeParser 74       8296.85  1723.782 19     90360 
+Chonkie SemanticChunker             1189     516.37   4.322    25     7068  
+
+
+QUALITY METRICS
+--------------------------------------------------------------------------------
+Method                              Sentence   Paragraph  Size Cons. Semantic
+                                    Complete   Preserve   (0-1)      Coherence
+--------------------------------------------------------------------------------
+LangChain RecursiveCharacterTextSplitter 0.242      0.0        0.639      0.675000011920929
+LlamaIndex SemanticSplitterNodeParser 0.986      0.0        0          0.4099999964237213
+Chonkie SemanticChunker             0.39       0.0        0          0.5149999856948853
+
+
+OVERALL SCORES (0-1 scale, higher is better)
+--------------------------------------------------------------------------------
+LangChain RecursiveCharacterTextSplitter Overall Score: 0.403
+LlamaIndex SemanticSplitterNodeParser Overall Score: 0.419
+Chonkie SemanticChunker             Overall Score: 0.271
+
+
+================================================================================
+FIRST CHUNK FROM EACH METHOD (for quick comparison)
+================================================================================
+
+--- Langchain (First Chunk) ---
+Length: 40 characters
+----------------------------------------
+# 2024 **ANNUAL REPORT**
+
+# **CONTENTS**
+
+
+--- Llamaindex (First Chunk) ---
+Length: 2899 characters
+----------------------------------------
+# 2024 **ANNUAL REPORT**
+
+# **CONTENTS**
+
+- 02 **Corporate Information**
+- 03 **Corporate Structure**
+- **Profile of the Board of Directors** 04
+- 06 **Key Senior Management Profile**
+- 07 **Financial Highlights**
+- 08 **Chairman's Statement**
+- **Management Discussion & Analysis** 10
+- 11 **Corporate Governance Overview Statement**
+- 20 **Sustainability Statement**
+- 35 **Additional Compliance Information**
+- 36 **Statement on Risk Management and Internal Control**
+- 38 **Audit Committee Report...
+[TRUNCATED - see all_chunks_*.txt for complete chunks]
+
+
+--- Chonkie (First Chunk) ---
+Length: 145 characters
+----------------------------------------
+# 2024 **ANNUAL REPORT**
+
+# **CONTENTS**
+
+- 02 **Corporate Information**
+- 03 **Corporate Structure**
+- **Profile of the Board of Directors** 04
+
+

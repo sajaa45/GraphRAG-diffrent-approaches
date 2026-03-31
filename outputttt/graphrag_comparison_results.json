@@ -1,0 +1,215 @@
+{
+  "metadata": {
+    "timestamp": "2026-03-27 14:40:27",
+    "model_used": "mistral:latest",
+    "neo4j_uri": "bolt://neo4j:7687",
+    "ollama_url": "http://host.docker.internal:11434",
+    "total_queries": 4,
+    "approaches": [
+      {
+        "id": "approach_1",
+        "name": "Single Chunk",
+        "description": "Uses only the most similar chunk"
+      },
+      {
+        "id": "approach_2",
+        "name": "Sequential Chunks",
+        "description": "Uses the most similar chunk + next chunk"
+      },
+      {
+        "id": "approach_3",
+        "name": "Context Window",
+        "description": "Uses previous + current + next chunk"
+      }
+    ]
+  },
+  "queries": {
+    "query_1": {
+      "query": "Who is the Chairman of the Board, and what is his medical background?",
+      "results": {
+        "approach_1": {
+          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "model": "mistral:latest",
+          "response_time": 199.31,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.5297313928604126,
+          "source_pages": "5",
+          "chunk_ids": [
+            "chunk_0007"
+          ]
+        },
+        "approach_2": {
+          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "model": "mistral:latest",
+          "response_time": 201.21,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.5297313928604126,
+          "source_pages": "5, 5",
+          "chunk_ids": [
+            "chunk_0007",
+            "chunk_0008"
+          ]
+        },
+        "approach_3": {
+          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "model": "mistral:latest",
+          "response_time": 190.85,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.5297313928604126,
+          "source_pages": "5, 5",
+          "chunk_ids": [
+            "chunk_0007",
+            "chunk_0008"
+          ],
+          "has_previous": false,
+          "has_next": true
+        }
+      }
+    },
+    "query_2": {
+      "query": "What is the estimated Gross Development Value (GDV) for the future development at Genting Highlands?",
+      "results": {
+        "approach_1": {
+          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+          "model": "mistral:latest",
+          "response_time": 125.12,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6725184321403503,
+          "source_pages": "9",
+          "chunk_ids": [
+            "chunk_0015"
+          ]
+        },
+        "approach_2": {
+          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+          "model": "mistral:latest",
+          "response_time": 120.04,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.6725184321403503,
+          "source_pages": "9",
+          "chunk_ids": [
+            "chunk_0015"
+          ]
+        },
+        "approach_3": {
+          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+          "model": "mistral:latest",
+          "response_time": 186.39,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.6725184321403503,
+          "source_pages": "9, 9",
+          "chunk_ids": [
+            "chunk_0014",
+            "chunk_0015"
+          ],
+          "has_previous": true,
+          "has_next": false
+        }
+      }
+    },
+    "query_3": {
+      "query": "which year did the company report its highest Revenue?",
+      "results": {
+        "approach_1": {
+          "response": " The document shows that the company reported a higher revenue of RM 283,597,749 for the period from 01.01.2022 to 30.06.2023 (18 months), compared to RM 271,775,421 for the period from 01.07.2023 to 30.06.2024 (12 months). Therefore, the year with the highest revenue reported by the company is 2022.",
+          "model": "mistral:latest",
+          "response_time": 319.25,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.46810224652290344,
+          "source_pages": "106",
+          "chunk_ids": [
+            "chunk_0182"
+          ]
+        },
+        "approach_2": {
+          "response": " The company reported its highest revenue in the period from 01.01.2022 to 30.06.2023, with a total of RM 307,516,997.",
+          "model": "mistral:latest",
+          "response_time": 276.36,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.46810224652290344,
+          "source_pages": "106",
+          "chunk_ids": [
+            "chunk_0182"
+          ]
+        },
+        "approach_3": {
+          "response": " The company reported its highest revenue in the period from 01.01.2022 to 30.06.2023, with a total of RM 307,516,997.",
+          "model": "mistral:latest",
+          "response_time": 320.72,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 1,
+          "similarity_score": 0.46810224652290344,
+          "source_pages": "106",
+          "chunk_ids": [
+            "chunk_0182"
+          ],
+          "has_previous": false,
+          "has_next": false
+        }
+      }
+    },
+    "query_4": {
+      "query": "What was the Earnings Per Share (EPS) in 2019?",
+      "results": {
+        "approach_1": {
+          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "model": "mistral:latest",
+          "response_time": 112.89,
+          "success": true,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.48978191614151,
+          "source_pages": "8",
+          "chunk_ids": [
+            "chunk_0013"
+          ]
+        },
+        "approach_2": {
+          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "model": "mistral:latest",
+          "response_time": 122.46,
+          "success": true,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.48978191614151,
+          "source_pages": "8",
+          "chunk_ids": [
+            "chunk_0013"
+          ]
+        },
+        "approach_3": {
+          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "model": "mistral:latest",
+          "response_time": 111.84,
+          "success": true,
+          "approach": "context_window",
+          "chunks_used": 1,
+          "similarity_score": 0.48978191614151,
+          "source_pages": "8",
+          "chunk_ids": [
+            "chunk_0013"
+          ],
+          "has_previous": false,
+          "has_next": false
+        }
+      }
+    }
+  }
+}

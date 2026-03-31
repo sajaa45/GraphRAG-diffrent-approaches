@@ -1,0 +1,31 @@
+=== Sample Chunks from Langchain ===
+
+--- Sample Chunk 1 (Index 0) ---
+Length: 40 characters
+
+# 2024 **ANNUAL REPORT**
+
+# **CONTENTS**
+
+==================================================
+
+--- Sample Chunk 2 (Index 856) ---
+Length: 458 characters
+
+| Trade receivables                              | (382, 665)               | (2,359,900)                |                   |                   |  |  |
+| Lease receivables                              |                          | (485, 886)                 |                   |                   |  |  |
+| Other receivables                              |                          | (1,942,310)                |                   |                   |  |  |
+
+==================================================
+
+--- Sample Chunk 3 (Index 1712) ---
+Length: 259 characters
+
+## **YNH PROPERTY BHD** Registration No: 200101026228 (561986-V)
+
+No. 188, Jalan PPMP 3/3, Pusat Perniagaan Manjung Point 3, 32040 Seri Manjung, Perak Darul Ridzuan, Malaysia. Tel: 6-05-688 1128 | Fax: 6-05-688 1388 Email: karsin@streamyx.com
+
+www.ynhb.com.my
+
+==================================================
+

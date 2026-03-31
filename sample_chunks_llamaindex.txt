@@ -1,0 +1,259 @@
+=== Sample Chunks from Llamaindex ===
+
+--- Sample Chunk 1 (Index 0) ---
+Length: 2899 characters
+
+# 2024 **ANNUAL REPORT**
+
+# **CONTENTS**
+
+- 02 **Corporate Information**
+- 03 **Corporate Structure**
+- **Profile of the Board of Directors** 04
+- 06 **Key Senior Management Profile**
+- 07 **Financial Highlights**
+- 08 **Chairman's Statement**
+- **Management Discussion & Analysis** 10
+- 11 **Corporate Governance Overview Statement**
+- 20 **Sustainability Statement**
+- 35 **Additional Compliance Information**
+- 36 **Statement on Risk Management and Internal Control**
+- 38 **Audit Committee Report**
+- 40 Directors' Responsibility Statement In **Respect Of Audited Financial Statements**
+- 41 **List of Properties**
+- 52 **Analysis Of Shareholdings**
+
+Appendix
+
+**Financial Statements**
+
+# **CORPORATE INFORMATION**
+
+#### **DIRECTORS**
+
+Dato' Dr. Yu Kuan Chon, DIMP, PPT, MBBS (Chairman, Executive Director) Dato' Yu Kuan Huat, DPMP, PMP, AMP, PPT (Managing Director) **Khong Kam Hou** (Senior Independent Non-Executive Director) **Ching Lee Fong** (Independent Non-Executive Director) Lee Zhi Yan (Independent Non-Executive Director)
+
+# **Audit Committee**
+
+**Khong Kam Hou** (Senior Independent Non-Executive Director) - Chairman **Ching Lee Fong** (Independent Non-Executive Director) - Member Lee Zhi Yan (Independent Non-Executive Director) - Member
+
+#### **Remuneration Committee**
+
+**Ching Lee Fong** (Independent Non-Executive Director) - Chairman Dato' Yu Kuan Huat, DPMP, PMP, AMP, PPT (Managing Director) - Member **Khong Kam Hou** (Senior Independent Non-Executive Director) - Member Lee Zhi Yan (Independent Non-Executive Director) - Member
+
+## **Nomination Committee**
+
+**Ching Lee Fong** (Independent Non-Executive Director) - Chairman **Khong Kam Hou** (Senior Independent Non-Executive Director) - Member Lee Zhi Yan (Independent Non-Executive Director) - Member
+
+#### **Secretaries**
+
+**Tan Tong Lang** (MAICSA 7045482) (SSM PC No. 202208000250) **Tan Lay Khoon** (MAICSA 7077867) (SSM PC NO. 202208000544) Cheng Ghee Cheng (LS 0004598) (SSM PC No. 202008002000)
+
+#### **Registrars**
+
+#### Aldpro Corporate Services Sdn. Bhd.
+
+B-21-1, Level 21, Tower B Northpoint Mid Valley City No. 1, Medan Syed Putra Utara 59200 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur Telephone No.: 03-9770 2200 Fax No.: 03-2201 7774 Email: admin@aldpro.com.my
+
+#### **Registered Office**
+
+B-21-1, Level 21, Tower B Northpoint Mid Valley City No. 1, Medan Syed Putra Utara 59200 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur Telephone No.: 03-9770 2200 Fax No.: 03-2201 7774 Email: boardroom@boardroom.com.my
+
+#### **Principal Place of Business and Head Office**
+
+188, Jalan PPMP 3/3 Pusat Perniagaan Manjung Point 3 32040 Seri Manjung Perak Darul Ridzuan Telephone No.: 05-6881128 Fax No.: 05-6881388 Email: karsin@streamyx.com Website: www.ynhb.com.my
+
+#### Sales Office - Kuala Lumpur
+
+Unit 03-01D, Level 3, Lot 163 10. Jalan Perak 50450 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur Telephone No.
+
+==================================================
+
+--- Sample Chunk 2 (Index 37) ---
+Length: 11729 characters
+
+| Malaysia                                          | 100  | 100                       | Operation and management<br>of a hotel and its related<br>business and property<br>investment holding |
+| Mesra Unggul Sdn.<br>Bhd.                                                        | Malaysia                                          | 100  | 100                       | Property investment<br>holding and development                                                        |
+| Bay Clubhouse Sdn.<br>Bhd.                                                       | Malaysia                                          | 100  | 100                       | Property investment<br>holding                                                                        |
+| YNH Realty Sdn. Bhd.                                                             | Malaysia                                          | 100  | 100                       | Marketing agent                                                                                       |
+| Benua Kukuh Sdn.<br>Bhd.                                                         | Malaysia                                          | 100  | 100                       | Property investment<br>holding                                                                        |
+
+- @ The auditor's opinion on the financial statements of this subsidiary included a qualification on the inventories amounts of RM1,033,327,470 paid in respect of joint venture and turnkey contracts entered into with various joint venture parties or landowners for property development works. These land costs are subject to agreed entitlements provided in the contracts with the joint venture parties or landowners, which cannot yet be reliably estimated. Additionally, as disclosed in Note 19, included in other receivables of the Group as of 30 June 2024 are amounts of RM66,883,000 (30.06.2023: RM38,383,000) paid in respect of joint venture and turnkey contracts which were terminated or considered incomplete and classified as other receivables.
+- Λ D'Kiara Place Sdn Bhd's shares are held in trust by Kar Sin Berhad as a trustee for the Company.
+- \* Incorporated and has principal place of business in the Federal Territory of Labuan, Malaysia.
+- # 97% directly held by the Company and 3% indirectly held through Kar Sin Berhad.
+- Ţ Not audited by Morison LC PLT
+
+## DEFERRED TAX ASSETS/(LIABILITIES) 16.
+
+|                          | Group            |                  |  |
+|--------------------------|------------------|------------------|--|
+|                          | 30.06.2024<br>RM | 30.06.2023<br>RM |  |
+| Deferred tax assets      | 102,063,810      | 116,014,561      |  |
+| Deferred tax liabilities | (21,591,309)     | (24, 430, 161)   |  |
+|                          | 80,472,501       | 91,584,400       |  |
+
+The movements in deferred tax during the financial year/period are as follows:
+
+|                                                              | Group                        |                          |  |
+|--------------------------------------------------------------|------------------------------|--------------------------|--|
+|                                                              | 30.06.2024<br><b>RM</b>      | 30.06.2023<br>RM         |  |
+| At 1 July/1 January<br>Recognised in profit or loss (Note 8) | 91,584,400<br>(11, 111, 899) | 70,501,838<br>21,082,562 |  |
+| At 30 June                                                   | 80,472,501                   | 91,584,400               |  |
+
+The deferred tax in the financial statements is in respect of the tax effects on the following:
+
+|                                                                                                                                                                                                                      | Group                                                           |                                                               |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|---------------------------------------------------------------|
+|                                                                                                                                                                                                                      | 30.06.2024<br><b>RM</b>                                         | 30.06.2023<br><b>RM</b>                                       |
+| <b>Deferred tax assets</b><br>Temporary differences arising from:                                                                                                                                                    |                                                                 |                                                               |
+| Expenses                                                                                                                                                                                                             | 4,213,556                                                       | 2,210,621                                                     |
+| Transfer of property development cost to<br>investment properties<br>Interest attributable to property development cost<br>Lease liabilities<br>Unrealised profit on development properties<br>Unutilised tax losses | 1,351,742<br>56,362,610<br>778,530<br>36, 163, 288<br>4,235,078 | 1,351,742<br>52,056,046<br>462,114<br>57,384,022<br>3,128,986 |
+| Offsetting                                                                                                                                                                                                           | 103,104,804<br>(22, 632, 303)                                   | 116,593,531<br>(25,009,131)                                   |
+| Deferred tax assets (after offsetting)                                                                                                                                                                               | 80,472,501                                                      | 91,584,400                                                    |
+
+|                                                      | Group          |                |  |
+|------------------------------------------------------|----------------|----------------|--|
+|                                                      | 30.06.2024     | 30.06.2023     |  |
+|                                                      | <b>RM</b>      | <b>RM</b>      |  |
+| Deferred tax liabilities                             |                |                |  |
+| Taxable temporary differences in respect of income   |                | (209, 400)     |  |
+| Differences between the carrying amount of property, |                |                |  |
+| plant and equipment and its tax base                 | (1,095,777)    | (1,069,920)    |  |
+| Fair value adjustment on consolidation               | (21, 536, 526) | (23, 729, 811) |  |
+|                                                      | (22, 632, 303) | (25,009,131)   |  |
+| Offsetting                                           | 22,632,303     | 25,009,131     |  |
+| Deferred tax liabilities (after offsetting)          |                |                |  |
+
+At the end of the reporting period, the Group has deductible temporary differences of interest attributable to property development cost and unrealise profit on development properties, unabsorbed capital allowances and unused tax losses that are available for offsetting against future taxable profits, subject to the agreement with the tax authorities.
+
+The details of unrecognised deductible temporary differences, unabsorbed capital allowances and unutilised tax losses are as follow:
+
+|                               | Group                   |                         |  |
+|-------------------------------|-------------------------|-------------------------|--|
+|                               | 30.06.2024<br><b>RM</b> | 30.06.2023<br><b>RM</b> |  |
+| Unabsorbed capital allowances | 5,328,515               | 5,071,509               |  |
+| Unutilised tax losses         | 25,204,894              | 31, 121, 217            |  |
+|                               | 30,533,409              | 36, 192, 726            |  |
+
+The unabsorbed capital allowances of the Company are available indefinitely for offsetting against future taxable profits of the Company, subject to same business source and guidelines issued by the tax authority.
+
+Pursuant to Section 8 of the Finance Act 2021 (Act 833), the amendments to Section 44(5F) of Income Tax Act 1967, the time limit of the carried forward unutilised tax losses is a maximum of 10 consecutive years of assessment.
+
+The unused tax losses are available for offset against future taxable profits of the Group and of the Company up to the following years of assessment.
+
+|                     | Group                   |                         |  |
+|---------------------|-------------------------|-------------------------|--|
+|                     | 30.06.2024<br><b>RM</b> | 30.06.2023<br><b>RM</b> |  |
+| Year of assessment: |                         |                         |  |
+| 2028                | 31,562,134              | 33,320,747              |  |
+| 2029                | 648,511                 | 648,511                 |  |
+| 2030                | 5,494,611               | 5,494,611               |  |
+| 2031                | 4,364,709               | 4,364,709               |  |
+| 2032                | 330,081                 | 330,081                 |  |
+| 2034                | 451,006                 |                         |  |
+|                     | 42,851,052              | 44,158,659              |  |
+
+## 17. OTHER CURRENT ASSETS
+
+|                                                                                                            | Group                   |                                   |  |
+|------------------------------------------------------------------------------------------------------------|-------------------------|-----------------------------------|--|
+|                                                                                                            | 30.06.2024<br><b>RM</b> | 30.06.2023<br>RM                  |  |
+| Costs to obtain contracts<br>Deposits for acquisition of development lands<br><b>Mobilisation deposits</b> | 8,409,424<br>3,158,700  | 1,573,233<br>125,211<br>3,158,700 |  |
+|                                                                                                            | 11,568,124              | 4,857,144                         |  |
+
+### Cost to obtain contracts
+
+Costs to obtain contracts relate to incremental commission fees paid to intermediaries as a result of obtaining residential and commercial properties sales contracts.
+
+These costs are amortised in accordance with the pattern of transfer of goods or services to which the asset relates. During the financial year, amortisation amounting to RM3,762,216 (30.06.2023: RM1,696,830) was recognised as part of cost of sales. There was no impairment loss in relation to the costs capitalised.
+
+### **Mobilisation deposits**
+
+These amounts are paid to architects and other professional services for future development projects. The directors, after considering all relevant and available information, are of the opinion that these amounts are fully recoverable.
+
+
+
+==================================================
+
+--- Sample Chunk 3 (Index 73) ---
+Length: 12311 characters
+
+During the financial year, the Group had uncovered a misstatement which was inadvertedly recorded in the prior periods' financial statements.
+
+On 30 September 2020, the Group had entered into a turnkey construction agreement with a joint venture party. At the time the agreement was entered into, the joint venture party was neither the registered owner of the land involved nor having a power of attorney over it. The land is currently under dispute regarding the ownership rights to the title.
+
+As from inception of the turnkey construction agreement, the joint venture party had no rights over the land causing the conditions of the agreement to remain unfulfilled, the consideration paid for the agreement was erroneously recognised in inventories, whereas it should be recognised in other receivables.
+
+The misstatement has now been corrected by way of retrospective adjustment and the effect of the adjustment is a decrease in inventories and an increase in other receivables as of 30 June 2023 and 1 January 2022 by RM38,383,000 for the Group. The adjustment has no impact on the Statements of Profit or Loss and Other Comprehensive Income and Statements of Cash Flows for prior periods.
+
+The disclosure set out below explain how the impact of the prior year adjustments has affected the financial position of the Group.
+
+|                                         | As previously<br>reported<br><b>RM</b> | <b>Prior</b> year<br>adjustments<br><b>RM</b> | As restated<br><b>RM</b>     |
+|-----------------------------------------|----------------------------------------|-----------------------------------------------|------------------------------|
+| 01.01.2022                              |                                        |                                               |                              |
+| Group                                   |                                        |                                               |                              |
+| <b>Statements of Financial Position</b> |                                        |                                               |                              |
+| <b>Non-Current Assets</b>               |                                        |                                               |                              |
+| Inventories                             | 1,167,812,133                          |                                               | $(38,383,000)$ 1,129,429,133 |
+|                                         |                                        |                                               |                              |
+| <b>Current Assets</b>                   |                                        |                                               |                              |
+| Other receivables                       |                                        | 38,383,000                                    | 38,383,000                   |
+|                                         |                                        |                                               |                              |
+| 30.06.2023                              |                                        |                                               |                              |
+| <b>Statements of Financial Position</b> |                                        |                                               |                              |
+| <b>Non-Current Assets</b>               |                                        |                                               |                              |
+| Inventories                             | $1,018,834,297$ $(38,383,000)$         |                                               | 980,451,297                  |
+|                                         |                                        |                                               |                              |
+| <b>Current Assets</b>                   |                                        |                                               |                              |
+| Other receivables                       |                                        | 38,383,000                                    | 38,383,000                   |
+|                                         |                                        |                                               |                              |
+
+## 44. **COMPARATIVE FIGURES**
+
+The presentation and classification of items in the current year financial statements have been consistent with the previous financial period except that certain comparative figures in the statement of financial position and have been reclassified to conform with current financial year's presentation.
+
+The reclassifications that have been made to the Group's and the Company's financial statements for the financial period ended 30 June 2023 are as follows:
+
+|                                                                  | As<br>previously<br>reported<br>RM | <b>Reclassification</b><br><b>RM</b> | As<br>reclassified<br><b>RM</b> |
+|------------------------------------------------------------------|------------------------------------|--------------------------------------|---------------------------------|
+| Group                                                            |                                    |                                      |                                 |
+| <b>Statements of financial</b><br>position as at 30 June<br>2023 |                                    |                                      |                                 |
+| <b>Current Assets</b>                                            |                                    |                                      |                                 |
+| Trade receivables                                                | 72,746,485                         | (14,020,985)                         | 58,725,500                      |
+| Other current assets                                             | 5,697,485                          | (840,341)                            | 4,857,144                       |
+| Other receivables                                                | 38,383,000                         | 14,861,326                           | 53,244,326                      |
+| Deposits, cash and bank                                          |                                    |                                      |                                 |
+| balance                                                          | 37,284,256                         | (444,301)                            | 36,839,955                      |
+| Other investments                                                |                                    | 444,301                              | 444,301                         |
+| <b>Non-Current Liabilities</b>                                   |                                    |                                      |                                 |
+| Loans and borrowings                                             | (383, 147, 472)                    | (85,314,506)                         | (468, 461, 978)                 |
+| <b>Current Liabilities</b>                                       |                                    |                                      |                                 |
+| Loans and borrowings                                             | (525, 978, 991)                    | 85,314,506                           | (440, 664, 485)                 |
+
+|                                                                                                                                      | As<br>previously<br>reported<br><b>RM</b> | <b>Reclassification</b><br><b>RM</b> | As<br>reclassified<br><b>RM</b> |
+|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------|--------------------------------------|---------------------------------|
+| Company<br><b>Statement of profit or</b><br>loss and other<br>comprehensive income<br>for the financial period<br>ended 30 June 2023 |                                           |                                      |                                 |
+| Net (allowance)/reversal<br>for impairment losses on                                                                                 |                                           |                                      |                                 |
+| receivables                                                                                                                          | (16,858,705)                              | 16,858,705                           |                                 |
+| Administrative expenses                                                                                                              | (1,818,669)                               | (16, 858, 705)                       | (18,677,374)                    |
+| <b>Statement of financial</b><br>position as of 30 June<br>2023                                                                      |                                           |                                      |                                 |
+| <b>Current Assets</b>                                                                                                                |                                           |                                      |                                 |
+| Other current assets                                                                                                                 | 32,077                                    | (32,077)                             |                                 |
+| Other receivables                                                                                                                    | 17,998,141                                | (17,711,664)                         | 286,477                         |
+| Amount owing by<br>subsidiary companies                                                                                              |                                           | 17,743,741                           | 17,743,741                      |
+| <b>Current Liabilities</b>                                                                                                           |                                           |                                      |                                 |
+| Other payables                                                                                                                       | (278, 857, 107)                           | 271,996,279                          | (6,860,828)                     |
+| Amount owing to directors                                                                                                            |                                           | (65, 944)                            | (65, 944)                       |
+| Amount owing to<br>subsidiary companies                                                                                              |                                           | (271, 930, 335)                      | (271, 930, 335)                 |
+
+In the previous financial period, the financial year end of the Company had changed from 31 December to 30 June. Accordingly, the financial statements of the Company for the current financial period are drawn up for a period of twelve months from 1 July 2023 to 30 June 2024, whereas comparative amounts are presented for a period of eighteen months from 1 January 2022 to 30 June 2023. Therefore, the amounts presented in statements of profit or loss and other comprehensive income, statements of changes in equity and statements of cash flows are not comparable with the amounts presented for comparative period.
+
+## **YNH PROPERTY BHD** Registration No: 200101026228 (561986-V)
+
+No. 188, Jalan PPMP 3/3, Pusat Perniagaan Manjung Point 3, 32040 Seri Manjung, Perak Darul Ridzuan, Malaysia. Tel: 6-05-688 1128 | Fax: 6-05-688 1388 Email: karsin@streamyx.com
+
+www.ynhb.com.my
+
+==================================================
+
