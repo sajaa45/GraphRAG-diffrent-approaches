@@ -1,0 +1,343 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-06 09:52:10",
+    "model_used": "llama3.2:1b",
+    "neo4j_uri": "bolt://neo4j:7687",
+    "ollama_url": "http://host.docker.internal:11434",
+    "total_queries": 4,
+    "approaches": [
+      {
+        "id": "approach_1",
+        "name": "Single Chunk",
+        "description": "Uses only the most similar chunk (baseline)"
+      },
+      {
+        "id": "approach_2",
+        "name": "Sequential Chunks",
+        "description": "Uses the most similar chunk + next chunk"
+      },
+      {
+        "id": "approach_3",
+        "name": "Context Window",
+        "description": "Uses previous + current + next chunk"
+      },
+      {
+        "id": "approach_4",
+        "name": "Top-5 Reranked",
+        "description": "Uses top-5 reranked chunks (RECOMMENDED)"
+      }
+    ]
+  },
+  "queries": {
+    "query_1": {
+      "query": "What was Aramco's net income for the full year 2024 in Saudi Riyals?",
+      "results": {
+        "approach_1": {
+          "response": "The document excerpt does not provide information about Aramco's net income for the full year 2024. It only mentions that as at the date of the Report, the share capital of the Company is ninety billion Saudi Riyals, which is fully paid, consisting of two hundred and twenty-two billion shares with no par value.",
+          "model": "llama3.2:1b",
+          "response_time": 23.08,
+          "success": true,
+          "prompt_size": 972,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6904061627578821,
+          "source_pages": "134",
+          "chunk_ids": [
+            "chunk_0697"
+          ]
+        },
+        "approach_2": {
+          "response": "There is no information provided about Aramco's net income for the full year 2024 in Saudi Riyals. The document excerpts only mention that the Government remains the Company's largest shareholder, and there are some agreements related to business activities, but it does not provide any financial data or information about the company's performance, including its net income.",
+          "model": "llama3.2:1b",
+          "response_time": 21.12,
+          "success": true,
+          "prompt_size": 1283,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.6904061627578821,
+          "source_pages": "134, 134",
+          "chunk_ids": [
+            "chunk_0697",
+            "chunk_0698"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "There is no mention of Aramco's net income for the full year 2024 in these document excerpts. In fact, there is no information about Aramco's financial performance or net income at all. The excerpt only provides a brief summary of Aramco's agreements and its share capital, but does not include any financial data such as net income.",
+          "model": "llama3.2:1b",
+          "response_time": 19.41,
+          "success": true,
+          "prompt_size": 1728,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.6904061627578821,
+          "source_pages": "134, 134, 134",
+          "chunk_ids": [
+            "chunk_0696",
+            "chunk_0697",
+            "chunk_0698"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Not found in context",
+          "response_time": 74.8,
+          "error": null,
+          "similarity_score": 0.6904061627578821,
+          "rerank_scores": [
+            "0.940",
+            "0.928",
+            "0.920",
+            "0.914",
+            "0.907"
+          ],
+          "source_pages": "134, 179, 60, 184, 166",
+          "chunk_ids": [
+            "chunk_0697",
+            "chunk_0971",
+            "chunk_0279",
+            "chunk_1018",
+            "chunk_0888"
+          ],
+          "context_chars": 7205
+        }
+      }
+    },
+    "query_2": {
+      "query": "What was Aramco's net income for the full year 2023 in Saudi Riyals?",
+      "results": {
+        "approach_1": {
+          "response": "The document excerpt does not provide information on Aramco's net income for the full year 2023. It only mentions that the Government remains the Company's largest shareholder, and there is a mention of bonus share grants, but it does not provide any financial data or information on the company's profitability.",
+          "model": "llama3.2:1b",
+          "response_time": 12.74,
+          "success": true,
+          "prompt_size": 972,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.701975980477965,
+          "source_pages": "134",
+          "chunk_ids": [
+            "chunk_0697"
+          ]
+        },
+        "approach_2": {
+          "response": "The document excerpts do not provide information on Aramco's net income for the full year 2023 in Saudi Riyals. In fact, it states that as of the date of the Annual Report, the share capital of the Company is ninety billion Saudi Riyals, which is fully paid, consisting of two hundred and twenty-two billion shares with no par value.",
+          "model": "llama3.2:1b",
+          "response_time": 17.57,
+          "success": true,
+          "prompt_size": 1283,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.701975980477965,
+          "source_pages": "134, 134",
+          "chunk_ids": [
+            "chunk_0697",
+            "chunk_0698"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "Based on the information provided, it is not explicitly stated in the document excerpts what Aramco's net income for the full year 2023 was in Saudi Riyals. However, we can infer that the company's share capital has increased significantly due to bonus shares granted to its employees.\n\nAccording to the excerpt, as of the date of the report, the Company's share capital is 90 billion Saudi Riyals, which is fully paid and consists of 242 billion shares with no par value. This suggests that Aramco's net income for the full year 2023 would be related to its retained earnings, which have been capitalized through bonus share grants.\n\nGiven that the company has increased its share capital by a total of thirty billion Saudi Riyals due to these bonus share grants, it is likely that Aramco's net income for the full year 2023 was positive. However, without further information on the company's financial performance, we cannot determine the exact amount of net income.\n\nIt is also worth noting that the document excerpts do not provide any specific details about Aramco's net income for the full year 2023, such as a breakdown of its revenue or expenses.",
+          "model": "llama3.2:1b",
+          "response_time": 35.96,
+          "success": true,
+          "prompt_size": 1728,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.701975980477965,
+          "source_pages": "134, 134, 134",
+          "chunk_ids": [
+            "chunk_0696",
+            "chunk_0697",
+            "chunk_0698"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Not found in context",
+          "response_time": 46.64,
+          "error": null,
+          "similarity_score": 0.701975980477965,
+          "rerank_scores": [
+            "0.952",
+            "0.929",
+            "0.927",
+            "0.918",
+            "0.911"
+          ],
+          "source_pages": "134, 179, 60, 184, 185",
+          "chunk_ids": [
+            "chunk_0697",
+            "chunk_0971",
+            "chunk_0279",
+            "chunk_1018",
+            "chunk_1030"
+          ],
+          "context_chars": 4367
+        }
+      }
+    },
+    "query_3": {
+      "query": "By what percentage did Aramco's net income decrease from 2023 to 2024?",
+      "results": {
+        "approach_1": {
+          "response": "To find the percentage decrease in Aramco's net income from 2023 to 2024, we need to compare the net income of 2023 with the net income of 2024.\n\nThe document excerpt does not provide the exact figures for net income. However, it mentions that the increase in losses was mainly attributable to higher employee-related costs during the year.\n\nSince there is no information about Aramco's net income, we can't calculate a percentage decrease based on the provided data.",
+          "model": "llama3.2:1b",
+          "response_time": 15.56,
+          "success": true,
+          "prompt_size": 510,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6898011299222351,
+          "source_pages": "60",
+          "chunk_ids": [
+            "chunk_0279"
+          ]
+        },
+        "approach_2": {
+          "response": "To determine the percentage decrease in Aramco's net income from 2023 to 2024, we need to compare the net income for each year.\n\nIn 2023, Aramco's net income was not mentioned in the document excerpts. However, it is mentioned that the increase in losses in 2024 was mainly attributable to higher employee-related costs during the year.\n\nSince there is no information about Aramco's net income in 2023, we cannot calculate a percentage decrease from 2023 to 2024.",
+          "model": "llama3.2:1b",
+          "response_time": 25.57,
+          "success": true,
+          "prompt_size": 1848,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.6898011299222351,
+          "source_pages": "60, 60",
+          "chunk_ids": [
+            "chunk_0279",
+            "chunk_0280"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "To find the percentage decrease in Aramco's net income from 2023 to 2024, we need to compare the net income for each year.\n\nIn 2023, Aramco's net income was not mentioned. However, in 2024, it was reported that the increase in losses was mainly attributable to higher employee-related costs during the year.\n\nSince there is no information about net income in 2023, we can't calculate a percentage decrease from 2023 to 2024.",
+          "model": "llama3.2:1b",
+          "response_time": 24.93,
+          "success": true,
+          "prompt_size": 2119,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.6898011299222351,
+          "source_pages": "60, 60, 60",
+          "chunk_ids": [
+            "chunk_0278",
+            "chunk_0279",
+            "chunk_0280"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Not found in context",
+          "response_time": 45.14,
+          "error": null,
+          "similarity_score": 0.6898011299222351,
+          "rerank_scores": [
+            "0.940",
+            "0.896",
+            "0.889",
+            "0.867",
+            "0.866"
+          ],
+          "source_pages": "60, 38, 87, 10, 184",
+          "chunk_ids": [
+            "chunk_0279",
+            "chunk_0146",
+            "chunk_0429",
+            "chunk_0014",
+            "chunk_1018"
+          ],
+          "context_chars": 4059
+        }
+      }
+    },
+    "query_4": {
+      "query": "What was Aramco's gearing ratio as of December 31, 2024?",
+      "results": {
+        "approach_1": {
+          "response": "Aramco's gearing ratio as of December 31, 2024, was 4.5%.",
+          "model": "llama3.2:1b",
+          "response_time": 13.53,
+          "success": true,
+          "prompt_size": 1492,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6928961512387544,
+          "source_pages": "45",
+          "chunk_ids": [
+            "chunk_0187"
+          ]
+        },
+        "approach_2": {
+          "response": "Aramco's gearing ratio as of December 31, 2024, was 4.5%.",
+          "model": "llama3.2:1b",
+          "response_time": 2.48,
+          "success": true,
+          "prompt_size": 1492,
+          "approach": "sequential_chunks",
+          "chunks_used": 1,
+          "similarity_score": 0.6928961512387544,
+          "source_pages": "45",
+          "chunk_ids": [
+            "chunk_0187"
+          ],
+          "has_next": false
+        },
+        "approach_3": {
+          "response": "As of December 31, 2024, Aramco's gearing ratio was 4.5%.",
+          "model": "llama3.2:1b",
+          "response_time": 18.19,
+          "success": true,
+          "prompt_size": 1796,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.6928961512387544,
+          "source_pages": "45, 45",
+          "chunk_ids": [
+            "chunk_0186",
+            "chunk_0187"
+          ],
+          "has_previous": true,
+          "has_next": false
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Not found in context",
+          "response_time": 49.49,
+          "error": null,
+          "similarity_score": 0.6928961512387544,
+          "rerank_scores": [
+            "0.693",
+            "0.607",
+            "0.602",
+            "0.589",
+            "0.575"
+          ],
+          "source_pages": "45, 60, 185, 58, 56",
+          "chunk_ids": [
+            "chunk_0187",
+            "chunk_0279",
+            "chunk_1030",
+            "chunk_0267",
+            "chunk_0249"
+          ],
+          "context_chars": 4471
+        }
+      }
+    }
+  }
+}
