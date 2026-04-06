@@ -63,6 +63,17 @@ services:
       - CLEAR_DB=y
     command: python neo4j_knowledge_graph.py
 
+  chunking-test:
+    build: .
+    container_name: chunking-tester
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python chunking.py
+
   graphrag-test:
     build: .
     container_name: graphrag-tester
@@ -79,7 +90,7 @@ services:
       - NEO4J_USERNAME=neo4j
       - NEO4J_PASSWORD=Lexical12345
       - OLLAMA_URL=http://host.docker.internal:11434
-      - OLLAMA_MODEL=mistral:latest
+      - OLLAMA_MODEL=llama3.2:1b
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command: python graphrag_system.py

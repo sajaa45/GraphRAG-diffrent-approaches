@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-03-27 14:40:27",
+    "timestamp": "2026-04-03 21:25:33",
     "model_used": "mistral:latest",
     "neo4j_uri": "bolt://neo4j:7687",
     "ollama_url": "http://host.docker.internal:11434",
@@ -25,191 +25,372 @@
   },
   "queries": {
     "query_1": {
-      "query": "Who is the Chairman of the Board, and what is his medical background?",
+      "query": "What was Aramco's Net Income in 2024 compared to 2023, and what were the top two reasons for the change?",
       "results": {
         "approach_1": {
-          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "response": " The document does not provide information about Aramco's net income in 2024 compared to 2023. However, it mentions that the increase in losses in 2024 was mainly attributable to higher employee-related costs during the year. Additionally, it highlights the strengthening of the domestic supply chain through 145 corporate purchase agreements with suppliers in Saudi Arabia worth approximately $17.5 billion. Without further context or data, it is not possible to definitively determine Aramco's net income for that period.",
           "model": "mistral:latest",
-          "response_time": 199.31,
+          "response_time": 67.65,
           "success": true,
           "approach": "single_chunk",
           "chunks_used": 1,
-          "similarity_score": 0.5297313928604126,
-          "source_pages": "5",
+          "similarity_score": 0.6835722048302016,
+          "source_pages": "60",
           "chunk_ids": [
-            "chunk_0007"
+            "chunk_0279"
           ]
         },
         "approach_2": {
-          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "response": " The document does not provide information about Aramco's net income in 2024 compared to 2023. However, it mentions that the increase in losses in 2024 was mainly attributable to higher employee-related costs during the year. Additionally, corporate capital expenditures increased due to higher various industrial support projects and community development projects. Without specific numbers, it's not possible to determine the exact change in net income.",
           "model": "mistral:latest",
-          "response_time": 201.21,
+          "response_time": 141.63,
           "success": true,
           "approach": "sequential_chunks",
           "chunks_used": 2,
-          "similarity_score": 0.5297313928604126,
-          "source_pages": "5, 5",
+          "similarity_score": 0.6835722048302016,
+          "source_pages": "60, 60",
           "chunk_ids": [
-            "chunk_0007",
-            "chunk_0008"
-          ]
+            "chunk_0279",
+            "chunk_0280"
+          ],
+          "has_next": true
         },
         "approach_3": {
-          "response": " The Chairman of the Board is Dato' Dr. Yu Kuan Chon. His medical background is that he obtained his medical degree in 1988.",
+          "response": " The document provided does not explicitly state the net income of Aramco in 2024 compared to 2023. However, it mentions that there was an increase in losses in 2024, primarily due to higher employee-related costs during the year. Therefore, it can be inferred that the net income in 2024 would have been lower than in 2023 if we assume that net income is a positive value and losses are a negative value. The second reason for this change could be an increase in corporate capital expenditures due to higher various industrial support projects and community development projects.",
           "model": "mistral:latest",
-          "response_time": 190.85,
+          "response_time": 169.06,
           "success": true,
           "approach": "context_window",
-          "chunks_used": 2,
-          "similarity_score": 0.5297313928604126,
-          "source_pages": "5, 5",
+          "chunks_used": 3,
+          "similarity_score": 0.6835722048302016,
+          "source_pages": "60, 60, 60",
           "chunk_ids": [
-            "chunk_0007",
-            "chunk_0008"
+            "chunk_0278",
+            "chunk_0279",
+            "chunk_0280"
           ],
-          "has_previous": false,
+          "has_previous": true,
           "has_next": true
         }
       }
     },
     "query_2": {
-      "query": "What is the estimated Gross Development Value (GDV) for the future development at Genting Highlands?",
+      "query": "What are the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050?",
       "results": {
-        "approach_1": {
-          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+         "approach_1": {
+          "response": " Based on the provided document excerpt, the five key levers that Aramco is focusing on to achieve its net-zero Scope 1 and 2 ambition by 2050 can be inferred as follows:\n\n1. Reducing carbon emissions: This is an overarching goal that encompasses various strategies aimed at decreasing the amount of greenhouse gas (GHG) emissions from Aramco's wholly-owned operated assets.\n\n2. Capturing, storing, and using carbon dioxide: Aramco plans to capture and store CO2, and then utilize it to produce chemicals, fuels, and other products as part of a circular carbon economy approach.\n\n3. Producing chemicals, fuels, and other products: By utilizing captured and stored CO2, Aramco aims to create new products that contribute to its net-zero ambition.\n\n4. Supporting the Kingdom's 2060 net-zero goal: Aramco's net-zero ambition aligns with the Kingdom's broader goal of achieving net-zero emissions by 2060, demonstrating a commitment to contributing to the country's overall carbon reduction efforts.\n\n5. Adopting a circular carbon economy approach: This strategy involves using and reusing resources in a way that minimizes waste and maximizes efficiency, which is essential for achieving Aramco's net-zero ambition.",
           "model": "mistral:latest",
-          "response_time": 125.12,
+          "response_time": 166.29,
           "success": true,
           "approach": "single_chunk",
           "chunks_used": 1,
-          "similarity_score": 0.6725184321403503,
-          "source_pages": "9",
+          "similarity_score": 0.651804301444729,
+          "source_pages": "77",
           "chunk_ids": [
-            "chunk_0015"
+            "chunk_0363"
           ]
         },
         "approach_2": {
-          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+          "response": " Based on the provided document excerpts, it's not explicitly stated that there are five specific levers or strategies that Aramco is focusing on to achieve its net-zero Scope 1 and 2 ambition by 2050. However, the text mentions the following key aspects:\n\n1. Reducing carbon emissions: This is an implied strategy as achieving net-zero emissions requires a reduction in greenhouse gas (GHG) emissions.\n\n2. Capturing, storing, and using carbon dioxide: Aramco plans to use captured CO2 to produce chemicals, fuels, and other products, which can be considered a strategy for carbon management.\n\n3. The circular carbon economy approach: This is another strategy that involves reusing and recycling carbon-containing materials in a way that minimizes waste and maximizes resource efficiency.\n\n4. Investments in capital expenditures: Aramco acknowledges that substantial costs and capital expenditures will be required to achieve its net-zero ambition.\n\n5. Supporting the Kingdom's 2060 net-zero goal: Although not a direct strategy for Aramco, this commitment indicates alignment with the broader national goals for carbon neutrality.",
           "model": "mistral:latest",
-          "response_time": 120.04,
+          "response_time": 170.87,
           "success": true,
           "approach": "sequential_chunks",
-          "chunks_used": 1,
-          "similarity_score": 0.6725184321403503,
-          "source_pages": "9",
+          "chunks_used": 2,
+          "similarity_score": 0.651804301444729,
+          "source_pages": "77, 77",
           "chunk_ids": [
-            "chunk_0015"
-          ]
+            "chunk_0363",
+            "chunk_0364"
+          ],
+          "has_next": true
         },
         "approach_3": {
-          "response": " The estimated Gross Development Value (GDV) for the future development at Genting Highlands is RM1.96 billion.",
+          "response": " Based on the provided document excerpts, it appears that Aramco is focusing on the following five key levers to achieve its net-zero Scope 1 and 2 ambition by 2050:\n\n1. Reducing carbon emissions: This is mentioned as part of the circular carbon economy approach.\n2. Capturing, storing, and using carbon dioxide: Aramco plans to use CO2 for producing chemicals, fuels, and other products.\n3. Achieving net-zero Scope 1 and 2 GHG emissions across its wholly-owned operated assets: This is the overall goal set by Aramco.\n4. Supporting the Kingdom's 2060 net-zero goal: Aramco's ambition aligns with Saudi Arabia's broader climate goals.\n5. Incurring substantial costs and capital expenditures: Aramco acknowledges that achieving its net-zero ambition will likely require significant financial investment.",
           "model": "mistral:latest",
-          "response_time": 186.39,
+          "response_time": 156.14,
           "success": true,
           "approach": "context_window",
-          "chunks_used": 2,
-          "similarity_score": 0.6725184321403503,
-          "source_pages": "9, 9",
+          "chunks_used": 3,
+          "similarity_score": 0.651804301444729,
+          "source_pages": "77, 77, 77",
           "chunk_ids": [
-            "chunk_0014",
-            "chunk_0015"
+            "chunk_0362",
+            "chunk_0363",
+            "chunk_0364"
           ],
           "has_previous": true,
-          "has_next": false
+          "has_next": true
         }
       }
     },
     "query_3": {
-      "query": "which year did the company report its highest Revenue?",
+      "query": "What are the primary related party transactions with the Government, and what is the balance of 'Due from the Government'?",
       "results": {
         "approach_1": {
-          "response": " The document shows that the company reported a higher revenue of RM 283,597,749 for the period from 01.01.2022 to 30.06.2023 (18 months), compared to RM 271,775,421 for the period from 01.07.2023 to 30.06.2024 (12 months). Therefore, the year with the highest revenue reported by the company is 2022.",
+          "response": " The primary related party transactions with the Government involve sales to specified Government, semi-Government, and other entities with Government ownership or control. These transactions are recognized upon the satisfaction of performance obligations, which occurs when control transfers to these customers, typically when the product is physically transferred.\n\nThe 'Due from the Government' balance represents receivables from these government entities that are past due. It includes amounts that are expected to be settled through offset against tax payments as per implementing regulations issued by the Government.",
           "model": "mistral:latest",
-          "response_time": 319.25,
+          "response_time": 122.22,
           "success": true,
           "approach": "single_chunk",
           "chunks_used": 1,
-          "similarity_score": 0.46810224652290344,
-          "source_pages": "106",
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179",
           "chunk_ids": [
-            "chunk_0182"
+            "chunk_0978"
           ]
         },
         "approach_2": {
-          "response": " The company reported its highest revenue in the period from 01.01.2022 to 30.06.2023, with a total of RM 307,516,997.",
+          "response": " The primary related party transactions with the Government involve revenue recognition upon the satisfaction of performance obligations, typically when control transfers to these customers (usually government entities) when products are physically transferred. The title of products passes at this point. Trade receivables from these customers become due once they are past due and are reclassified as a due from the Government current receivable.\n\nThe balance of 'Due from the Government' includes amounts that represent revenues awaiting settlement, offset against tax payments or other amounts payable to the government by the company. The specific balance is not provided in the document excerpts.",
           "model": "mistral:latest",
-          "response_time": 276.36,
+          "response_time": 159.15,
           "success": true,
           "approach": "sequential_chunks",
-          "chunks_used": 1,
-          "similarity_score": 0.46810224652290344,
-          "source_pages": "106",
+          "chunks_used": 2,
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179, 179",
           "chunk_ids": [
-            "chunk_0182"
-          ]
+            "chunk_0978",
+            "chunk_0979"
+          ],
+          "has_next": true
         },
         "approach_3": {
-          "response": " The company reported its highest revenue in the period from 01.01.2022 to 30.06.2023, with a total of RM 307,516,997.",
+          "response": " The primary related party transactions with the Government involve compensation through price equalization (Note 2(y)) and for past due trade receivables of specified Government, semi-Government, and other entities with Government ownership or control to whom the Company supplies specified products and services.\n\nThe balance of 'Due from the Government' includes these past due amounts, reclassified trade receivables, as well as any amounts that may be payable to the Government based on the company's expectation to settle them on a net basis with other amounts due from the Government. However, the document does not provide specific numerical values for the balance of 'Due from the Government'.",
           "model": "mistral:latest",
-          "response_time": 320.72,
+          "response_time": 185.74,
           "success": true,
           "approach": "context_window",
-          "chunks_used": 1,
-          "similarity_score": 0.46810224652290344,
-          "source_pages": "106",
+          "chunks_used": 3,
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179, 179, 179",
           "chunk_ids": [
-            "chunk_0182"
+            "chunk_0977",
+            "chunk_0978",
+            "chunk_0979"
           ],
-          "has_previous": false,
-          "has_next": false
+          "has_previous": true,
+          "has_next": true
         }
       }
     },
     "query_4": {
-      "query": "What was the Earnings Per Share (EPS) in 2019?",
+      "query": "What was the upstream carbon intensity (kg CO2e/boe) for 2024, and how does it compare to the 2018 baseline?",
       "results": {
         "approach_1": {
-          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "response": " The document does not provide the exact upstream carbon intensity (kg CO2e/boe) for 2024. However, it mentions that the figures from 2022 to 2024 reflect a market-based calculation methodology, which is different from the location-based methodology used for 2020 and 2021. To compare the 2024 figure with the 2018 baseline, we would need data for both years calculated using the same methodology. Unfortunately, the document does not provide enough information to determine if or how the 2024 value compares to the 2018 baseline.",
           "model": "mistral:latest",
-          "response_time": 112.89,
+          "response_time": 82.9,
           "success": true,
           "approach": "single_chunk",
           "chunks_used": 1,
-          "similarity_score": 0.48978191614151,
-          "source_pages": "8",
+          "similarity_score": 0.6288743850304628,
+          "source_pages": "67",
           "chunk_ids": [
-            "chunk_0013"
+            "chunk_0313"
           ]
         },
         "approach_2": {
-          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "response": " The document does not provide the specific value for the upstream carbon intensity (kg CO2e/boe) for 2024. However, it mentions that the figures from 2022 to 2024 reflect a market-based calculation methodology, which is different from the location-based methodology used for 2020 and 2021. As for the comparison with the 2018 baseline, without knowing the value for 2018, it's impossible to determine if there has been an increase or decrease in upstream carbon intensity.",
           "model": "mistral:latest",
-          "response_time": 122.46,
+          "response_time": 45.81,
           "success": true,
           "approach": "sequential_chunks",
           "chunks_used": 1,
-          "similarity_score": 0.48978191614151,
-          "source_pages": "8",
+          "similarity_score": 0.6288743850304628,
+          "source_pages": "67",
           "chunk_ids": [
-            "chunk_0013"
-          ]
+            "chunk_0313"
+          ],
+          "has_next": false
         },
         "approach_3": {
-          "response": " The Earnings Per Share (EPS) in 2019 was 6.41.",
+          "response": " The document does not provide the exact value of the upstream carbon intensity (kg CO2e/boe) for 2024. However, it mentions that the figures from 2024 have undergone ISAE3000 (revised) limited assurance, and the results will be published in Q2 2025. To compare the 2024 value with the 2018 baseline, we would need to wait until the results are published.",
           "model": "mistral:latest",
-          "response_time": 111.84,
+          "response_time": 101.57,
           "success": true,
           "approach": "context_window",
-          "chunks_used": 1,
-          "similarity_score": 0.48978191614151,
-          "source_pages": "8",
+          "chunks_used": 2,
+          "similarity_score": 0.6288743850304628,
+          "source_pages": "67, 67",
           "chunk_ids": [
-            "chunk_0013"
+            "chunk_0312",
+            "chunk_0313"
           ],
-          "has_previous": false,
+          "has_previous": true,
           "has_next": false
         }
       }
     }
   }
 }
+1. Honest Overall Performance
+❗ High-level verdict:
+
+Your system is retrieving relevant context, but failing to retrieve answer-bearing chunks
+
+Let’s go query by query:
+
+📊 Query 1 (Net income 2024 vs 2023)
+All approaches: ❌ Wrong
+Model says: “document does not provide…”
+
+👉 Reality:
+
+This info definitely exists in the report
+So this is a retrieval failure
+📊 Query 2 (Five key levers)
+All approaches: ❌ Wrong
+Model hallucinates 5 levers
+
+👉 This is dangerous:
+
+Retrieval gave partial context
+LLM fabricated structure
+📊 Query 3 (Related party + balance)
+All approaches: ❌ Incomplete
+Got:
+✅ explanation
+❌ missing numeric balance
+
+👉 This is a numeric retrieval failure
+
+📊 Query 4 (Carbon intensity)
+All approaches: ❌ Wrong
+Model says data not present
+
+👉 Again:
+
+Likely exists → retrieval failure
+📈 Final Score (strict evaluation)
+Metric	Score
+Fully correct answers	0 / 4 ❌
+Partially correct	1 / 4 (Query 3)
+Hallucinations	1 major (Query 2) ⚠️
+Retrieval success	Low (~25%)
+🧠 2. Key Insight (VERY important)
+
+Your system is currently:
+
+✅ Good at semantic similarity
+❌ Bad at answer retrieval
+
+This is the #1 trap in RAG systems
+
+🚨 3. Why all 3 approaches failed
+You tested:
+Single chunk
+next chunk
+± context window
+
+👉 Result: No improvement
+
+💡 Conclusion:
+
+The problem is NOT chunk size
+
+It’s:
+
+❌ Wrong chunks retrieved
+❌ No answer-aware ranking
+🔬 4. How to Evaluate Properly (what you should implement)
+
+Right now you only track:
+
+similarity score
+response time
+success (always true ❌ useless metric)
+✅ Add these evaluation metrics
+1. Exact Match (EM)
+def exact_match(pred, truth):
+    return pred.strip().lower() == truth.strip().lower()
+2. F1 Score (for partial answers)
+Measures overlap between expected vs predicted answer
+3. Answer Type Accuracy (VERY IMPORTANT)
+
+Classify questions:
+
+TYPES = ["numeric", "list", "descriptive"]
+
+Then evaluate:
+
+numeric → must contain numbers
+list → must contain structured items
+descriptive → explanation OK
+
+👉 Your system fails:
+
+numeric ❌
+list ❌
+4. Retrieval Recall (CRITICAL)
+
+👉 This is your biggest missing metric:
+
+Did you retrieve the chunk that actually contains the answer?
+
+retrieval_hit = any(chunk_id in ground_truth_chunks for chunk_id in retrieved_chunks)
+5. Hallucination Score
+
+Check:
+
+Does answer include info not in chunks?
+
+Query 2 = ❌ hallucination
+
+🧪 5. What your experiment actually shows
+❗ Key conclusion:
+
+Context expansion (Approach 2 & 3) does NOT fix bad retrieval
+
+This is a very strong finding — you should actually mention this if you present your work.
+
+🚀 6. How to Improve (high ROI fixes)
+🔥 Priority 1: Fix Retrieval (not chunking)
+Add hybrid scoring
+
+Right now:
+
+score = cosine_similarity
+
+Upgrade to:
+
+score = cosine_similarity \
+      + 0.2 * has_numbers \
+      + 0.2 * has_list_structure \
+      + 0.2 * keyword_overlap
+🔥 Priority 2: Increase Top-K
+
+You’re likely using small K
+
+👉 Use:
+
+top_k = 15 or 20
+
+Then rerank
+
+🔥 Priority 3: Query Understanding Layer
+
+Before retrieval:
+
+if "how much" or "balance":
+    boost_numeric_chunks()
+
+if "what are":
+    boost_list_chunks()
+🔥 Priority 4: Reranking (game changer)
+
+Use:
+
+cross-encoder (e.g. reranker model)
+or LLM reranking
+🧠 7. Advanced Insight (this is PhD-level thinking)
+
+You are currently optimizing:
+
+chunk similarity
+
+But you should optimize:
+
+answer likelihood
+
+These are NOT the same.

@@ -13,24 +13,37 @@ def main():
     
     # Check if required files exist
     required_files = [
-        "output/llamaindex_chunks_with_pages.json",
-        "output/pdf2_sections.json", 
-        "pdf2.json"
+        ("output/SemanticSplitterNodeParser_chunks.json", "output/llamaindex_chunks_with_pages.json"),
+        ("output/saudi-aramco-ara-2024-english_sections.json", "output/pdf2_sections.json"),
+        ("saudi-aramco-ara-2024-english.json", "pdf2.json")
     ]
     
     missing_files = []
-    for file_path in required_files:
-        if not os.path.exists(file_path):
-            missing_files.append(file_path)
+    found_files = []
+    
+    for file_options in required_files:
+        found = False
+        for file_path in (file_options if isinstance(file_options, tuple) else (file_options,)):
+            if os.path.exists(file_path):
+                found_files.append(file_path)
+                found = True
+                break
+        
+        if not found:
+            missing_files.append(file_options[0] if isinstance(file_options, tuple) else file_options)
     
     if missing_files:
         print("Missing required files:")
         for file_path in missing_files:
             print(f"  - {file_path}")
-        print("\nPlease run json_text_processor.py first to generate the required files")
+        print("\nPlease run:")
+        print("  1. json_text_processor.py (to generate sections)")
+        print("  2. chunking.py (to generate chunks with embeddings)")
         return
     
-    print("All required files found")
+    print("All required files found:")
+    for file_path in found_files:
+        print(f"  ✓ {file_path}")
     
     # Set default Neo4j connection if not set
     if not os.getenv("NEO4J_URI"):

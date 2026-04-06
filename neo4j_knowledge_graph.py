@@ -145,6 +145,7 @@ class DocumentKnowledgeGraph:
                         c.total_chunks_in_section = $total_chunks,
                         c.page_range = $page_range,
                         c.source_pages = $source_pages,
+                        c.embedding = $embedding,
                         c.created_at = datetime()
                 """,
                 chunk_id=chunk_id,
@@ -154,7 +155,8 @@ class DocumentKnowledgeGraph:
                 chunk_index=chunk['chunk_index_in_section'],
                 total_chunks=chunk['total_chunks_in_section'],
                 page_range=chunk['page_range'],
-                source_pages=chunk['source_pages']
+                source_pages=chunk['source_pages'],
+                embedding=chunk.get('embedding', [])
                 )
                 
                 # Create relationship to section
@@ -268,24 +270,70 @@ def main():
     output_dir = "/app/output" if os.path.exists("/app/output") else "output"
     input_dir = "/app/input" if os.path.exists("/app/input") else "."
     
-    chunks_file = os.path.join(output_dir, "llamaindex_chunks_with_pages.json")
-    sections_file = os.path.join(output_dir, "pdf2_sections.json")
-    original_pages_file = os.path.join(input_dir, "pdf2.json")
+    # Try to find chunks file (support both old and new naming)
+    chunks_file_options = [
+        os.path.join(output_dir, "SemanticSplitterNodeParser_chunks.json"),
+        os.path.join(output_dir, "llamaindex_chunks_with_pages.json"),
+    ]
+    
+    chunks_file = None
+    for file_path in chunks_file_options:
+        if os.path.exists(file_path):
+            chunks_file = file_path
+            break
+    
+    # Try to find sections file (support multiple naming patterns)
+    sections_file_options = [
+        os.path.join(output_dir, "saudi-aramco-ara-2024-english_sections.json"),
+        os.path.join(output_dir, "pdf2_sections.json"),
+    ]
+    
+    sections_file = None
+    for file_path in sections_file_options:
+        if os.path.exists(file_path):
+            sections_file = file_path
+            break
+    
+    # Try to find original JSON file
+    original_pages_file_options = [
+        os.path.join(input_dir, "saudi-aramco-ara-2024-english.json"),
+        os.path.join(input_dir, "pdf2.json"),
+    ]
+    
+    original_pages_file = None
+    for file_path in original_pages_file_options:
+        if os.path.exists(file_path):
+            original_pages_file = file_path
+            break
     
     # Check if files exist
-    if not os.path.exists(chunks_file):
-        print(f"Chunks file not found: {chunks_file}")
-        print("Please run json_text_processor.py first to generate chunk files")
+    if not chunks_file:
+        print(f"Chunks file not found in: {output_dir}")
+        print("Tried:")
+        for file_path in chunks_file_options:
+            print(f"  - {file_path}")
+        print("\nPlease run chunking.py first to generate chunk files")
         return
     
-    if not os.path.exists(sections_file):
-        print(f"Sections file not found: {sections_file}")
-        print("Please run json_text_processor.py first to generate section files")
+    if not sections_file:
+        print(f"Sections file not found in: {output_dir}")
+        print("Tried:")
+        for file_path in sections_file_options:
+            print(f"  - {file_path}")
+        print("\nPlease run json_text_processor.py first to generate section files")
         return
     
-    if not os.path.exists(original_pages_file):
-        print(f"Original pages file not found: {original_pages_file}")
+    if not original_pages_file:
+        print(f"Original pages file not found in: {input_dir}")
+        print("Tried:")
+        for file_path in original_pages_file_options:
+            print(f"  - {file_path}")
         return
+    
+    print(f"Using files:")
+    print(f"  Chunks: {chunks_file}")
+    print(f"  Sections: {sections_file}")
+    print(f"  Original: {original_pages_file}")
     
     print("Building Neo4j Knowledge Graph for Document Structure")
     print("=" * 60)

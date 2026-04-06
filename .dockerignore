@@ -25,3 +25,6 @@ coverage.xml
 Thumbs.db
 output
 outputttt
+
+# Exclude benchmark comparison file (use chunking.py for production)
+chunking_comparison.py

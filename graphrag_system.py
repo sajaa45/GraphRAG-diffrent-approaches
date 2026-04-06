@@ -80,13 +80,117 @@ class GraphRAGSystem:
         """Create embedding for query"""
         return self.embedding_model.encode([query])[0]
     
-    def find_similar_chunks(self, query_embedding: np.ndarray, top_k: int = 5) -> List[Dict]:
+    def rerank_chunks(self, chunks: List[Dict], query: str) -> List[Dict]:
         """
-        Find most similar chunks using Neo4j and cosine similarity
-        Note: This is a simplified approach. In production, you'd store embeddings in Neo4j
+        Rerank chunks based on query type and content characteristics
+        This addresses the limitation of pure semantic similarity
+        """
+        query_lower = query.lower()
+        
+        # Detect query type
+        is_numeric_query = any(keyword in query_lower for keyword in [
+            "how much", "how many", "net income", "revenue", "profit", "loss",
+            "balance", "assets", "debt", "equity", "cash", "value", "amount",
+            "total", "sum", "percentage", "%", "sar", "usd", "million", "billion"
+        ])
+        
+        is_list_query = any(keyword in query_lower for keyword in [
+            "what are", "list", "which", "name the", "identify", "enumerate",
+            "types of", "categories", "examples of"
+        ])
+        
+        is_definition_query = any(keyword in query_lower for keyword in [
+            "what is", "define", "meaning of", "explain", "describe"
+        ])
+        
+        is_comparison_query = any(keyword in query_lower for keyword in [
+            "compare", "difference", "versus", "vs", "between", "higher", "lower"
+        ])
+        
+        # Rerank each chunk
+        for chunk in chunks:
+            text = chunk['content']
+            text_lower = text.lower()
+            
+            # Start with semantic similarity score
+            score = chunk['similarity']
+            
+            # Boost for numeric queries if chunk contains numbers
+            if is_numeric_query:
+                # Check for actual numeric data (not just page numbers)
+                has_numbers = any(char.isdigit() for char in text)
+                has_currency = any(curr in text_lower for curr in ['sar', 'usd', 'million', 'billion'])
+                has_percentage = '%' in text
+                
+                if has_numbers and (has_currency or has_percentage):
+                    score += 0.25  # Strong boost for financial data
+                elif has_numbers:
+                    score += 0.15  # Moderate boost for any numbers
+            
+            # Boost for list queries if chunk contains list structures
+            if is_list_query:
+                list_indicators = [
+                    text.count('\n1.'), text.count('\n2.'), text.count('\n3.'),
+                    text.count('\n-'), text.count('\n•'), text.count('\n*'),
+                    text.count('first'), text.count('second'), text.count('third')
+                ]
+                list_score = sum(1 for count in list_indicators if count > 0)
+                
+                if list_score >= 3:
+                    score += 0.20  # Strong boost for clear lists
+                elif list_score >= 1:
+                    score += 0.10  # Moderate boost for some list structure
+            
+            # Boost for definition queries if chunk has definition patterns
+            if is_definition_query:
+                definition_patterns = [
+                    ' is ', ' are ', ' means ', ' refers to ', ' defined as ',
+                    'definition', 'meaning'
+                ]
+                if any(pattern in text_lower for pattern in definition_patterns):
+                    score += 0.15
+            
+            # Boost for comparison queries if chunk has comparison language
+            if is_comparison_query:
+                comparison_patterns = [
+                    'compared to', 'versus', 'higher than', 'lower than',
+                    'increased', 'decreased', 'more than', 'less than'
+                ]
+                if any(pattern in text_lower for pattern in comparison_patterns):
+                    score += 0.15
+            
+            # Penalize very short chunks (likely incomplete context)
+            if len(text) < 100:
+                score -= 0.10
+            
+            # Penalize chunks that are mostly tables without context
+            if text.count('|') > len(text) / 20:  # More than 5% pipe characters
+                score -= 0.05
+            
+            chunk['rerank_score'] = score
+        
+        # Sort by reranked score
+        reranked = sorted(chunks, key=lambda x: x['rerank_score'], reverse=True)
+        
+        print(f"  Reranked {len(chunks)} chunks based on query type")
+        if is_numeric_query:
+            print(f"    → Boosted chunks with financial data")
+        if is_list_query:
+            print(f"    → Boosted chunks with list structures")
+        if is_definition_query:
+            print(f"    → Boosted chunks with definitions")
+        if is_comparison_query:
+            print(f"    → Boosted chunks with comparisons")
+        
+        return reranked
+    
+    def find_similar_chunks(self, query_embedding: np.ndarray, top_k: int = 15) -> List[Dict]:
+        """
+        Find most similar chunks using Neo4j and pre-computed embeddings stored in chunks
+        Now retrieves top_k=15 by default for better recall
         """
         with self.neo4j_driver.session() as session:
-            # Get all chunks with their content
+            # Get all chunks with their content and pre-computed embeddings
             result = session.run("""
                 MATCH (c:Chunk)
                 RETURN c.chunk_id as chunk_id, 
@@ -94,14 +198,21 @@ class GraphRAGSystem:
                        c.section_id as section_id,
                        c.page_range as page_range,
                        c.chunk_index_in_section as chunk_index,
-                       c.total_chunks_in_section as total_chunks
+                       c.total_chunks_in_section as total_chunks,
+                       c.embedding as embedding
                 ORDER BY c.chunk_id
             """)
             
             chunks = []
-            chunk_texts = []
+            chunk_embeddings = []
             
             for record in result:
+                embedding = record['embedding']
+                
+                # Skip chunks without embeddings
+                if not embedding or len(embedding) == 0:
+                    continue
+                
                 chunk_data = {
                     'chunk_id': record['chunk_id'],
                     'content': record['content'],
@@ -111,18 +222,23 @@ class GraphRAGSystem:
                     'total_chunks': record['total_chunks']
                 }
                 chunks.append(chunk_data)
-                chunk_texts.append(record['content'])
+                chunk_embeddings.append(embedding)
             
-            print(f"Loaded {len(chunks)} chunks for similarity search")
+            print(f"Loaded {len(chunks)} chunks with pre-computed embeddings for similarity search")
             
-            # Calculate embeddings for all chunks (in production, store these in Neo4j)
-            print("Calculating chunk embeddings...")
-            chunk_embeddings = self.embedding_model.encode(chunk_texts)
+            if len(chunks) == 0:
+                print("Warning: No chunks with embeddings found!")
+                return []
             
-            # Calculate cosine similarities
-            similarities = np.dot(chunk_embeddings, query_embedding) / (
-                np.linalg.norm(chunk_embeddings, axis=1) * np.linalg.norm(query_embedding)
-            )
+            # Convert to numpy array and normalize for efficient computation
+            chunk_embeddings = np.array(chunk_embeddings)
+            
+            # Normalize embeddings for stable cosine similarity
+            chunk_embeddings = chunk_embeddings / np.linalg.norm(chunk_embeddings, axis=1, keepdims=True)
+            query_embedding_normalized = query_embedding / np.linalg.norm(query_embedding)
+            
+            # Calculate cosine similarities using normalized embeddings
+            similarities = np.dot(chunk_embeddings, query_embedding_normalized)
             
             # Get top-k most similar chunks
             top_indices = np.argsort(similarities)[::-1][:top_k]
@@ -205,7 +321,7 @@ class GraphRAGSystem:
             return chunks
     
     def query_ollama(self, prompt: str, model: str = "mistral:latest", max_tokens: int = 500) -> Dict:
-        """Query Ollama model"""
+        """Query Ollama model with improved error handling"""
         try:
             payload = {
                 "model": model,
@@ -217,8 +333,17 @@ class GraphRAGSystem:
                 }
             }
             
+            # Log prompt size for debugging
+            prompt_size = len(prompt)
+            if prompt_size > 10000:
+                print(f"  ⚠ Large prompt: {prompt_size} chars")
+            
             start_time = time.time()
-            response = requests.post(f"{self.ollama_url}/api/generate", json=payload)
+            response = requests.post(
+                f"{self.ollama_url}/api/generate", 
+                json=payload,
+                timeout=120  # 2 minute timeout
+            )
             end_time = time.time()
             
             if response.status_code == 200:
@@ -227,18 +352,32 @@ class GraphRAGSystem:
                     "response": result.get("response", ""),
                     "model": model,
                     "response_time": round(end_time - start_time, 2),
-                    "success": True
+                    "success": True,
+                    "prompt_size": prompt_size
                 }
             else:
+                error_detail = ""
+                try:
+                    error_detail = response.json().get('error', '')
+                except:
+                    error_detail = response.text[:200]
+                
                 return {
-                    "error": f"Ollama API error: {response.status_code}",
-                    "success": False
+                    "error": f"Ollama API error: {response.status_code} - {error_detail}",
+                    "success": False,
+                    "prompt_size": prompt_size
                 }
+        except requests.exceptions.Timeout:
+            return {
+                "error": "Ollama request timeout (>120s)",
+                "success": False
+            }
         except Exception as e:
             return {
                 "error": f"Failed to query Ollama: {e}",
                 "success": False
             }
+
     
     def approach_1_single_chunk(self, query: str, model: str = "mistral:latest") -> Dict:
         """Approach 1: Use only the most similar chunk"""
@@ -507,32 +646,137 @@ Answer:"""
         
         return result
     
+    def approach_5_top_k_reranked(self, query: str, model: str, top_chunks: List[Dict]) -> Dict:
+        """
+        NEW Approach 5: Use top-5 reranked chunks (RECOMMENDED)
+        This addresses the core limitation of betting on a single chunk
+        """
+        print(f"\n=== Approach 5: Top-K Reranked Chunks (RECOMMENDED) ===")
+        
+        result = {
+            'approach': 'top_k_reranked',
+            'success': False,
+            'chunks_used': len(top_chunks),
+            'response': '',
+            'response_time': 0,
+            'error': None
+        }
+        
+        try:
+            # Combine top-k chunks with clear separation
+            combined_content = ""
+            total_chars = 0
+            chunks_to_use = []
+            
+            # Limit context size to avoid Ollama 500 errors (max ~8000 chars)
+            MAX_CONTEXT_CHARS = 8000
+            
+            for i, chunk in enumerate(top_chunks, 1):
+                chunk_text = chunk['content']
+                chunk_header = f"\n--- Context {i} (Pages {chunk['page_range']}, Relevance: {chunk['rerank_score']:.3f}) ---\n"
+                
+                # Check if adding this chunk would exceed limit
+                if total_chars + len(chunk_header) + len(chunk_text) > MAX_CONTEXT_CHARS:
+                    print(f"  ⚠ Context size limit reached, using {len(chunks_to_use)} chunks instead of {len(top_chunks)}")
+                    break
+                
+                combined_content += chunk_header + chunk_text + "\n"
+                total_chars += len(chunk_header) + len(chunk_text)
+                chunks_to_use.append(chunk)
+            
+            # Update chunks_used to actual number
+            result['chunks_used'] = len(chunks_to_use)
+            
+            # Improved prompt with strict instructions
+            prompt = f"""You are answering questions based ONLY on the provided context below.
+
+STRICT RULES:
+1. If the answer is not explicitly stated in the context, respond: "Not found in context"
+2. Do NOT infer, guess, or use external knowledge
+3. If the question requires numbers, include exact values from the context
+4. If the question asks for a list, provide all items mentioned in the context
+5. Cite which context section(s) you used (e.g., "According to Context 1...")
+
+CONTEXT:
+{combined_content}
+
+QUESTION: {query}
+
+ANSWER (following the strict rules above):"""
+            
+            print(f"  Using {len(chunks_to_use)} chunks ({total_chars} chars):")
+            for i, chunk in enumerate(chunks_to_use, 1):
+                print(f"    {i}. {chunk['chunk_id']} (Pages {chunk['page_range']}, Rerank: {chunk['rerank_score']:.3f})")
+            
+            # Query Ollama with timeout
+            start_time = time.time()
+            response = self.query_ollama(prompt, model, max_tokens=1000)
+            end_time = time.time()
+            
+            if response['success']:
+                result['success'] = True
+                result['response'] = response['response']
+                result['response_time'] = round(end_time - start_time, 2)
+                result['similarity_score'] = chunks_to_use[0]['similarity']
+                result['rerank_scores'] = [f"{c['rerank_score']:.3f}" for c in chunks_to_use]
+                result['source_pages'] = ", ".join([chunk['page_range'] for chunk in chunks_to_use])
+                result['chunk_ids'] = [chunk['chunk_id'] for chunk in chunks_to_use]
+                result['context_chars'] = total_chars
+                
+                print(f"  ✓ Response generated in {result['response_time']}s")
+            else:
+                result['error'] = response.get('error', 'Unknown error')
+                print(f"  ✗ Failed: {result['error']}")
+        
+        except Exception as e:
+            result['error'] = str(e)
+            print(f"  ✗ Error: {e}")
+        
+        return result
+    
     def compare_approaches(self, query: str, model: str = "mistral:latest") -> Dict:
-        """Compare all three approaches for a given query"""
+        """Compare all approaches with improved retrieval (top-k=15, reranking, top-5 chunks)"""
         print(f"\n{'='*80}")
-        print(f"COMPARING GRAPHRAG APPROACHES")
+        print(f"COMPARING GRAPHRAG APPROACHES (IMPROVED RETRIEVAL)")
         print(f"Query: {query}")
         print(f"Model: {model}")
         print(f"{'='*80}")
         
-        # Calculate embeddings once for efficiency
-        print("Finding most similar chunk (calculating embeddings once)...")
+        # Step 1: Retrieve top-15 candidates (better recall)
+        print("\n[Step 1] Retrieving top-15 candidate chunks...")
         query_embedding = self.embed_query(query)
-        similar_chunks = self.find_similar_chunks(query_embedding, top_k=1)
+        similar_chunks = self.find_similar_chunks(query_embedding, top_k=15)
         
         if not similar_chunks:
             return {"error": "No chunks found for any approach", "success": False}
         
-        best_chunk = similar_chunks[0]
-        print(f"Best match: {best_chunk['chunk_id']} (similarity: {best_chunk['similarity']:.3f})")
-        print(f"Pages: {best_chunk['page_range']}")
+        print(f"  Retrieved {len(similar_chunks)} candidates")
+        print(f"  Similarity range: {similar_chunks[0]['similarity']:.3f} to {similar_chunks[-1]['similarity']:.3f}")
+        
+        # Step 2: Rerank based on query type
+        print("\n[Step 2] Reranking chunks based on query characteristics...")
+        reranked_chunks = self.rerank_chunks(similar_chunks, query)
+        
+        print(f"  Top 3 after reranking:")
+        for i, chunk in enumerate(reranked_chunks[:3], 1):
+            print(f"    {i}. {chunk['chunk_id']} - Similarity: {chunk['similarity']:.3f}, Rerank: {chunk['rerank_score']:.3f}")
+        
+        # Step 3: Use top-5 chunks for context (not just 1)
+        best_chunk = reranked_chunks[0]
         
         results = {}
         
-        # Test each approach using the pre-found best chunk
+        # Approach 1: Single best chunk (baseline)
         results['approach_1'] = self.approach_1_single_chunk_optimized(query, model, best_chunk)
+        
+        # Approach 2: Sequential chunks (best + next)
         results['approach_2'] = self.approach_2_sequential_chunks_optimized(query, model, best_chunk)
+        
+        # Approach 3: Context window (prev + best + next)
         results['approach_3'] = self.approach_4_context_window_optimized(query, model, best_chunk)
+        
+        # NEW Approach 4: Top-5 reranked chunks (RECOMMENDED)
+        results['approach_4'] = self.approach_5_top_k_reranked(query, model, reranked_chunks[:5])
         
         # Summary
         print(f"\n{'='*80}")
@@ -541,14 +785,20 @@ Answer:"""
         
         for approach_name, result in results.items():
             if result['success']:
-                print(f"\n{approach_name.upper().replace('_', ' ')}:")
+                approach_label = {
+                    'approach_1': 'Single Chunk (Baseline)',
+                    'approach_2': 'Sequential Chunks',
+                    'approach_3': 'Context Window',
+                    'approach_4': 'Top-5 Reranked (RECOMMENDED)'
+                }.get(approach_name, approach_name)
+                
+                print(f"\n{approach_label}:")
                 print(f"  Chunks used: {result['chunks_used']}")
                 print(f"  Response time: {result['response_time']}s")
                 print(f"  Similarity score: {result.get('similarity_score', 'N/A'):.3f}")
                 print(f"  Source pages: {result['source_pages']}")
-                if approach_name == 'approach_3':
-                    print(f"  Has previous: {result.get('has_previous', False)}")
-                    print(f"  Has next: {result.get('has_next', False)}")
+                if 'rerank_scores' in result:
+                    print(f"  Rerank scores: {result['rerank_scores']}")
                 print(f"  Response preview: {result['response'][:200]}...")
             else:
                 print(f"\n{approach_name.upper().replace('_', ' ')}: FAILED")
@@ -594,10 +844,10 @@ def main():
         
         # Test queries
         test_queries = [
-            "Who is the Chairman of the Board, and what is his medical background?",
-            "What is the estimated Gross Development Value (GDV) for the future development at Genting Highlands?",
-            "which year did the company report its highest Revenue?",
-            "What was the Earnings Per Share (EPS) in 2019?",
+            "What was Aramco's net income for the full year 2024 in Saudi Riyals?",
+            "What was Aramco's net income for the full year 2023 in Saudi Riyals?",
+            "By what percentage did Aramco's net income decrease from 2023 to 2024?",
+            "What was Aramco's gearing ratio as of December 31, 2024?",
         ]
         
         # Test each query with all approaches
@@ -626,9 +876,10 @@ def main():
                 "ollama_url": OLLAMA_URL,
                 "total_queries": len(test_queries),
                 "approaches": [
-                    {"id": "approach_1", "name": "Single Chunk", "description": "Uses only the most similar chunk"},
+                    {"id": "approach_1", "name": "Single Chunk", "description": "Uses only the most similar chunk (baseline)"},
                     {"id": "approach_2", "name": "Sequential Chunks", "description": "Uses the most similar chunk + next chunk"},
-                    {"id": "approach_3", "name": "Context Window", "description": "Uses previous + current + next chunk"}
+                    {"id": "approach_3", "name": "Context Window", "description": "Uses previous + current + next chunk"},
+                    {"id": "approach_4", "name": "Top-5 Reranked", "description": "Uses top-5 reranked chunks (RECOMMENDED)"}
                 ]
             },
             "queries": all_results
@@ -647,7 +898,8 @@ def main():
         approach_stats = {
             'approach_1': {'total_time': 0, 'success_count': 0},
             'approach_2': {'total_time': 0, 'success_count': 0},
-            'approach_3': {'total_time': 0, 'success_count': 0}
+            'approach_3': {'total_time': 0, 'success_count': 0},
+            'approach_4': {'total_time': 0, 'success_count': 0}
         }
         
         for query_data in all_results.values():
@@ -659,7 +911,13 @@ def main():
         for approach, stats in approach_stats.items():
             if stats['success_count'] > 0:
                 avg_time = stats['total_time'] / stats['success_count']
-                approach_name = "Context Window" if approach == "approach_3" else approach.replace('_', ' ').title()
+                approach_names = {
+                    'approach_1': 'Single Chunk (Baseline)',
+                    'approach_2': 'Sequential Chunks',
+                    'approach_3': 'Context Window',
+                    'approach_4': 'Top-5 Reranked (RECOMMENDED)'
+                }
+                approach_name = approach_names.get(approach, approach.replace('_', ' ').title())
                 print(f"{approach_name}: {avg_time:.2f}s average, {stats['success_count']}/{len(test_queries)} successful")
         
     except Exception as e:

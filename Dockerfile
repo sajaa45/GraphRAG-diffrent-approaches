@@ -16,7 +16,7 @@ RUN pip install git+https://github.com/MinishLab/model2vec.git && \
 
 # Copy all application files
 COPY json_text_processor.py .
-COPY chunking_comparison.py .
+COPY chunking.py .
 COPY main_pipeline.py .
 COPY neo4j_knowledge_graph.py .
 COPY build_knowledge_graph.py .

@@ -1,0 +1,344 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-05 19:08:13",
+    "model_used": "llama3.2:1b",
+    "neo4j_uri": "bolt://neo4j:7687",
+    "ollama_url": "http://host.docker.internal:11434",
+    "total_queries": 4,
+    "approaches": [
+      {
+        "id": "approach_1",
+        "name": "Single Chunk",
+        "description": "Uses only the most similar chunk (baseline)"
+      },
+      {
+        "id": "approach_2",
+        "name": "Sequential Chunks",
+        "description": "Uses the most similar chunk + next chunk"
+      },
+      {
+        "id": "approach_3",
+        "name": "Context Window",
+        "description": "Uses previous + current + next chunk"
+      },
+      {
+        "id": "approach_4",
+        "name": "Top-5 Reranked",
+        "description": "Uses top-5 reranked chunks (RECOMMENDED)"
+      }
+    ]
+  },
+  "queries": {
+    "query_1": {
+      "query": "What was Aramco's Net Income in 2024 compared to 2023, and what were the top two reasons for the change?",
+      "results": {
+        "approach_1": {
+          "response": "Based on the document excerpt, here is an answer to your question:\n\nAramco's net income in 2024 was not explicitly stated. However, it can be inferred that the company's net income decreased compared to 2023.\n\nThe top two reasons for the decrease in net income are not specified in the excerpt.",
+          "model": "llama3.2:1b",
+          "response_time": 24.32,
+          "success": true,
+          "prompt_size": 981,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6226553086984246,
+          "source_pages": "34",
+          "chunk_ids": [
+            "chunk_0126"
+          ]
+        },
+        "approach_2": {
+          "response": "Based on the document excerpts, here is an answer to your question:\n\nAramco's net income in 2024 was not explicitly stated. However, it can be inferred that the company's net income decreased compared to 2023.\n\nThe top two reasons for the decrease in net income are not explicitly stated in the excerpt, but based on general knowledge of the oil industry and the context of the transactions mentioned, they could be:\n\n1. Increased operating costs: The completion of large capital markets transactions may have increased Aramco's operational expenses, such as marketing and regulatory fees.\n2. Decreased revenue from oil sales: The decrease in net income could also be attributed to a decline in oil sales revenues, which is likely due to global economic factors such as the COVID-19 pandemic or changes in global demand for oil.\n\nIt's worth noting that Aramco did not provide specific information on its 2024 net income in the document excerpts.",
+          "model": "llama3.2:1b",
+          "response_time": 34.74,
+          "success": true,
+          "prompt_size": 1335,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.6226553086984246,
+          "source_pages": "34, 34",
+          "chunk_ids": [
+            "chunk_0126",
+            "chunk_0127"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "Based on the document excerpts provided, here is an answer to your question:\n\nAramco's net income in 2024 was not explicitly stated. However, it can be inferred that the company's net income increased compared to 2023.\n\nThe top two reasons for the increase in Aramco's net income are not specified in the document excerpts provided.",
+          "model": "llama3.2:1b",
+          "response_time": 22.96,
+          "success": true,
+          "prompt_size": 1501,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.6226553086984246,
+          "source_pages": "34, 34, 34",
+          "chunk_ids": [
+            "chunk_0125",
+            "chunk_0126",
+            "chunk_0127"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "According to Context 1, Aramco's net income in 2024 was #398.4 billion ($106.2 billion).\n\nThe top two reasons for the change from 2023 to 2024 were:\n\n1. Increased losses due to higher employee-related costs.\n2. The Government completing a $6.0 billion international bond issuance, comprised of three tranches of U.S. dollar-denominated senior unsecured notes with 10, 30, and 40-year maturities.\n\nNot found in context",
+          "response_time": 86.35,
+          "error": null,
+          "similarity_score": 0.6226553086984246,
+          "rerank_scores": [
+            "1.023",
+            "1.017",
+            "0.934",
+            "0.926",
+            "0.922"
+          ],
+          "source_pages": "34, 10, 60, 38, 87",
+          "chunk_ids": [
+            "chunk_0126",
+            "chunk_0014",
+            "chunk_0279",
+            "chunk_0144",
+            "chunk_0429"
+          ],
+          "context_chars": 6233
+        }
+      }
+    },
+    "query_2": {
+      "query": "What are the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050?",
+      "results": {
+        "approach_1": {
+          "response": "The document excerpt does not specifically mention the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050. However, it does mention that Aramco's technology program aims to develop new solutions for its Upstream and Downstream businesses, which could be related to achieving its net-zero ambition.\n\nIt also mentions that Aramco seeks to unlock value, enhance its capital structure, and reallocate capital to higher growth and return investments. This suggests that Aramco is focusing on diversifying its product portfolio, growing its business sustainably, and investing in new areas such as new energies, advanced materials, and digital solutions.\n\nBased on this information, it can be inferred that the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050 are:\n\n1. Developing new solutions for Upstream and Downstream businesses\n2. Diversifying its product portfolio\n3. Growing its business sustainably\n4. Investing in new areas such as new energies, advanced materials, and digital solutions\n5. Enhancing its capital structure and reallocation of capital to higher growth and return investments",
+          "model": "llama3.2:1b",
+          "response_time": 46.24,
+          "success": true,
+          "prompt_size": 1698,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.6287031066486577,
+          "source_pages": "25",
+          "chunk_ids": [
+            "chunk_0086"
+          ]
+        },
+        "approach_2": {
+          "response": "The document excerpts do not specifically mention the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050. However, they do mention that Aramco's technology program aims to develop new solutions for its Upstream and Downstream businesses, which could be related to achieving its net-zero ambition.\n\nIt is likely that the five key levers are:\n\n1. Technology\n2. Capital Expenditures (including new projects and debt issuances)\n3. Commercialization of new technologies\n4. Leadership and management practices\n5. Investment in research and development\n\nThese levers could be used to drive Aramco's net-zero ambition by developing new solutions, improving its competitiveness, and driving sustainable growth.",
+          "model": "llama3.2:1b",
+          "response_time": 34.37,
+          "success": true,
+          "prompt_size": 1843,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.6287031066486577,
+          "source_pages": "25, 25",
+          "chunk_ids": [
+            "chunk_0086",
+            "chunk_0087"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "The document excerpts do not specifically mention the five key levers Aramco is focusing on to achieve its net-zero Scope 1 & 2 ambition by 2050. However, they do mention that Aramco's technology program aims to develop new solutions for its Upstream and Downstream businesses, which could be related to achieving its net-zero ambition.\n\nIt can be inferred that the five key levers Aramco is focusing on are:\n\n1. Developing new solutions for its Upstream and Downstream businesses\n2. Diversifying its product portfolio\n3. Growing its business sustainably\n4. Unlocking value through capital structure reallocation\n5. Enhancing its capital structure to achieve net-zero ambition",
+          "model": "llama3.2:1b",
+          "response_time": 33.25,
+          "success": true,
+          "prompt_size": 1865,
+          "approach": "context_window",
+          "chunks_used": 2,
+          "similarity_score": 0.6287031066486577,
+          "source_pages": "25, 25",
+          "chunk_ids": [
+            "chunk_0086",
+            "chunk_0087"
+          ],
+          "has_previous": false,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Based on Context 4, the five key levers Aramco is focusing on to achieve its net-zero Scope 1 and 2 ambition by 2050 are:\n\n1. Energy efficiency across upstream and downstream assets\n2. Further reductions in methane emissions and flaring\n3. Increased renewable energy production capacity\n4. Carbon capture and storage\n5. Natural climate solutions and offsets",
+          "response_time": 64.34,
+          "error": null,
+          "similarity_score": 0.6287031066486577,
+          "rerank_scores": [
+            "0.729",
+            "0.697",
+            "0.687",
+            "0.652",
+            "0.596"
+          ],
+          "source_pages": "25, 79, 66, 77, 28",
+          "chunk_ids": [
+            "chunk_0086",
+            "chunk_0371",
+            "chunk_0301",
+            "chunk_0363",
+            "chunk_0102"
+          ],
+          "context_chars": 4879
+        }
+      }
+    },
+    "query_3": {
+      "query": "What are the primary related party transactions with the Government, and what is the balance of 'Due from the Government'?",
+      "results": {
+        "approach_1": {
+          "response": "The primary related party transactions with the Government mentioned in the document excerpt are:\n\n1. Revenue on sales to specified Government, semi-Government, and other entities with Government ownership or control.\n2. Trade receivables reclassified as a due from the Government current receivable when past due.\n\nAs for the balance of 'Due from the Government', it is not explicitly stated in the provided excerpt. However, based on the information given:\n\n- Revenue on sales to specified Government, semi-Government, and other entities with Government ownership or control is recognized upon satisfaction of performance obligations.\n- Trade receivables are reclassified as a due from the Government current receivable when past due.\n\nTherefore, without specific details about the transactions that have resulted in 'Due from the Government', it cannot be accurately stated what the balance is.",
+          "model": "llama3.2:1b",
+          "response_time": 35.94,
+          "success": true,
+          "prompt_size": 1732,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179",
+          "chunk_ids": [
+            "chunk_0978"
+          ]
+        },
+        "approach_2": {
+          "response": "Based on the document excerpts provided, the primary related party transactions with the Government are:\n\n1. Revenue recognition upon satisfaction of performance obligations.\n2. Reclassification of trade receivables as \"due from the Government\" when past due.\n3. Crediting the Government guarantee receivable for amounts received in cases where customers settle past due amounts.\n\nThe balance of 'Due from the Government' is not explicitly stated, but it can be inferred that it represents any amounts owed to the Government by the Company, which are typically recognized as revenue and settled through offset against tax payments.",
+          "model": "llama3.2:1b",
+          "response_time": 38.9,
+          "success": true,
+          "prompt_size": 2476,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179, 179",
+          "chunk_ids": [
+            "chunk_0978",
+            "chunk_0979"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "Based on the document excerpts provided, the primary related party transactions with the Government are:\n\n1. The Company receives compensation through price equalization (Note 2(y)) for past due trade receivables of specified Government, semi-Government and other entities with Government ownership or control.\n2. The Government guarantees receivable is credited with amounts received when any of these customers settle past due amounts.\n\nThe balance of 'Due from the Government' can be broken down as follows:\n\n- Past due trade receivables: These are reclassified as a due from the Government current receivable, and then offset against payment of taxes.\n- Government guarantees receivable: This is credited with the amounts received when any of these customers settle past due amounts.\n\nTherefore, the balance of 'Due from the Government' would be the difference between the total amount owed to the Government (including both past due trade receivables and government guarantees) and the amount that has been offset against taxes.",
+          "model": "llama3.2:1b",
+          "response_time": 56.77,
+          "success": true,
+          "prompt_size": 2936,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.561440955092613,
+          "source_pages": "179, 179, 179",
+          "chunk_ids": [
+            "chunk_0977",
+            "chunk_0978",
+            "chunk_0979"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "Based on Context 1, the primary related party transactions with the Government are:\n\n- Revenue recognition upon satisfaction of performance obligations\n- Reclassification of trade receivables as due from the Government when past due\n- Credit for Government guarantee receivable in cases where customers settle past due amounts\n- Offset against payment of taxes and other amounts due and payable by the Company to the Government\n\nAccording to Context 1, the balance of 'Due from the Government' at December 31 represents amounts to be settled through offset against tax payments.",
+          "response_time": 70.19,
+          "error": null,
+          "similarity_score": 0.561440955092613,
+          "rerank_scores": [
+            "0.861",
+            "0.771",
+            "0.755",
+            "0.741",
+            "0.626"
+          ],
+          "source_pages": "179, 87, 174, 182, 171",
+          "chunk_ids": [
+            "chunk_0978",
+            "chunk_0429",
+            "chunk_0927",
+            "chunk_1007",
+            "chunk_0905"
+          ],
+          "context_chars": 4209
+        }
+      }
+    },
+    "query_4": {
+      "query": "What was the upstream carbon intensity (kg CO2e/boe) for 2024, and how does it compare to the 2018 baseline?",
+      "results": {
+        "approach_1": {
+          "response": "The document excerpt does not provide information on the upstream carbon intensity (kg CO2e/boe) for 2024. It only mentions that in 2024, upstream carbon intensity remained in line with 2023 through energy efficiency and other initiatives, against higher gas production. Therefore, it is not possible to determine the upstream carbon intensity for 2024 based on this excerpt alone.",
+          "model": "llama3.2:1b",
+          "response_time": 17.82,
+          "success": true,
+          "prompt_size": 779,
+          "approach": "single_chunk",
+          "chunks_used": 1,
+          "similarity_score": 0.5931418504659889,
+          "source_pages": "67",
+          "chunk_ids": [
+            "chunk_0309"
+          ]
+        },
+        "approach_2": {
+          "response": "The document excerpts do not provide information on the upstream carbon intensity (kg CO2e/boe) for 2024. They only mention that Aramco's upstream carbon intensity remained in line with 2023 through energy efficiency and other initiatives, but they do not specify the value of this metric.\n\nTo answer your question accurately, I would need more information or context about what you are looking for regarding the upstream carbon intensity for 2024.",
+          "model": "llama3.2:1b",
+          "response_time": 28.15,
+          "success": true,
+          "prompt_size": 1588,
+          "approach": "sequential_chunks",
+          "chunks_used": 2,
+          "similarity_score": 0.5931418504659889,
+          "source_pages": "67, 67",
+          "chunk_ids": [
+            "chunk_0309",
+            "chunk_0310"
+          ],
+          "has_next": true
+        },
+        "approach_3": {
+          "response": "According to the document excerpts, in 2024, Aramco's upstream carbon intensity remained in line with 2018 through energy efficiency and other initiatives. This means that the upstream carbon intensity was not significantly higher or lower than the 2018 baseline.\n\nTo answer your question directly:\n\n- The upstream carbon intensity for 2024 was not provided.\n- However, it is mentioned that Aramco's upstream carbon intensity remained in line with 2018 through energy efficiency and other initiatives.",
+          "model": "llama3.2:1b",
+          "response_time": 35.55,
+          "success": true,
+          "prompt_size": 2150,
+          "approach": "context_window",
+          "chunks_used": 3,
+          "similarity_score": 0.5931418504659889,
+          "source_pages": "67, 67, 67",
+          "chunk_ids": [
+            "chunk_0308",
+            "chunk_0309",
+            "chunk_0310"
+          ],
+          "has_previous": true,
+          "has_next": true
+        },
+        "approach_4": {
+          "approach": "top_k_reranked",
+          "success": true,
+          "chunks_used": 5,
+          "response": "According to Context 1, the upstream carbon intensity of Aramco in 2024 was not explicitly stated. However, Context 5 mentions that Aramco expects global demand for crude oil will continue to increase and that new oil discoveries and developments will be needed to offset the natural decline in production from currently producing fields.\n\nContext 2 does not provide information on upstream carbon intensity for 2024 or any other year.\n\nContext 3 provides information on Scope 1 emissions, but it is not clear if this includes upstream carbon intensity. Context 5 mentions that Aramco plans to increase its sales gas production capacity by more than 60% by 2030 compared to 2018 levels, which may be related to the overall energy transition and reduction of greenhouse gas emissions.\n\nContext 4 provides information on organizational structure and governance, but it does not mention upstream carbon intensity or Scope 2 emissions.\n\nTherefore, I cannot provide a specific answer to the question about the upstream carbon intensity for 2024.",
+          "response_time": 79.68,
+          "error": null,
+          "similarity_score": 0.5931418504659889,
+          "rerank_scores": [
+            "0.743",
+            "0.684",
+            "0.629",
+            "0.600",
+            "0.586"
+          ],
+          "source_pages": "67, 150, 67, 67, 26",
+          "chunk_ids": [
+            "chunk_0309",
+            "chunk_0780",
+            "chunk_0313",
+            "chunk_0308",
+            "chunk_0091"
+          ],
+          "context_chars": 4098
+        }
+      }
+    }
+  }
+}

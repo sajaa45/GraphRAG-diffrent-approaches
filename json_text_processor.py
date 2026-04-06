@@ -76,10 +76,235 @@ def should_combine_pages(current_page: str, previous_page: str) -> bool:
     
     return should_combine
 
+def is_junk_heuristic(text: str, min_chars: int = 30, alpha_ratio: float = 0.05, dot_ratio: float = 0.8) -> bool:
+    """
+    Determine if a page contains mostly junk/noise content (extremely lenient parameters)
+    
+    Args:
+        text: Page text content
+        min_chars: Minimum character count (pages below this are junk)
+        alpha_ratio: Minimum ratio of alphanumeric characters (lowered to 0.05 - very lenient for tables)
+        dot_ratio: Maximum ratio any single character can appear (raised to 0.8 - very lenient)
+    
+    Returns:
+        bool: True if page is likely junk
+    """
+    text_clean = text.strip()
+    
+    # Too short (very conservative)
+    if len(text_clean) < min_chars:
+        return True
+    
+    # Check for decorative/table pages with mostly symbols
+    if is_decorative_table_page(text_clean):
+        return True
+    
+    # Calculate alpha ratio excluding table formatting characters AND numbers
+    # Don't penalize legitimate tables for having | - = characters or numbers
+    table_formatting_chars = {'|', '-', '+', '=', '_', '\\', '/', '<', '>', '{', '}', '[', ']', ',', '.', '%', '$'}
+    text_for_alpha = ''.join(char for char in text_clean if char not in table_formatting_chars and not char.isdigit())
+    
+    alpha_count = sum(c.isalpha() for c in text_for_alpha)  # Only count letters, not numbers
+    alpha = alpha_count / max(len(text_for_alpha), 1)
+    if alpha < alpha_ratio:
+        return True
+    
+    # Any single character appears too frequently (more lenient)
+    # Skip common formatting characters that might appear frequently
+    skip_chars = {' ', '\n', '\t', '-', '|', '=', '*', '#', '+', '_', ',', '.'}
+    for char in set(text_clean):
+        if char in skip_chars:
+            continue
+        char_ratio = text_clean.count(char) / len(text_clean)
+        if char_ratio > dot_ratio:
+            return True
+    
+    return False
+
+def is_decorative_table_page(text: str) -> bool:
+    """
+    Detect pages that are mostly decorative tables with repetitive symbols
+    Uses very conservative thresholds to avoid filtering legitimate data tables
+    """
+    # Count different types of characters
+    bullet_chars = {'•', '●', '○', '◦', '▪', '▫', '■', '□', '◆', '◇', '$\\bullet$'}
+    arabic_numerals = {'٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '\u0660', '\u06f0'}
+    
+    # 1. Check for excessive repetition of decorative symbols (very high threshold)
+    bullet_count = sum(text.count(char) for char in bullet_chars)
+    arabic_num_count = sum(text.count(char) for char in arabic_numerals)
+    total_decorative = bullet_count + arabic_num_count
+    
+    # Only flag if more than 90% is decorative symbols (extremely conservative)
+    if total_decorative / max(len(text), 1) > 0.9:
+        return True
+    
+    # 2. Check for tables with mostly repetitive content (very conservative)
+    lines = text.split('\n')
+    table_lines = [line for line in lines if '|' in line and line.count('|') > 2]
+    
+    # Only check if it's almost entirely table lines (98%+) and many lines
+    if len(table_lines) > 0.98 * len(lines) and len(table_lines) > 20:
+        # Analyze table content diversity
+        table_content = []
+        for line in table_lines:
+            # Extract content between | symbols
+            cells = [cell.strip() for cell in line.split('|')[1:-1]]  # Skip first/last empty
+            table_content.extend(cells)
+        
+        if table_content:
+            # Remove empty cells and very short cells (likely formatting)
+            meaningful_cells = [cell for cell in table_content if len(cell.strip()) > 2]
+            
+            if len(meaningful_cells) > 20:  # Only analyze if enough content
+                # Check for excessive repetition of the same content (very strict)
+                unique_cells = set(meaningful_cells)
+                diversity_ratio = len(unique_cells) / len(meaningful_cells)
+                
+                # Only flag if less than 1% unique content (extremely repetitive)
+                if diversity_ratio < 0.01:
+                    return True
+                
+                # Check if most cells are just symbols/bullets (very strict)
+                symbol_cells = sum(1 for cell in meaningful_cells 
+                                 if len(cell) <= 3 and any(char in cell for char in bullet_chars | arabic_numerals))
+                symbol_ratio = symbol_cells / len(meaningful_cells)
+                
+                # Only flag if more than 99% of cells are just symbols
+                if symbol_ratio > 0.99:
+                    return True
+    
+    # 3. Check for pages with very low text diversity (very conservative)
+    words = text.lower().split()
+    if len(words) > 200:  # Only check if substantial content
+        unique_words = set(words)
+        word_diversity = len(unique_words) / len(words)
+        
+        # Only flag if less than 1% unique words (extremely repetitive)
+        if word_diversity < 0.01:
+            return True
+    
+    return False
+
+def is_short_page(text: str, min_length: int = 50) -> bool:
+    """Check if page is too short to be meaningful (more lenient)"""
+    return len(text.strip()) < min_length
+
+def analyze_page_content(text: str, page_num: str) -> Dict[str, any]:
+    """Analyze page content to understand filtering decisions"""
+    text_clean = text.strip()
+    
+    # Calculate alpha ratio excluding table formatting characters
+    table_formatting_chars = {'|', '-', '+', '=', '_', '\\', '/', '<', '>', '{', '}', '[', ']'}
+    text_for_alpha = ''.join(char for char in text_clean if char not in table_formatting_chars)
+    
+    alpha_count = sum(c.isalnum() for c in text_for_alpha)
+    alpha_ratio = alpha_count / max(len(text_for_alpha), 1)
+    
+    # Find most frequent non-whitespace character
+    char_counts = {}
+    skip_chars = {' ', '\n', '\t', '-', '|', '=', '*', '#', '+', '_'}
+    for char in text_clean:
+        if char not in skip_chars:
+            char_counts[char] = char_counts.get(char, 0) + 1
+    
+    max_char_ratio = 0
+    max_char = None
+    if char_counts:
+        max_char = max(char_counts, key=char_counts.get)
+        max_char_ratio = char_counts[max_char] / len(text_clean)
+    
+    # Check decorative table detection
+    is_decorative = is_decorative_table_page(text_clean)
+    
+    # Calculate content diversity (generic measure)
+    words = text_clean.lower().split()
+    word_diversity = 0
+    if len(words) > 5:
+        unique_words = set(words)
+        word_diversity = len(unique_words) / len(words)
+    
+    return {
+        'page': page_num,
+        'length': len(text_clean),
+        'alpha_ratio': round(alpha_ratio, 3),
+        'max_char': max_char,
+        'max_char_ratio': round(max_char_ratio, 3),
+        'is_decorative': is_decorative,
+        'word_diversity': round(word_diversity, 3),
+        'preview': text_clean[:100] + "..." if len(text_clean) > 100 else text_clean
+    }
+
+def filter_pages(pages_data: Dict[str, str]) -> Dict[str, str]:
+    """
+    Filter out junk and short pages before sectioning (more conservative)
+    
+    Args:
+        pages_data: Dictionary of page numbers and content
+    
+    Returns:
+        Dict: Filtered pages dictionary
+    """
+    filtered_pages = {}
+    filtered_count = {'junk': 0, 'short': 0, 'first_page': 0}
+    filtered_details = []
+    
+    # Sort pages by page number for processing
+    sorted_pages = sorted(pages_data.items(), key=lambda x: int(x[0]))
+    
+    print(f"  Filtering {len(sorted_pages)} pages...")
+    
+    for i, (page_num, page_text) in enumerate(sorted_pages):
+        # Skip first page by default
+        if i == 0:
+            filtered_count['first_page'] += 1
+            print(f"    Skipped page {page_num} (first page)")
+            continue
+        
+        # Analyze page content
+        analysis = analyze_page_content(page_text, page_num)
+        
+        # Check if page is junk (more conservative)
+        if is_junk_heuristic(page_text):
+            filtered_count['junk'] += 1
+            reason = "decorative table" if analysis['is_decorative'] else "low quality"
+            preview = analysis['preview'].replace('\n', '\\n')[:80] + "..." if len(analysis['preview']) > 80 else analysis['preview'].replace('\n', '\\n')
+            filtered_details.append(f"    Page {page_num}: {reason} (len={analysis['length']}, alpha={analysis['alpha_ratio']},  decorative={analysis['is_decorative']})")
+            filtered_details.append(f"      Preview: {preview}")
+            continue
+        
+        # Check if page is too short (more conservative)
+        if is_short_page(page_text):
+            filtered_count['short'] += 1
+            preview = analysis['preview'].replace('\n', '\\n')[:80] + "..." if len(analysis['preview']) > 80 else analysis['preview'].replace('\n', '\\n')
+            filtered_details.append(f"    Page {page_num}: too short ({analysis['length']} chars)")
+            filtered_details.append(f"      Preview: {preview}")
+            continue
+        
+        # Keep this page
+        filtered_pages[page_num] = page_text
+    
+    print(f"  Filtering results:")
+    print(f"    Original pages: {len(sorted_pages)}")
+    print(f"    Filtered out: {sum(filtered_count.values())} pages")
+    print(f"      - First page: {filtered_count['first_page']}")
+    print(f"      - Junk content: {filtered_count['junk']}")
+    print(f"      - Too short: {filtered_count['short']}")
+    print(f"    Kept: {len(filtered_pages)} pages")
+    
+    # Show details of ALL filtered pages
+    if filtered_details:
+        print(f"  All filtered pages:")
+        for detail in filtered_details:
+            print(detail)
+    
+    return filtered_pages
+
 def create_page_sections(pages_data: Dict[str, str]) -> List[Dict[str, any]]:
     """
-    Create sections from pages according to the specified logic:
-    - Each page becomes a section
+    Create sections from pages after filtering out junk and short pages
+    - Filter out first page, junk content, and short pages
+    - Each remaining page becomes a section
     - Combine with previous page if current doesn't start with uppercase and previous doesn't end with period
     
     Args:
@@ -92,8 +317,15 @@ def create_page_sections(pages_data: Dict[str, str]) -> List[Dict[str, any]]:
     if not pages_data:
         return []
     
-    # Sort pages by page number (convert to int for proper sorting)
-    sorted_pages = sorted(pages_data.items(), key=lambda x: int(x[0]))
+    # Filter pages before sectioning
+    filtered_pages = filter_pages(pages_data)
+    
+    if not filtered_pages:
+        print("  No pages remaining after filtering")
+        return []
+    
+    # Sort filtered pages by page number (convert to int for proper sorting)
+    sorted_pages = sorted(filtered_pages.items(), key=lambda x: int(x[0]))
     
     sections = []
     current_section_text = ""
@@ -103,7 +335,7 @@ def create_page_sections(pages_data: Dict[str, str]) -> List[Dict[str, any]]:
         page_text = page_text.strip()
         
         if i == 0:
-            # First page always starts a new section
+            # First filtered page always starts a new section
             current_section_text = page_text
             current_section_pages = [page_num]
         else:
@@ -142,117 +374,6 @@ def create_page_sections(pages_data: Dict[str, str]) -> List[Dict[str, any]]:
     
     return sections
 
-def langchain_chunker(text: str, chunk_size: int = 512, overlap: int = 64) -> List[str]:
-    """LangChain RecursiveCharacterTextSplitter implementation"""
-    try:
-        from langchain_text_splitters import RecursiveCharacterTextSplitter
-        
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=overlap,
-            length_function=len,
-            separators=["\n\n", "\n", " ", ""]
-        )
-        
-        chunks = splitter.split_text(text)
-        return chunks
-    
-    except ImportError:
-        print("LangChain not installed. Install with: pip install langchain")
-        return [text]  # Return original text as single chunk
-
-def llamaindex_chunker(text: str) -> List[str]:
-    """LlamaIndex SemanticSplitterNodeParser with free embeddings"""
-    try:
-        from llama_index.core.node_parser import SemanticSplitterNodeParser
-        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-        from llama_index.core import Document
-        
-        # Use free HuggingFace embeddings instead of OpenAI
-        embed_model = HuggingFaceEmbedding(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
-        
-        splitter = SemanticSplitterNodeParser(
-            buffer_size=1,
-            breakpoint_percentile_threshold=95,
-            embed_model=embed_model,
-        )
-        
-        # Create document
-        document = Document(text=text)
-        nodes = splitter.get_nodes_from_documents([document])
-        
-        chunks = [node.text for node in nodes]
-        return chunks
-    
-    except ImportError:
-        print("LlamaIndex or HuggingFace embeddings not installed.")
-        return [text]  # Return original text as single chunk
-    except Exception as e:
-        print(f"LlamaIndex error: {e}")
-        return [text]  # Return original text as single chunk
-
-def chonkie_chunker(text: str) -> List[str]:
-    """Chonkie semantic chunker implementation"""
-    try:
-        from chonkie import SemanticChunker
-        
-        chunker = SemanticChunker()
-        chunks = chunker.chunk(text)
-        
-        # Extract text from chunk objects
-        chunk_texts = [chunk.text for chunk in chunks]
-        return chunk_texts
-    
-    except ImportError:
-        print("Chonkie not installed. Install with: pip install chonkie")
-        return [text]  # Return original text as single chunk
-
-def apply_chunking_to_sections(sections: List[Dict], method_name: str, **kwargs) -> List[Dict]:
-    """
-    Apply a chunking method to each section and track page origins
-    
-    Args:
-        sections: List of page sections
-        method_name: Name of the chunking method
-        **kwargs: Arguments for the chunker function
-    
-    Returns:
-        List of chunks with page tracking information
-    """
-    
-    all_chunks = []
-    
-    for section in sections:
-        print(f"  Processing section {section['section_id']} (pages {section['page_range']}) with {method_name}")
-        
-        # Apply chunking method to this section
-        if method_name == "LangChain":
-            section_chunks = langchain_chunker(section['text'], **kwargs)
-        elif method_name == "LlamaIndex":
-            section_chunks = llamaindex_chunker(section['text'])
-        elif method_name == "Chonkie":
-            section_chunks = chonkie_chunker(section['text'])
-        else:
-            section_chunks = [section['text']]  # Fallback: keep as single chunk
-        
-        # Add metadata to each chunk
-        for i, chunk_text in enumerate(section_chunks):
-            chunk_info = {
-                'text': chunk_text,
-                'length': len(chunk_text),
-                'section_id': section['section_id'],
-                'source_pages': section['pages'],
-                'page_range': section['page_range'],
-                'chunk_index_in_section': i + 1,
-                'total_chunks_in_section': len(section_chunks),
-                'method': method_name
-            }
-            all_chunks.append(chunk_info)
-    
-    return all_chunks
-
 def save_sections_to_file(sections: List[Dict], output_path: str = None):
     """
     Save page sections to a text file for inspection
@@ -285,44 +406,6 @@ def save_sections_to_file(sections: List[Dict], output_path: str = None):
         
     except Exception as e:
         print(f"Error saving sections: {e}")
-
-def save_method_chunks_to_file(chunks: List[Dict], method_name: str, output_path: str = None):
-    """
-    Save chunks from a specific method to a text file for inspection
-    
-    Args:
-        chunks (List[Dict]): List of chunk dictionaries
-        method_name (str): Name of the chunking method
-        output_path (str, optional): Output file path
-    """
-    
-    if output_path is None:
-        output_dir = "/app/output" if os.path.exists("/app/output") else "."
-        safe_method_name = method_name.lower().replace(' ', '_')
-        output_path = os.path.join(output_dir, f"{safe_method_name}_chunks_with_pages.txt")
-    
-    try:
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(f"{method_name} Chunking Results\n")
-            f.write(f"Total chunks: {len(chunks)}\n")
-            f.write("=" * 80 + "\n\n")
-            
-            for i, chunk in enumerate(chunks, 1):
-                f.write(f"CHUNK {i:04d}\n")
-                f.write(f"Method: {chunk['method']}\n")
-                f.write(f"Section: {chunk['section_id']}\n")
-                f.write(f"Source Pages: {chunk['page_range']}\n")
-                f.write(f"Page Numbers: {', '.join(chunk['source_pages'])}\n")
-                f.write(f"Chunk {chunk['chunk_index_in_section']} of {chunk['total_chunks_in_section']} in this section\n")
-                f.write(f"Length: {chunk['length']} characters\n")
-                f.write("-" * 40 + "\n")
-                f.write(chunk['text'])
-                f.write("\n\n" + "=" * 80 + "\n\n")
-        
-        print(f"{method_name} chunks saved to: {output_path}")
-        
-    except Exception as e:
-        print(f"Error saving {method_name} chunks: {e}")
 
 def analyze_sections(sections: List[Dict]) -> Dict[str, any]:
     """
@@ -368,7 +451,10 @@ def analyze_sections(sections: List[Dict]) -> Dict[str, any]:
     return analysis
 
 def main():
-    """Main function to process JSON and create sections, then apply chunking methods"""
+    """Main function to process JSON and create sections only"""
+    
+    print("JSON Text Processor - Page Sectioning Only")
+    print("=" * 50)
     
     # Configuration - check for Docker environment
     input_dir = "/app/input" if os.path.exists("/app/input") else "."
@@ -385,124 +471,66 @@ def main():
         json_path = os.path.join(input_dir, json_file)
         
         print(f"\nProcessing: {json_file}")
-        print("=" * 60)
+        print("=" * 50)
         
-        # Check if output files already exist
+        # Check if section output files already exist
         sections_file = os.path.join(output_dir, json_file.replace('.json', '_sections.txt'))
         sections_json_file = os.path.join(output_dir, json_file.replace('.json', '_sections.json'))
         
         if os.path.exists(sections_file) and os.path.exists(sections_json_file):
             print(f"Section files already exist for {json_file}")
-            
-            # Check if method chunk files also exist
-            method_files_exist = all(
-                os.path.exists(os.path.join(output_dir, f"{method.lower()}_chunks_with_pages.txt")) and
-                os.path.exists(os.path.join(output_dir, f"{method.lower()}_chunks_with_pages.json"))
-                for method in ["llamaindex"]
-            )
-            
-            if method_files_exist:
-                print(f"All method chunk files already exist for {json_file}")
-                print("   Skipping processing (files already exist)")
-                continue
-            else:
-                print("   Some method chunk files missing, will process chunking methods only")
-                # Load existing sections
-                try:
-                    with open(sections_json_file, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                        sections = data.get('sections', [])
-                    print(f"   Loaded {len(sections)} existing sections")
-                except Exception as e:
-                    print(f"   Error loading existing sections: {e}")
-                    continue
-        else:
-            # Load pages from JSON
-            pages_data = load_json_pages(json_path)
-            
-            if not pages_data:
-                print(f"Failed to load data from {json_file}")
-                continue
-            
-            # STEP 1: Create page sections using the specified logic
-            print("Step 1: Creating page sections...")
-            sections = create_page_sections(pages_data)
-            
-            if not sections:
-                print("No sections created")
-                continue
-            
-            # Analyze section results
-            analysis = analyze_sections(sections)
-            
-            print(f"\nSection Results:")
-            print(f"  Total sections: {analysis['total_sections']}")
-            print(f"  Single-page sections: {analysis['single_page_sections']}")
-            print(f"  Multi-page sections: {analysis['multi_page_sections']}")
-            print(f"  Page combination rate: {analysis['combination_rate']}%")
-            print(f"  Average section length: {analysis['average_section_length']} characters")
-            print(f"  Length range: {analysis['min_section_length']} - {analysis['max_section_length']} characters")
-            print(f"  Max pages per section: {analysis['max_pages_per_section']}")
-            
-            # Save sections to file
-            save_sections_to_file(sections, sections_file)
-            
-            # Save sections as JSON for programmatic use
-            try:
-                with open(sections_json_file, 'w', encoding='utf-8') as f:
-                    json.dump({
-                        'analysis': analysis,
-                        'sections': sections
-                    }, f, indent=2, ensure_ascii=False)
-                print(f"Sections JSON saved to: {sections_json_file}")
-            except Exception as e:
-                print(f"Error saving sections JSON: {e}")
+            print("   Skipping processing (files already exist)")
+            continue
         
-        # STEP 2: Apply chunking methods to each section
-        print(f"\nStep 2: Applying chunking methods to {len(sections)} sections...")
+        # Load pages from JSON
+        pages_data = load_json_pages(json_path)
         
-        chunking_methods = [
-            ("LangChain", {"chunk_size": 512, "overlap": 64}),
-            ("LlamaIndex", {}),
-            ("Chonkie", {})
-        ]
+        if not pages_data:
+            print(f"Failed to load data from {json_file}")
+            continue
         
-        for method_name, kwargs in chunking_methods:
-            # Check if method files already exist
-            method_txt_file = os.path.join(output_dir, f"{method_name.lower()}_chunks_with_pages.txt")
-            method_json_file = os.path.join(output_dir, f"{method_name.lower()}_chunks_with_pages.json")
-            
-            if os.path.exists(method_txt_file) and os.path.exists(method_json_file):
-                print(f"{method_name} chunk files already exist, skipping")
-                continue
-            
-            print(f"\n--- Applying {method_name} chunking ---")
-            
-            try:
-                chunks = apply_chunking_to_sections(sections, method_name, **kwargs)
-                
-                if chunks:
-                    print(f"  Created {len(chunks)} chunks total")
-                    
-                    # Save chunks to file
-                    save_method_chunks_to_file(chunks, method_name)
-                    
-                    # Save chunks as JSON
-                    try:
-                        with open(method_json_file, 'w', encoding='utf-8') as f:
-                            json.dump({
-                                'method': method_name,
-                                'total_chunks': len(chunks),
-                                'chunks': chunks
-                            }, f, indent=2, ensure_ascii=False)
-                        print(f"  {method_name} chunks JSON saved to: {method_json_file}")
-                    except Exception as e:
-                        print(f"  Error saving {method_name} chunks JSON: {e}")
-                else:
-                    print(f"  No chunks created for {method_name}")
-                    
-            except Exception as e:
-                print(f"  Error applying {method_name}: {e}")
+        # Create page sections with filtering
+        print("Creating page sections with filtering...")
+        print("Filtering criteria (conservative):")
+        print("  ✓ Skip first page (cover page)")
+        print("  ✓ Remove junk content (< 25% alphanumeric, excessive repetition)")
+        print("  ✓ Remove very short pages (< 50 characters)")
+        print("  ✓ Ignore common formatting chars in repetition check")
+        
+        sections = create_page_sections(pages_data)
+        
+        if not sections:
+            print("No sections created")
+            continue
+        
+        # Analyze section results
+        analysis = analyze_sections(sections)
+        
+        print(f"\nSection Results:")
+        print(f"  Total sections: {analysis['total_sections']}")
+        print(f"  Single-page sections: {analysis['single_page_sections']}")
+        print(f"  Multi-page sections: {analysis['multi_page_sections']}")
+        print(f"  Page combination rate: {analysis['combination_rate']}%")
+        print(f"  Average section length: {analysis['average_section_length']} characters")
+        print(f"  Length range: {analysis['min_section_length']} - {analysis['max_section_length']} characters")
+        print(f"  Max pages per section: {analysis['max_pages_per_section']}")
+        
+        # Save sections to file
+        save_sections_to_file(sections, sections_file)
+        
+        # Save sections as JSON for programmatic use
+        try:
+            with open(sections_json_file, 'w', encoding='utf-8') as f:
+                json.dump({
+                    'analysis': analysis,
+                    'sections': sections
+                }, f, indent=2, ensure_ascii=False)
+            print(f"Sections JSON saved to: {sections_json_file}")
+        except Exception as e:
+            print(f"Error saving sections JSON: {e}")
+        
+        print(f"\nSectioning completed for {json_file}")
+        print(f"Next step: Run chunking.py to create filtered chunks with embeddings")
 
 if __name__ == "__main__":
     main()
