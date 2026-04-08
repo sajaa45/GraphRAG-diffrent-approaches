@@ -1,0 +1,16 @@
+# Fdb version 4
+["pdflatex"] 1775598073.05691 "c:/Users/LENOVO/Desktop/GraphRAG/output/aa.tex" "aa.pdf" "aa" 1775598124.63581 0
+  "C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1247596667 35752 024fb6c41858982481f6968b5fc26508 ""
+  "C:/Program Files/MiKTeX/tex/latex/base/article.cls" 1761900684 20144 b966087dda3b194755eb460d32e2ef75 ""
+  "C:/Program Files/MiKTeX/tex/latex/base/size10.clo" 1761900684 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
+  "C:/Program Files/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1761202581 30662 bfd6e864f4ffc5018b0e2b6260c3181c ""
+  "C:/Users/LENOVO/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1775596389 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
+  "C:/Users/LENOVO/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1775598123 13323422 aa1aa9aeaa79252a21f59cb23e753e14 ""
+  "aa.aux" 1775598124 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "aa.tex" 1775577388 70 0dc3eca2ff39d234d124842e117734f6 ""
+  "c:/Users/LENOVO/Desktop/GraphRAG/output/aa.tex" 1775577388 70 0dc3eca2ff39d234d124842e117734f6 ""
+  (generated)
+  "aa.aux"
+  "aa.log"
+  "aa.pdf"
+  (rewritten before read)

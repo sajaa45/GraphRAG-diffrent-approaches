@@ -37,6 +37,60 @@ def load_json_sections(file_path: str) -> Optional[List[Dict]]:
         return None
 
 
+def flatten_hierarchical_sections(sections, parent_path="", pages_data=None):
+    """
+    Flatten hierarchical sections from parse_pdf.py into a list with section paths.
+    
+    Args:
+        sections: List of hierarchical sections
+        parent_path: Parent section path for recursion
+        pages_data: Dictionary mapping page numbers to text content
+    
+    Returns:
+        List of flattened sections with section_path added and text from pages_data
+    """
+    flattened = []
+    
+    for section in sections:
+        # Build section path
+        section_path = f"{parent_path} > {section['title']}" if parent_path else section['title']
+        
+        # Get text from pages_data if available
+        section_text = ""
+        if pages_data:
+            for page_num in range(section['start_page'], section['end_page'] + 1):
+                page_key = str(page_num)
+                if page_key in pages_data:
+                    section_text += pages_data[page_key] + "\n"
+        
+        # Create flattened section entry
+        flat_section = {
+            'section_id': len(flattened) + 1,
+            'title': section['title'],
+            'section_path': section_path,
+            'level': section['level'],
+            'start_page': section['start_page'],
+            'end_page': section['end_page'],
+            'text': section_text,
+            'char_count': len(section_text),
+            'page_range': f"{section['start_page']}-{section['end_page']}",
+            'pages': list(range(section['start_page'], section['end_page'] + 1))
+        }
+        
+        flattened.append(flat_section)
+        
+        # Recursively process subsections
+        if 'subsections' in section and section['subsections']:
+            subsections_flat = flatten_hierarchical_sections(section['subsections'], section_path, pages_data)
+            flattened.extend(subsections_flat)
+    
+    # Renumber section IDs
+    for i, section in enumerate(flattened, 1):
+        section['section_id'] = i
+    
+    return flattened
+
+
 def get_embedding_model():
     try:
         from sentence_transformers import SentenceTransformer
@@ -440,9 +494,9 @@ def llamaindex_chunker(text: str, buffer_size: int = 1, threshold: int = 80, emb
         return [], {}
 
 def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
-                                            output_dir, debug=False, **kwargs):    
+                                            output_dir, debug=False, pages_data=None, **kwargs):    
     """
-    Apply a chunking method to each section individually and save progressively
+    Apply a chunking method to each section page-by-page and save progressively
     Can resume from where it left off if interrupted
     
     Args:
@@ -450,10 +504,11 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
         chunker_func: The chunking function to apply
         method_name: Name of the chunking method
         output_dir: Directory to save progressive output
+        pages_data: Dictionary mapping page numbers to text (for page-by-page chunking)
         **kwargs: Arguments for the chunker function
     
     Returns:
-        List of chunks with page tracking information and embeddings
+        List of chunks with exact page tracking information and embeddings
     """
     all_chunks = []
     
@@ -535,7 +590,7 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
         
         # Write initial text file
         with open(txt_filename, 'w', encoding='utf-8') as f:
-            f.write(f"=== {method_name} Chunks with Page Tracking and Filtering ===\n")
+            f.write(f"=== {method_name} Chunks with Exact Page Tracking and Filtering ===\n")
             f.write(f"Status: Processing...\n")
             f.write(f"Total sections: {len(sections)}\n")
             f.write(f"Filtering enabled: {embed_model is not None}\n")
@@ -563,31 +618,83 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
         
         print(f"  Processing section {section['section_id']} (pages {section['page_range']}) with {method_name}")
         
-        # Apply chunking method to this section (now returns filtered chunks with embeddings and stats)
-        filtered_chunks, section_stats = chunker_func(section['text'], embed_model=embed_model, debug=debug, 
-                                                       filtered_examples_accumulator=all_filtered_chunks, **kwargs)
-        
-        # Update cumulative stats
-        for key in cumulative_stats:
-            cumulative_stats[key] += section_stats.get(key, 0)
-        total_raw_chunks += len(filtered_chunks) + sum(section_stats.values())
-        
-        # Process chunks for this section
+        # Process page-by-page if pages_data is available
         section_chunk_data = []
-        for i, chunk_data in enumerate(filtered_chunks):
-            chunk_info = {
-                'text': chunk_data['text'],
-                'length': len(chunk_data['text']),
-                'embedding': chunk_data['embedding'],
-                'section_id': section['section_id'],
-                'source_pages': section['pages'],
-                'page_range': section['page_range'],
-                'chunk_index_in_section': i + 1,
-                'total_chunks_in_section': len(filtered_chunks),
-                'method': method_name
-            }
-            all_chunks.append(chunk_info)
-            section_chunk_data.append(chunk_info)
+        
+        if pages_data:
+            # Chunk each page individually to track exact source page
+            for page_num in section['pages']:
+                page_key = str(page_num)
+                if page_key not in pages_data:
+                    continue
+                
+                page_text = pages_data[page_key]
+                if not page_text or not page_text.strip():
+                    continue
+                
+                # Chunk this page
+                filtered_chunks, page_stats = chunker_func(
+                    page_text, 
+                    embed_model=embed_model, 
+                    debug=debug,
+                    filtered_examples_accumulator=all_filtered_chunks, 
+                    **kwargs
+                )
+                
+                # Update cumulative stats
+                for key in cumulative_stats:
+                    cumulative_stats[key] += page_stats.get(key, 0)
+                total_raw_chunks += len(filtered_chunks) + sum(page_stats.values())
+                
+                # Add chunks with exact page tracking
+                for i, chunk_data in enumerate(filtered_chunks):
+                    chunk_info = {
+                        'text': chunk_data['text'],
+                        'length': len(chunk_data['text']),
+                        'embedding': chunk_data['embedding'],
+                        'section_id': section['section_id'],
+                        'section_path': section.get('section_path', section.get('title', 'Unknown')),
+                        'section_level': section.get('level', 1),
+                        'source_page': page_num,  # Exact page this chunk came from
+                        'section_page_range': section['page_range'],
+                        'chunk_index_in_page': i + 1,
+                        'total_chunks_in_page': len(filtered_chunks),
+                        'method': method_name
+                    }
+                    all_chunks.append(chunk_info)
+                    section_chunk_data.append(chunk_info)
+        else:
+            # Fallback: chunk entire section text (old behavior)
+            filtered_chunks, section_stats = chunker_func(
+                section.get('text', ''), 
+                embed_model=embed_model, 
+                debug=debug,
+                filtered_examples_accumulator=all_filtered_chunks, 
+                **kwargs
+            )
+            
+            # Update cumulative stats
+            for key in cumulative_stats:
+                cumulative_stats[key] += section_stats.get(key, 0)
+            total_raw_chunks += len(filtered_chunks) + sum(section_stats.values())
+            
+            # Process chunks for this section
+            for i, chunk_data in enumerate(filtered_chunks):
+                chunk_info = {
+                    'text': chunk_data['text'],
+                    'length': len(chunk_data['text']),
+                    'embedding': chunk_data['embedding'],
+                    'section_id': section['section_id'],
+                    'section_path': section.get('section_path', section.get('title', 'Unknown')),
+                    'section_level': section.get('level', 1),
+                    'source_pages': section['pages'],
+                    'page_range': section['page_range'],
+                    'chunk_index_in_section': i + 1,
+                    'total_chunks_in_section': len(filtered_chunks),
+                    'method': method_name
+                }
+                all_chunks.append(chunk_info)
+                section_chunk_data.append(chunk_info)
         
         # Update JSON file progressively
         try:
@@ -641,9 +748,19 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
                     f.write(f"Length: {chunk_info['length']} characters\n")
                     f.write(f"Method: {chunk_info['method']}\n")
                     f.write(f"Section: {chunk_info['section_id']}\n")
-                    f.write(f"Source Pages: {chunk_info['page_range']}\n")
-                    f.write(f"Page Numbers: {', '.join(map(str, chunk_info['source_pages']))}\n")
-                    f.write(f"Chunk {chunk_info['chunk_index_in_section']} of {chunk_info['total_chunks_in_section']} in this section\n")
+                    f.write(f"Section Path: {chunk_info.get('section_path', 'N/A')}\n")
+                    f.write(f"Section Level: {chunk_info.get('section_level', 1)}\n")
+                    
+                    # Show exact source page if available, otherwise show page range
+                    if 'source_page' in chunk_info:
+                        f.write(f"Source Page: {chunk_info['source_page']}\n")
+                        f.write(f"Section Pages: {chunk_info.get('section_page_range', 'N/A')}\n")
+                        f.write(f"Chunk {chunk_info.get('chunk_index_in_page', 1)} of {chunk_info.get('total_chunks_in_page', 1)} on this page\n")
+                    else:
+                        f.write(f"Source Pages: {chunk_info.get('page_range', 'N/A')}\n")
+                        f.write(f"Page Numbers: {', '.join(map(str, chunk_info.get('source_pages', [])))}\n")
+                        f.write(f"Chunk {chunk_info.get('chunk_index_in_section', 1)} of {chunk_info.get('total_chunks_in_section', 1)} in this section\n")
+                    
                     f.write(f"Has Embedding: {len(chunk_info['embedding']) > 0}\n")
                     f.write("-" * 40 + "\n")
                     f.write(chunk_info['text'])
@@ -729,12 +846,14 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
 
 def benchmark_chunker_on_sections_progressive(sections: List[Dict], chunker_func, 
                                                method_name: str, output_dir: str,
-                                               debug: bool = False, **kwargs) -> tuple:
+                                               debug: bool = False, pages_data=None, **kwargs) -> tuple:
     """Benchmark a chunking method on sections with progressive JSON output"""
     print(f"\nTesting {method_name} with progressive output...")
     
     start_time = time.time()
-    chunks_with_metadata, filtering_summary = apply_chunking_to_sections_progressive(sections, chunker_func, method_name, output_dir, **kwargs)
+    chunks_with_metadata, filtering_summary = apply_chunking_to_sections_progressive(
+        sections, chunker_func, method_name, output_dir, pages_data=pages_data, **kwargs
+    )
     end_time = time.time()
     
     processing_time = round(end_time - start_time, 2)
@@ -819,33 +938,85 @@ def main():
     print("=" * 70)
     
     output_dir = "/app/output" if os.path.exists("/app/output") else "output"
+    input_dir = "/app/input" if os.path.exists("/app/input") else "."
     
-    # Find JSON section files
+    # Find JSON section files (prioritize parsed_sections.json from parse_pdf.py)
     section_files = []
     if os.path.exists(output_dir):
-        section_files = [f for f in os.listdir(output_dir) if f.endswith('_sections.json')]
+        # Look for parsed_sections.json first (from parse_pdf.py)
+        if os.path.exists(os.path.join(output_dir, 'parsed_sections.json')):
+            section_files = ['parsed_sections.json']
+        else:
+            section_files = [f for f in os.listdir(output_dir) if f.endswith('_sections.json')]
     
     if not section_files:
-        print("No JSON section files found. Please run json_text_processor.py first.")
+        print("No JSON section files found. Please run parse_pdf.py first.")
         return
     
     # Use the first section file found
     section_file = os.path.join(output_dir, section_files[0])
-    sections = load_json_sections(section_file)
     
-    if not sections:
+    try:
+        with open(section_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        sections = data.get('sections', [])
+        
+        if not sections:
+            print("No sections found in file")
+            return
+        
+        # Check if sections are hierarchical (from parse_pdf.py)
+        is_hierarchical = any('subsections' in section for section in sections)
+        
+        if is_hierarchical:
+            print(f"Detected hierarchical sections from parse_pdf.py")
+            
+            # Load pages data from the source JSON file
+            filename = data.get('filename', '')
+            if filename:
+                # Extract base name and look for corresponding JSON
+                base_name = os.path.splitext(os.path.basename(filename))[0]
+                pages_json_file = os.path.join(input_dir, f"{base_name}.json")
+                
+                if os.path.exists(pages_json_file):
+                    print(f"Loading page text from: {pages_json_file}")
+                    with open(pages_json_file, 'r', encoding='utf-8') as f:
+                        pages_data = json.load(f)
+                    print(f"Loaded {len(pages_data)} pages")
+                else:
+                    print(f"Warning: Could not find pages JSON file: {pages_json_file}")
+                    print("Sections will have no text content")
+                    pages_data = {}
+            else:
+                print("Warning: No filename in sections file, cannot load page text")
+                pages_data = {}
+            
+            print(f"Flattening {len(sections)} top-level sections...")
+            sections = flatten_hierarchical_sections(sections, pages_data=pages_data)
+            print(f"Flattened to {len(sections)} total sections")
+        else:
+            print(f"Loaded {len(sections)} flat sections")
+        
+    except Exception as e:
+        print(f"Error loading sections: {e}")
+        import traceback
+        traceback.print_exc()
         return
     
-    print(f"Loaded {len(sections)} sections from {section_files[0]}")
+    print(f"Loaded from {section_files[0]}")
     
     # Calculate total text length for reference
-    total_text_length = sum(len(section['text']) for section in sections)
+    total_text_length = sum(len(section.get('text', '')) for section in sections)
     print(f"Total text across all sections: {total_text_length:,} characters")
     
     # Show section breakdown
     print(f"\nSection breakdown:")
     for section in sections[:5]:  # Show first 5 sections
-        print(f"  Section {section['section_id']}: {len(section['text'])} chars, pages {section['page_range']}")
+        section_path = section.get('section_path', section.get('title', 'Unknown'))
+        text_len = len(section.get('text', ''))
+        print(f"  Section {section['section_id']}: {section_path}")
+        print(f"    {text_len} chars, pages {section['page_range']}")
     if len(sections) > 5:
         print(f"  ... and {len(sections) - 5} more sections")
     
@@ -858,6 +1029,7 @@ def main():
     print("  ✓ Repetitive content filtering (< 20% unique words)")
     print("  ✓ Simultaneous embedding generation")
     print("  ✓ Progressive output with embeddings")
+    print("  ✓ Section path and page tracking")
     print("  ✓ Resume capability (continues from where it left off)")
     print("="*70)
     
@@ -875,6 +1047,7 @@ def main():
             llamaindex_chunker,
             method_name,
             output_dir,
+            pages_data=pages_data,
             **config
         )
         results.append(stats)
@@ -901,7 +1074,7 @@ def main():
                   f"{result['min_length']:<6} {result['max_length']:<6}")
     
     print(f"\nFiles saved to: {output_dir}")
-    print("✓ SemanticSplitterNodeParser_chunks.json - Contains chunks with embeddings")
+    print("✓ SemanticSplitterNodeParser_chunks.json - Contains chunks with embeddings and section paths")
     print("✓ SemanticSplitterNodeParser_chunks.txt - Human-readable format")
     print("\nEnhanced filtering applied:")
     print("  - Removed chunks < 50 characters (likely titles)")
@@ -910,6 +1083,7 @@ def main():
     print("  - Removed meaningless content (navigation, formatting)")
     print("  - Removed repetitive chunks (< 20% unique words)")
     print("  - Generated embeddings for all remaining chunks")
+    print("  - Tracked section paths and page numbers for each chunk")
     print("\nUse the generated JSON files for knowledge graph creation and GraphRAG testing.")
 
 if __name__ == "__main__":

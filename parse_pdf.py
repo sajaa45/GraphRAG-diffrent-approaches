@@ -103,15 +103,14 @@ def parse_pdf(pdf_path, output_path=None):
             else:
                 end_page = len(doc)
             
-            # Extract text from section pages
-            section_text = []
+            # Don't extract text - chunking.py will get it from the JSON file
+            # Just calculate character count for reference
+            char_count = 0
             for page_idx in range(page_num - 1, end_page):
                 if page_idx < len(doc):
                     page = doc[page_idx]
                     text = page.get_text()
-                    section_text.append(text)
-            
-            combined_text = '\n'.join(section_text)
+                    char_count += len(text)
             
             section = {
                 "level": level,
@@ -119,8 +118,7 @@ def parse_pdf(pdf_path, output_path=None):
                 "original_title": title,
                 "start_page": page_num,
                 "end_page": end_page,
-                "text": combined_text,
-                "char_count": len(combined_text)
+                "char_count": char_count
             }
             
             flat_sections.append(section)

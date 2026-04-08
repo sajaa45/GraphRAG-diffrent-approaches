@@ -1,14 +1,245 @@
 #!/usr/bin/env python3
 """
 Content-Based Sectioning Processor
-Automatically detects table of contents and creates sections based on document structure
+Uses PDF TOC metadata to create hierarchical sections
 """
 
 import json
 import re
-from typing import Dict, List, Tuple, Any, Optional
+import fitz  # PyMuPDF
+from typing import Dict, List, Any
+
+
+def normalize_title(title):
+    """
+    Normalize section title by removing file prefixes and cleaning up.
+    """
+    # Remove common file prefixes like "UK01_0005821_01_"
+    title = re.sub(r'^[A-Z0-9_]+_\d+_', '', title)
+    # Remove version suffixes like "_v14"
+    title = re.sub(r'_v\d+$', '', title)
+    # Replace underscores with spaces
+    title = title.replace('_', ' ')
+    # Clean up multiple spaces
+    title = ' '.join(title.split())
+    return title
+
+
+def build_hierarchy(flat_sections):
+    """
+    Build hierarchical structure from flat list of sections.
+    """
+    if not flat_sections:
+        return []
+    
+    root = []
+    stack = []  # Stack to track parent sections at each level
+    
+    for section in flat_sections:
+        level = section["level"]
+        
+        # Pop stack until we find the parent level
+        while stack and stack[-1]["level"] >= level:
+            stack.pop()
+        
+        # Add subsections list if not present
+        if "subsections" not in section:
+            section["subsections"] = []
+        
+        # Add to parent's subsections or root
+        if stack:
+            parent = stack[-1]
+            parent["subsections"].append(section)
+        else:
+            root.append(section)
+        
+        # Push current section to stack
+        stack.append(section)
+    
+    return root
+
 
 class ContentBasedSectioning:
+    def __init__(self, pdf_path):
+        """Initialize with PDF path"""
+        self.pdf_path = pdf_path
+        self.doc = None
+    
+    def process_document(self) -> Dict[str, Any]:
+        """
+        Process the PDF document using TOC-based sectioning
+        """
+        try:
+            print("Content-Based Sectioning Processor (TOC-based)")
+            print("=" * 50)
+            
+            # Open the PDF
+            self.doc = fitz.open(self.pdf_path)
+            
+            # Get TOC from PDF metadata
+            toc = self.doc.get_toc()
+            
+            if not toc:
+                print("No TOC found in PDF")
+                self.doc.close()
+                return self.fallback_sectioning()
+            
+            print(f"Found TOC with {len(toc)} entries")
+            
+            # Build flat list of sections from TOC
+            flat_sections = []
+            for i, entry in enumerate(toc):
+                level, title, page_num = entry[0], entry[1], entry[2]
+                
+                # Skip sections that start on page 1
+                if page_num == 1:
+                    print(f"Skipping section starting on page 1: {title}")
+                    continue
+                
+                # Normalize the title
+                normalized_title = normalize_title(title)
+                
+                # Determine end page (start of next section or last page)
+                if i + 1 < len(toc):
+                    end_page = toc[i + 1][2] - 1
+                else:
+                    end_page = len(self.doc)
+                
+                # Extract text from section pages
+                section_text = []
+                for page_idx in range(page_num - 1, end_page):
+                    if page_idx < len(self.doc):
+                        page = self.doc[page_idx]
+                        text = page.get_text()
+                        section_text.append(text)
+                
+                combined_text = '\n'.join(section_text)
+                
+                section = {
+                    "level": level,
+                    "title": normalized_title,
+                    "original_title": title,
+                    "start_page": page_num,
+                    "end_page": end_page,
+                    "text": combined_text,
+                    "char_count": len(combined_text)
+                }
+                
+                flat_sections.append(section)
+                print(f"Extracted: {normalized_title} (pages {page_num}-{end_page})")
+            
+            # Build hierarchical structure
+            hierarchical_sections = build_hierarchy(flat_sections)
+            
+            result = {
+                "filename": self.pdf_path,
+                "num_pages": len(self.doc),
+                "num_sections": len(flat_sections),
+                "sections": hierarchical_sections,
+                "metadata": {
+                    "sectioning_method": "toc_based",
+                    "total_sections": len(flat_sections)
+                }
+            }
+            
+            self.doc.close()
+            
+            print(f"\n✓ Successfully extracted {len(flat_sections)} sections")
+            
+            return result
+            
+        except Exception as e:
+            print(f"Error processing PDF: {e}")
+            if self.doc:
+                self.doc.close()
+            return None
+    
+    def fallback_sectioning(self) -> Dict[str, Any]:
+        """
+        Fallback method when no TOC is detected
+        """
+        print("Using fallback sectioning method...")
+        
+        if self.doc:
+            self.doc.close()
+        
+        return {
+            "filename": self.pdf_path,
+            "num_pages": 0,
+            "num_sections": 0,
+            "sections": [],
+            "metadata": {
+                "sectioning_method": "fallback",
+                "error": "No TOC found"
+            }
+        }
+
+
+def main():
+    """Test the content-based sectioning independently"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="Extract sections from PDF using TOC"
+    )
+    parser.add_argument(
+        "pdf_path",
+        help="Path to the PDF file"
+    )
+    parser.add_argument(
+        "--output", "-o",
+        help="Output file path (JSON format)",
+        default="output/content_based_sections.json"
+    )
+    
+    args = parser.parse_args()
+    
+    try:
+        # Process with content-based sectioning
+        processor = ContentBasedSectioning(args.pdf_path)
+        result = processor.process_document()
+        
+        if not result:
+            print("Failed to process document")
+            return
+        
+        # Save results
+        with open(args.output, 'w', encoding='utf-8') as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        
+        # Save text version for easy reading
+        text_output = args.output.replace('.json', '.txt')
+        with open(text_output, 'w', encoding='utf-8') as f:
+            f.write("Content-Based Sections (TOC-based)\n")
+            f.write("=" * 50 + "\n\n")
+            
+            def write_section(section, indent=0):
+                prefix = "  " * indent
+                f.write(f"{prefix}Section: {section['title']}\n")
+                f.write(f"{prefix}Pages: {section['start_page']}-{section['end_page']}\n")
+                f.write(f"{prefix}Characters: {section['char_count']}\n")
+                f.write(f"{prefix}{'-' * 40}\n")
+                
+                if section.get('subsections'):
+                    f.write(f"{prefix}Subsections:\n")
+                    for subsection in section['subsections']:
+                        write_section(subsection, indent + 1)
+                
+                f.write("\n")
+            
+            for section in result['sections']:
+                write_section(section)
+        
+        print(f"\nResults saved to:")
+        print(f"  JSON: {args.output}")
+        print(f"  Text: {text_output}")
+        
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
     def __init__(self):
         """Initialize the content-based sectioning processor"""
         self.toc_patterns = [

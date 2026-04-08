@@ -26,6 +26,9 @@ COPY test_embeddings.py .
 COPY test_simple_embeddings.py .
 COPY test_chunking_models.py .
 COPY test_embedding_models.py .
+COPY parse_pdf.py .
+COPY content_based_sectioning.py .
+COPY chunk_sections.py .
 
 # Create directories for input, output, and samples
 RUN mkdir -p /app/input /app/output /app/samples

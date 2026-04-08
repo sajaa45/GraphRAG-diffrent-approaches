@@ -95,6 +95,40 @@ services:
       - "host.docker.internal:host-gateway"
     command: python graphrag_system.py
 
+  parse-pdf:
+    build: .
+    container_name: pdf-parser
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python parse_pdf.py /app/input/saudi-aramco-ara-2024-english.pdf --output /app/output/parsed_sections.json
+
+ 
+  content-sections:
+    build: .
+    container_name: content-sectioning
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python content_based_sectioning.py /app/input/saudi-aramco-ara-2024-english.pdf --output /app/output/content_sections.json
+
+  chunk-sections:
+    build: .
+    container_name: section-chunker
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python chunk_sections.py /app/output/parsed_sections.json --output /app/output/chunked_sections.json --chunk-size 512 --threshold 0.5
+
 volumes:
   neo4j_data:
   neo4j_logs:
