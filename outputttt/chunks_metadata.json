@@ -1,0 +1,64 @@
+{
+  "source_file": "/app/output/parsed_sections.json",
+  "total_sections": 7,
+  "total_chunks": 0,
+  "created_at": "2026-04-11 10:25:11",
+  "sections": [
+    {
+      "section_id": 1,
+      "title": "Aramco Overview & Strat",
+      "level": 1,
+      "start_page": 4,
+      "end_page": 29,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 2,
+      "title": "Aramco Results&Performance",
+      "level": 1,
+      "start_page": 30,
+      "end_page": 61,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 3,
+      "title": "Aramco Sustainability",
+      "level": 1,
+      "start_page": 62,
+      "end_page": 71,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 4,
+      "title": "Aramco Risk",
+      "level": 1,
+      "start_page": 72,
+      "end_page": 89,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 5,
+      "title": "Corp Governance",
+      "level": 1,
+      "start_page": 90,
+      "end_page": 123,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 6,
+      "title": "Additional financial and legal information",
+      "level": 1,
+      "start_page": 124,
+      "end_page": 155,
+      "chunks_count": 0
+    },
+    {
+      "section_id": 7,
+      "title": "consolidated financial statements",
+      "level": 1,
+      "start_page": 156,
+      "end_page": 238,
+      "chunks_count": 0
+    }
+  ]
+}

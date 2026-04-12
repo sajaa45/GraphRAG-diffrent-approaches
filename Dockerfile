@@ -29,6 +29,10 @@ COPY test_embedding_models.py .
 COPY parse_pdf.py .
 COPY content_based_sectioning.py .
 COPY chunk_sections.py .
+COPY vector_store_pipeline.py .
+COPY unified_pipeline.py .
+COPY query_vector_store.py .
+COPY build_kg_from_query.py .
 
 # Create directories for input, output, and samples
 RUN mkdir -p /app/input /app/output /app/samples

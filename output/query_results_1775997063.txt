@@ -1,0 +1,131 @@
+================================================================================
+QUERY RESULTS: 'CEO'
+================================================================================
+
+Search mode: direct_chunks
+Timestamp: 2026-04-12 12:31:03
+Total sections: 1
+Total chunks: 6
+
+================================================================================
+SECTIONS FOUND
+================================================================================
+
+1. Corp Governance
+   Pages: 90-123
+   Best chunk similarity: 0.486
+
+
+================================================================================
+MATCHED CHUNKS (Ordered by Similarity)
+================================================================================
+
+CHUNK 1
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.486
+Chunk Index: 27
+Length: 326 characters
+--------------------------------------------------------------------------------
+Previously, Ms. Elsenhans has served as the President and CEO of Sunoco, Inc. from 2008 to 2012, CEO of Sunoco Logistics Partners in 2010, and as an Executive at Royal Dutch Shell from 1980 to 2008, holding several senior executive roles, including Executive Vice President Global Manufacturing.
+
+#### **Qualifications**
+
+Ms. 
+
+================================================================================
+
+CHUNK 2
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.473
+Chunk Index: 49
+Length: 474 characters
+--------------------------------------------------------------------------------
+# **Experience**
+
+Currently, Mr. Nasser serves as President and CEO of the Company, and is a member of the International Advisory Board of KFUPM and a member of the Board of Trustees of KAUST.
+
+Prior to serving as President and CEO, Mr. Nasser served in a number of leadership positions at the Company, including Senior Vice President of Upstream from 2007 to 2015 and Vice President of Petroleum Engineering and Development from 2006 to 2007.
+
+#### **Qualifications**
+
+Mr. 
+
+================================================================================
+
+CHUNK 3
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.472
+Chunk Index: 50
+Length: 62 characters
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+
+================================================================================
+
+CHUNK 4
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.470
+Chunk Index: 23
+Length: 117 characters
+--------------------------------------------------------------------------------
+#### **Experience**
+
+Currently, Mr. Dudley serves as a director on the boards of several publicly traded companies.
+
+
+
+================================================================================
+
+CHUNK 5
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.458
+Chunk Index: 45
+Length: 621 characters
+--------------------------------------------------------------------------------
+CONSOLIDATED FINANCIAL **STATEMENTS**
+## **Board of Directors continued**
+
+## Mr. Amin H. Nasser
+
+## **Board of Directors membership inside KSA**
+
+#### Current
+
+- Member of the International Advisory Board of KFUPM
+- Member of the Board of Trustees of KAUST
+
+## **Board of Directors membership outside KSA**
+
+### Current
+
+- Member of the World Economic Forum's International Business Council (IBC)
+- Member of the Massachusetts Institute of Technology Presidential CEO Advisory Board and its Executive Committee
+- Member of the JP Morgan International Council
+- Member of the Board of Directors of BlackRock, Inc.
+
+# Mr. 
+
+================================================================================
+
+CHUNK 6
+--------------------------------------------------------------------------------
+Section: Corp Governance
+Similarity: 0.457
+Chunk Index: 30
+Length: 504 characters
+--------------------------------------------------------------------------------
+Previously, Mr. Gulliver served as an Executive at HSBC Holdings plc, holding several senior executive roles including Group Chief Executive Officer from 2011 to 2018, Group Managing Director from 2004 to 2011, CEO, Global Banking Markets & Global Asset Management from 2006 to 2010, Co-head of Corporate Investment Banking and Markets from 2003 to 2006, Group General Manager from 2000 to 2004, Head of Treasury and Capital Markets Asia Pacific from 1996 to 2002, and as a graduate trainee in 1980.
+
+6. 
+
+================================================================================
+
