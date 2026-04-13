@@ -16,7 +16,7 @@ from query_vector_store import VectorStoreQuery
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-DEFAULT_QUERIES = ["CEO", "revenue", "risk factors"]
+DEFAULT_QUERY = "CEO"
 TOP_N_CHUNKS = 3
 SIMILARITY_THRESHOLD = 0.45
 OLLAMA_URL = "http://host.docker.internal:11434"
@@ -91,13 +91,24 @@ class KnowledgeGraphBuilder:
         # Default to False if unclear
         return False
     
-    def extract_entities_with_llm(self, text: str, query_type: str) -> List[Tuple[str, str, str]]:
+    def extract_entities_with_llm(self, text: str, query_type: str) -> List[Dict[str, Any]]:
         """
-        Extract entities using LLM
+        Extract entities using LLM based on query type
         
         Returns:
-            List of (person_name, relationship_type, organization) tuples
+            List of entity dictionaries with type-specific fields
         """
+        if query_type.lower() in ['ceo', 'cfo', 'executive', 'board']:
+            return self._extract_people_entities(text, query_type)
+        elif 'revenue' in query_type.lower():
+            return self._extract_revenue_entities(text)
+        elif 'risk' in query_type.lower():
+            return self._extract_risk_entities(text)
+        else:
+            return self._extract_people_entities(text, query_type)
+    
+    def _extract_people_entities(self, text: str, query_type: str) -> List[Dict[str, Any]]:
+        """Extract people/executive entities"""
         prompt = f"""Extract CURRENT {query_type} information from this text. Ignore past/former positions.
 
 Text: {text}
@@ -117,6 +128,131 @@ CRITICAL Rules:
 - IGNORE keywords: "Previously", "has served", "from...to", "was", past tense verbs
 - Return empty array [] if no CURRENT positions found
 """
+        
+        entities_data = self._call_llm(prompt)
+        if not entities_data:
+            return []
+        
+        # Convert to standardized format
+        entities = []
+        for entity in entities_data:
+            person = entity.get('person', '').strip()
+            role = entity.get('role', '').strip()
+            org = entity.get('organization', 'Saudi Aramco').strip()
+            is_current = entity.get('is_current', False)
+            
+            # Double-check with text analysis
+            if person and len(person) > 2:
+                if not self.is_current_position(text, person):
+                    continue
+                
+                if is_current:
+                    # Map role to relationship type
+                    if 'ceo' in role.lower() or 'chief executive' in role.lower():
+                        rel_type = 'CEO_OF'
+                    elif 'cfo' in role.lower() or 'chief financial' in role.lower():
+                        rel_type = 'CFO_OF'
+                    elif 'board' in role.lower() or 'director' in role.lower():
+                        rel_type = 'BOARD_MEMBER_OF'
+                    else:
+                        rel_type = 'WORKS_AT'
+                    
+                    entities.append({
+                        'type': 'person',
+                        'person': person,
+                        'relationship': rel_type,
+                        'organization': org
+                    })
+        
+        return entities
+    
+    def _extract_revenue_entities(self, text: str) -> List[Dict[str, Any]]:
+        """Extract revenue/financial entities"""
+        prompt = f"""Extract revenue and financial information from this text.
+
+Text: {text}
+
+Return ONLY a JSON array with this exact format (no other text):
+[
+  {{"metric": "Revenue", "value": "123.4", "unit": "billion", "currency": "USD", "year": "2024", "organization": "Saudi Aramco"}}
+]
+
+Rules:
+- Extract financial metrics like: Revenue, Net Income, Profit, Sales, EBITDA
+- Include the numeric value, unit (million/billion), currency, and year
+- If text mentions Saudi Aramco or "the Company", use "Saudi Aramco" as organization
+- Return empty array [] if no financial data found
+"""
+        
+        entities_data = self._call_llm(prompt)
+        if not entities_data:
+            return []
+        
+        entities = []
+        for entity in entities_data:
+            metric = entity.get('metric', '').strip()
+            value = entity.get('value', '').strip()
+            unit = entity.get('unit', '').strip()
+            currency = entity.get('currency', 'USD').strip()
+            year = entity.get('year', '').strip()
+            org = entity.get('organization', 'Saudi Aramco').strip()
+            
+            if metric and value:
+                entities.append({
+                    'type': 'financial',
+                    'metric': metric,
+                    'value': value,
+                    'unit': unit,
+                    'currency': currency,
+                    'year': year,
+                    'organization': org
+                })
+        
+        return entities
+    
+    def _extract_risk_entities(self, text: str) -> List[Dict[str, Any]]:
+        """Extract risk factor entities"""
+        prompt = f"""Extract risk factors from this text.
+
+Text: {text}
+
+Return ONLY a JSON array with this exact format (no other text):
+[
+  {{"risk_type": "Market Risk", "description": "brief description", "severity": "High", "organization": "Saudi Aramco"}}
+]
+
+Rules:
+- Extract risk types like: Market Risk, Operational Risk, Regulatory Risk, Financial Risk, etc.
+- Provide a brief description (max 100 chars)
+- severity can be: High, Medium, Low, or Unknown
+- If text mentions Saudi Aramco or "the Company", use "Saudi Aramco" as organization
+- Return empty array [] if no risks found
+"""
+        
+        entities_data = self._call_llm(prompt)
+        if not entities_data:
+            return []
+        
+        entities = []
+        for entity in entities_data:
+            risk_type = entity.get('risk_type', '').strip()
+            description = entity.get('description', '').strip()
+            severity = entity.get('severity', 'Unknown').strip()
+            org = entity.get('organization', 'Saudi Aramco').strip()
+            
+            if risk_type:
+                entities.append({
+                    'type': 'risk',
+                    'risk_type': risk_type,
+                    'description': description,
+                    'severity': severity,
+                    'organization': org
+                })
+        
+        return entities
+    
+    def _call_llm(self, prompt: str) -> List[Dict]:
+        """Call Ollama LLM and parse JSON response"""
         
         try:
             response = requests.post(
@@ -148,35 +284,7 @@ CRITICAL Rules:
             json_str = llm_output[json_start:json_end]
             entities_data = json.loads(json_str)
             
-            # Convert to tuples with relationship types
-            entities = []
-            for entity in entities_data:
-                person = entity.get('person', '').strip()
-                role = entity.get('role', '').strip()
-                org = entity.get('organization', 'Saudi Aramco').strip()
-                is_current = entity.get('is_current', False)
-                
-                # Double-check with text analysis (LLM might miss temporal cues)
-                if person and len(person) > 2:
-                    # Verify this is actually a current position
-                    if not self.is_current_position(text, person):
-                        continue
-                    
-                    # Only include if marked as current position
-                    if is_current:
-                        # Map role to relationship type
-                        if 'ceo' in role.lower() or 'chief executive' in role.lower():
-                            rel_type = 'CEO_OF'
-                        elif 'cfo' in role.lower() or 'chief financial' in role.lower():
-                            rel_type = 'CFO_OF'
-                        elif 'board' in role.lower() or 'director' in role.lower():
-                            rel_type = 'BOARD_MEMBER_OF'
-                        else:
-                            rel_type = 'WORKS_AT'
-                        
-                        entities.append((person, rel_type, org))
-            
-            return entities
+            return entities_data
             
         except requests.exceptions.RequestException as e:
             print(f"    ✗ Ollama connection error: {e}")
@@ -277,19 +385,24 @@ CRITICAL Rules:
                 if entities:
                     print(f"  ✓ Found {len(entities)} entities:")
                     
-                    for person_name, rel_type, org_name in entities:
-                        print(f"    - {person_name} --[{rel_type}]--> {org_name}")
-                        
-                        # Create nodes
-                        self.create_person_node(session, person_name, text[:200], similarity)
-                        self.create_organization_node(session, org_name)
-                        
-                        # Create relationship
-                        self.create_relationship(session, person_name, org_name, 
-                                               rel_type, text[:200], similarity)
-                        
-                        total_entities += 1
-                        total_relationships += 1
+                    for entity in entities:
+                        if entity['type'] == 'person':
+                            person_name = entity['person']
+                            rel_type = entity['relationship']
+                            org_name = entity['organization']
+                            
+                            print(f"    - {person_name} --[{rel_type}]--> {org_name}")
+                            
+                            # Create nodes
+                            self.create_person_node(session, person_name, text[:200], similarity)
+                            self.create_organization_node(session, org_name)
+                            
+                            # Create relationship
+                            self.create_relationship(session, person_name, org_name, 
+                                                   rel_type, text[:200], similarity)
+                            
+                            total_entities += 1
+                            total_relationships += 1
                 else:
                     print(f"    ✗ No entities extracted")
         

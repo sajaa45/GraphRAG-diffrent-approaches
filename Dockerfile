@@ -33,6 +33,8 @@ COPY vector_store_pipeline.py .
 COPY unified_pipeline.py .
 COPY query_vector_store.py .
 COPY build_kg_from_query.py .
+COPY relation_extraction_config.py .
+COPY multi_relation_kg_builder.py .
 
 # Create directories for input, output, and samples
 RUN mkdir -p /app/input /app/output /app/samples
