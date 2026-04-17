@@ -375,8 +375,18 @@ Rules:
                 similarity = chunk['similarity']
                 section = chunk['section_title']
                 
+                # Get page information (prefer source_page if available)
+                page_info = ""
+                if 'source_page' in chunk:
+                    page_info = f" | Page: {chunk['source_page']}"
+                elif 'start_page' in chunk and 'end_page' in chunk:
+                    if chunk['start_page'] == chunk['end_page']:
+                        page_info = f" | Page: {chunk['start_page']}"
+                    else:
+                        page_info = f" | Pages: {chunk['start_page']}-{chunk['end_page']}"
+                
                 print(f"\nChunk {i} (similarity: {similarity:.3f}):")
-                print(f"  Section: {section}")
+                print(f"  Section: {section}{page_info}")
                 print(f"  Extracting entities with LLM...")
                 
                 # Extract entities using LLM

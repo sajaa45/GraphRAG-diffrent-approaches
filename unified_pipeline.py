@@ -77,7 +77,7 @@ class UnifiedPipeline:
         
         print("✓ Pipeline initialized\n")
     
-    def process_section(self, section: Dict, section_idx: int, total_sections: int):
+    def process_section(self, section: Dict, section_idx: int, total_sections: int, pages_data: Dict = None):
         """
         Process a single section: chunk using chunking.py and store immediately
         Also stores section-level embedding for hierarchical search
@@ -86,81 +86,153 @@ class UnifiedPipeline:
             section: Section dictionary
             section_idx: Current section index
             total_sections: Total number of sections
+            pages_data: Optional dictionary mapping page numbers to text for page-by-page chunking
         """
         section_title = section.get('title', 'Untitled')
         section_text = section.get('text', '')
         
         print(f"[{section_idx}/{total_sections}] Processing: {section_title}")
         
-        if not section_text or not section_text.strip():
-            print(f"  ⚠ Empty section, skipping")
+        # Check if we can do page-by-page chunking
+        has_page_contents = 'page_contents' in section and section['page_contents']
+        section_pages = section.get('pages', [])
+        
+        # Determine if we should use page-by-page chunking
+        use_page_by_page = (has_page_contents or (pages_data and section_pages))
+        
+        if not use_page_by_page and (not section_text or not section_text.strip()):
+            print(f"  ⚠ Empty section and no page data, skipping")
             return 0
         
-        # First, store section-level embedding for hierarchical search
-        section_id = f"section_{section_idx}"
-        section_embedding = self.embed_model.encode([section_text])[0].tolist()
+        # Store section-level embedding for hierarchical search (if we have meaningful text)
+        if section_text and len(section_text) > 50:  # More than just a placeholder
+            section_id = f"section_{section_idx}"
+            section_embedding = self.embed_model.encode([section_text])[0].tolist()
+            
+            self.collection.add(
+                documents=[section_text[:1000]],  # Store preview of section text
+                ids=[section_id],
+                metadatas=[{
+                    "type": "section",
+                    "section_id": section_idx,
+                    "title": section_title,
+                    "level": section.get('level', 0),
+                    "start_page": section.get('start_page', 0),
+                    "end_page": section.get('end_page', 0),
+                    "char_count": len(section_text)
+                }],
+                embeddings=[section_embedding]
+            )
         
-        self.collection.add(
-            documents=[section_text[:1000]],  # Store preview of section text
-            ids=[section_id],
-            metadatas=[{
-                "type": "section",
-                "section_id": section_idx,
-                "title": section_title,
-                "level": section.get('level', 0),
-                "start_page": section.get('start_page', 0),
-                "end_page": section.get('end_page', 0),
-                "char_count": len(section_text)
-            }],
-            embeddings=[section_embedding]
-        )
-        
-        # Then chunk using the production chunking system from chunking.py
-        # This includes all filtering (small, decorative, TOC, meaningless, repetitive)
-        filtered_chunks, filtering_stats = llamaindex_chunker(
-            text=section_text,
-            buffer_size=self.buffer_size,
-            threshold=self.threshold,
-            embed_model=self.embed_model,
-            debug=False
-        )
-        
-        if not filtered_chunks:
-            print(f"  ⚠ No chunks after filtering")
-            return 0
-        
-        # Show filtering stats
-        total_filtered = sum(filtering_stats.values())
-        if total_filtered > 0:
-            print(f"  Filtered: {total_filtered} chunks (small:{filtering_stats.get('small',0)}, "
-                  f"decorative:{filtering_stats.get('decorative',0)}, "
-                  f"TOC:{filtering_stats.get('toc',0)}, "
-                  f"meaningless:{filtering_stats.get('meaningless',0)}, "
-                  f"repetitive:{filtering_stats.get('repetitive',0)})")
-        
-        # Prepare data for ChromaDB
         chunk_texts = []
         chunk_ids = []
         chunk_metadatas = []
         chunk_embeddings = []
+        chunk_counter = 1
+        total_filtered = 0
         
-        for i, chunk_data in enumerate(filtered_chunks, 1):
-            chunk_id = f"section_{section_idx}_chunk_{i}"
+        if use_page_by_page:
+            # Process page-by-page for exact page tracking
+            print(f"  Processing {len(section_pages)} pages individually...")
             
-            chunk_texts.append(chunk_data['text'])
-            chunk_ids.append(chunk_id)
-            chunk_metadatas.append({
-                "type": "chunk",
-                "section_id": section_idx,
-                "section_title": section_title,
-                "section_level": section.get('level', 0),
-                "start_page": section.get('start_page', 0),
-                "end_page": section.get('end_page', 0),
-                "chunk_index": i,
-                "total_chunks": len(filtered_chunks),
-                "char_count": len(chunk_data['text'])
-            })
-            chunk_embeddings.append(chunk_data['embedding'])
+            for page_num in section_pages:
+                # Get page text
+                page_text = None
+                
+                if has_page_contents:
+                    page_content = next((p for p in section['page_contents'] if p['page_number'] == page_num), None)
+                    if page_content:
+                        page_text = page_content.get('content', '')
+                elif pages_data:
+                    page_key = str(page_num)
+                    if page_key in pages_data:
+                        page_text = pages_data[page_key]
+                
+                if not page_text or not page_text.strip():
+                    continue
+                
+                # Chunk this page
+                filtered_chunks, filtering_stats = llamaindex_chunker(
+                    text=page_text,
+                    buffer_size=self.buffer_size,
+                    threshold=self.threshold,
+                    embed_model=self.embed_model,
+                    debug=False
+                )
+                
+                # Track filtering stats
+                total_filtered += sum(filtering_stats.values())
+                
+                # Add chunks from this page
+                for i, chunk_data in enumerate(filtered_chunks, 1):
+                    chunk_id = f"section_{section_idx}_chunk_{chunk_counter}"
+                    
+                    chunk_texts.append(chunk_data['text'])
+                    chunk_ids.append(chunk_id)
+                    chunk_metadatas.append({
+                        "type": "chunk",
+                        "section_id": section_idx,
+                        "section_title": section_title,
+                        "section_level": section.get('level', 0),
+                        "source_page": page_num,  # Exact page this chunk came from
+                        "section_page_range": section.get('page_range', f"{section.get('start_page', 0)}-{section.get('end_page', 0)}"),
+                        "start_page": section.get('start_page', 0),  # Keep for compatibility
+                        "end_page": section.get('end_page', 0),  # Keep for compatibility
+                        "chunk_index": chunk_counter,
+                        "chunk_index_in_page": i,
+                        "total_chunks_in_page": len(filtered_chunks),
+                        "char_count": len(chunk_data['text'])
+                    })
+                    chunk_embeddings.append(chunk_data['embedding'])
+                    chunk_counter += 1
+            
+            if total_filtered > 0:
+                print(f"  Filtered: {total_filtered} chunks across all pages")
+        else:
+            # Fallback: chunk entire section text (old behavior)
+            filtered_chunks, filtering_stats = llamaindex_chunker(
+                text=section_text,
+                buffer_size=self.buffer_size,
+                threshold=self.threshold,
+                embed_model=self.embed_model,
+                debug=False
+            )
+            
+            if not filtered_chunks:
+                print(f"  ⚠ No chunks after filtering")
+                return 0
+            
+            # Show filtering stats
+            total_filtered = sum(filtering_stats.values())
+            if total_filtered > 0:
+                print(f"  Filtered: {total_filtered} chunks (small:{filtering_stats.get('small',0)}, "
+                      f"decorative:{filtering_stats.get('decorative',0)}, "
+                      f"TOC:{filtering_stats.get('toc',0)}, "
+                      f"meaningless:{filtering_stats.get('meaningless',0)}, "
+                      f"repetitive:{filtering_stats.get('repetitive',0)})")
+            
+            # Prepare data for ChromaDB
+            for i, chunk_data in enumerate(filtered_chunks, 1):
+                chunk_id = f"section_{section_idx}_chunk_{i}"
+                
+                chunk_texts.append(chunk_data['text'])
+                chunk_ids.append(chunk_id)
+                chunk_metadatas.append({
+                    "type": "chunk",
+                    "section_id": section_idx,
+                    "section_title": section_title,
+                    "section_level": section.get('level', 0),
+                    "start_page": section.get('start_page', 0),
+                    "end_page": section.get('end_page', 0),
+                    "chunk_index": i,
+                    "total_chunks": len(filtered_chunks),
+                    "char_count": len(chunk_data['text'])
+                })
+                chunk_embeddings.append(chunk_data['embedding'])
+        
+        if not chunk_texts:
+            print(f"  ⚠ No chunks after filtering")
+            return 0
         
         # Store directly in ChromaDB (no JSON intermediate)
         self.collection.add(
@@ -170,8 +242,8 @@ class UnifiedPipeline:
             embeddings=chunk_embeddings
         )
         
-        print(f"  ✓ Stored section embedding + {len(filtered_chunks)} filtered chunks in vector DB")
-        return len(filtered_chunks)
+        print(f"  ✓ Stored section embedding + {len(chunk_texts)} filtered chunks in vector DB")
+        return len(chunk_texts)
     
     def process_sections_file(self, sections_file: str, save_metadata: bool = True, save_chunks: bool = True):
         """
@@ -200,51 +272,53 @@ class UnifiedPipeline:
         
         print(f"✓ Found {len(sections)} sections")
         
-        # Check if sections have text, if not, load from source
-        has_text = any(section.get('text') for section in sections)
+        # Check if sections have meaningful text (not just placeholders)
+        has_text = any(section.get('text') and len(section.get('text', '')) > 100 for section in sections)
         
-        if not has_text:
-            print("⚠ Sections don't have text content, loading from source...")
+        # Try to load pages_data for page-by-page chunking
+        pages_data = {}
+        source_filename = data.get('filename', '')
+        
+        if source_filename:
+            base_name = os.path.splitext(os.path.basename(source_filename))[0]
             
-            # Get source filename from sections data
-            source_filename = data.get('filename', '')
-            if source_filename:
-                # Try to find the source JSON file
-                base_name = os.path.splitext(os.path.basename(source_filename))[0]
-                
-                # Try multiple locations
-                possible_paths = [
-                    Path(sections_file).parent.parent / f"{base_name}.json",  # ../filename.json
-                    Path(sections_file).parent / f"{base_name}.json",  # output/filename.json
-                    Path("/app/input") / f"{base_name}.json",  # /app/input/filename.json (Docker)
-                    Path(".") / f"{base_name}.json",  # ./filename.json
-                ]
-                
-                source_json = None
-                for path in possible_paths:
-                    if path.exists():
-                        source_json = path
+            # Try multiple locations
+            possible_paths = [
+                Path(sections_file).parent.parent / f"{base_name}.json",  # ../filename.json
+                Path(sections_file).parent / f"{base_name}.json",  # output/filename.json
+                Path("/app/input") / f"{base_name}.json",  # /app/input/filename.json (Docker)
+                Path(".") / f"{base_name}.json",  # ./filename.json
+            ]
+            
+            for path in possible_paths:
+                if path.exists():
+                    print(f"✓ Loading page data for page-by-page chunking from: {path}")
+                    try:
+                        with open(path, 'r', encoding='utf-8') as f:
+                            pages_data = json.load(f)
+                        print(f"✓ Loaded {len(pages_data)} pages")
                         break
-                
-                if source_json:
-                    print(f"✓ Loading page text from: {source_json}")
-                    with open(source_json, 'r', encoding='utf-8') as f:
-                        pages_data = json.load(f)
-                    
-                    # Add text to sections from pages
-                    sections = self._add_text_to_sections(sections, pages_data)
-                    print(f"✓ Added text content to {len(sections)} sections")
-                else:
-                    print(f"✗ Could not find source file: {base_name}.json")
-                    print(f"  Tried locations:")
-                    for path in possible_paths:
-                        print(f"    - {path}")
-                    print("✗ Cannot proceed without text content")
-                    return
-            else:
-                print("✗ No source filename in sections file")
-                print("✗ Cannot proceed without text content")
+                    except Exception as e:
+                        print(f"⚠ Error loading pages: {e}")
+        
+        # If sections don't have meaningful text, we'll use pages_data for page-by-page chunking
+        if not has_text:
+            print("⚠ Sections don't have text content")
+            
+            if not pages_data:
+                print("✗ No pages_data available - cannot proceed")
                 return
+            
+            print("✓ Will use pages_data for page-by-page chunking")
+            # Add minimal placeholder text and ensure pages field exists
+            for section in sections:
+                if not section.get('text') or len(section.get('text', '')) < 100:
+                    section['text'] = f"Section: {section.get('title', 'Untitled')}"  # Placeholder
+                # Ensure pages field exists
+                if 'pages' not in section:
+                    start = section.get('start_page', 0)
+                    end = section.get('end_page', 0)
+                    section['pages'] = list(range(start, end + 1))
         
         print()
         
@@ -255,7 +329,7 @@ class UnifiedPipeline:
         cumulative_filtering_stats = {'small': 0, 'toc': 0, 'meaningless': 0, 'repetitive': 0, 'decorative': 0}
         
         for idx, section in enumerate(sections, 1):
-            chunks_count = self.process_section(section, idx, len(sections))
+            chunks_count = self.process_section(section, idx, len(sections), pages_data)
             total_chunks += chunks_count
             
             # Save lightweight metadata (no embeddings)
@@ -278,18 +352,28 @@ class UnifiedPipeline:
                 )
                 
                 for i, (doc, meta) in enumerate(zip(section_chunks['documents'], section_chunks['metadatas'])):
-                    all_chunk_details.append({
+                    chunk_detail = {
                         'text': doc,
                         'length': len(doc),
                         'section_id': meta['section_id'],
                         'section_title': meta['section_title'],
                         'section_level': meta['section_level'],
-                        'start_page': meta['start_page'],
-                        'end_page': meta['end_page'],
                         'chunk_index': meta['chunk_index'],
-                        'total_chunks': meta['total_chunks'],
                         'method': 'SemanticSplitterNodeParser'
-                    })
+                    }
+                    
+                    # Add page information (prefer source_page if available)
+                    if 'source_page' in meta:
+                        chunk_detail['source_page'] = meta['source_page']
+                        chunk_detail['section_page_range'] = meta.get('section_page_range', '')
+                        chunk_detail['chunk_index_in_page'] = meta.get('chunk_index_in_page', 1)
+                        chunk_detail['total_chunks_in_page'] = meta.get('total_chunks_in_page', 1)
+                    else:
+                        chunk_detail['start_page'] = meta['start_page']
+                        chunk_detail['end_page'] = meta['end_page']
+                        chunk_detail['total_chunks'] = meta.get('total_chunks', 0)
+                    
+                    all_chunk_details.append(chunk_detail)
         
         # Save lightweight metadata file (no embeddings!)
         if save_metadata and metadata_records:
@@ -350,8 +434,16 @@ class UnifiedPipeline:
                     f.write(f"Method: {chunk['method']}\n")
                     f.write(f"Section: {chunk['section_id']} - {chunk['section_title']}\n")
                     f.write(f"Section Level: {chunk['section_level']}\n")
-                    f.write(f"Pages: {chunk['start_page']}-{chunk['end_page']}\n")
-                    f.write(f"Chunk {chunk['chunk_index']} of {chunk['total_chunks']} in this section\n")
+                    
+                    # Show page information (prefer source_page if available)
+                    if 'source_page' in chunk:
+                        f.write(f"Source Page: {chunk['source_page']}\n")
+                        f.write(f"Section Pages: {chunk.get('section_page_range', 'N/A')}\n")
+                        f.write(f"Chunk {chunk.get('chunk_index_in_page', 1)} of {chunk.get('total_chunks_in_page', 1)} on this page\n")
+                    else:
+                        f.write(f"Pages: {chunk.get('start_page', 'N/A')}-{chunk.get('end_page', 'N/A')}\n")
+                        f.write(f"Chunk {chunk['chunk_index']} of {chunk.get('total_chunks', 0)} in this section\n")
+                    
                     f.write("-" * 40 + "\n")
                     f.write(chunk['text'])
                     f.write("\n\n" + "=" * 80 + "\n\n")

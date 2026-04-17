@@ -1,0 +1,540 @@
+
+================================================================================
+EXTRACTING RELATION: CEO
+================================================================================
+Source: Person
+Target: Organization
+Relationship: CEO_OF
+
+✓ Using 5/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/5 (similarity: 0.519)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 168
+  Page: 117
+  Text preview: RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                     ...
+  Full text:
+--------------------------------------------------------------------------------
+RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                      |               |                   |         |                      |             |            |
+
+5. ORGANIZATIONAL
+
+### **Senior Executives remuneration**
+
+Table 2 sets out the aggregated remuneration paid to the Company's five highest paid Senior Executives, inclusive of the CEO and CFO positions.
+
+#### Table 2: Total remuneration paid to the five highest paid executives including CEO and CFO
+
+|                          |              |                      | Fixed remuneration |            |                  |                          |            | Variable remuneration |                  |                                 |             |               |                |
+|--------------------------|--------------|----------------------|--------------------|------------|------------------|--------------------------|------------|-----------------------|------------------|---------------------------------|-------------|---------------|----------------|
+| All<br>amounts<br>in SAR | alarie<br>ιñ |                      | fits<br>₹          |            | tior<br>Periodic | ofits                    |            |                       | จ<br>ᇹ<br>ᅙ<br>Ğ |                                 | ᢦ<br>Ó<br>屲 | Total<br>Boar |                |
+| <b>Total</b>             |              | 17,006,550 9,774,343 | 3,116,801          | 29,897,694 | $\equiv$         | $\overline{\phantom{0}}$ | 24,893,526 |                       |                  | 3,351,366 22,479,590 50,724,482 | 35,277,516  |               | $-115,899,692$ |
+
+The Company's compensation framework for its Senior Executives is designed to provide a competitive compensation package that includes base pay, variable pay, and benefits as follows:
+
+- With respect to fixed remuneration, the Company considers the level and demands of the position, including duties and responsibilities, as well as the educational qualifications, practical experience, skills, performance, and seniority of the individual, all within the context of market conditions and pay practices of peers and other relevant companies;
+- With respect to variable remuneration, the Company offers variable compensation that is market-aligned and subject to the fulfillment of predefined performance goals. Two variable pay plans are used: a Short-Term Incentive Plan and a Long-Term Incentive Plan. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/5 (similarity: 0.515)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 96
+  Page: 108
+  Text preview: | • Executive and/or other significant leadership experience.                                                                                                                        ...
+  Full text:
+--------------------------------------------------------------------------------
+| • Executive and/or other significant leadership experience.                                                                                                                        
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Seth M. Klarman (confidence: 0.515)
+
+Chunk 3/5 (similarity: 0.504)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 54
+  Page: 102
+  Text preview: Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. ...
+  Full text:
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Amin H. Nasser (confidence: 0.504)
+
+Chunk 4/5 (similarity: 0.478)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 26
+  Page: 96
+  Text preview: Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Man...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Managing Director of BP's Asia and Americas Department from 2009 to 2010, President and CEO of TNK-BP from 2003 to 2009, and Director, Gas, Power and Renewables at BP Amoco from 2001 to 2002.
+
+#### **Qualifications**
+
+∩∩
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/5 (similarity: 0.457)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 61
+  Page: 103
+  Text preview: Mr. Ziad T. Al Murshed **Executive Vice President & Chief Financial Officer** 
+
+#### **Experience**
+
+Ziad T. Al Murshed was appointed as Executive Vice President & Chief Financial Officer in May 2022....
+  Full text:
+--------------------------------------------------------------------------------
+Mr. Ziad T. Al Murshed **Executive Vice President & Chief Financial Officer** 
+
+#### **Experience**
+
+Ziad T. Al Murshed was appointed as Executive Vice President & Chief Financial Officer in May 2022. He has served as a member of Executive Management since June 2018.
+
+
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Mr. Ziad T. Al Murshed (confidence: 0.457)
+
+  Processing 3 CEO candidates...
+  ✓ Selected CEO: Seth M. Klarman (confidence: 0.515)
+
+================================================================================
+EXTRACTION COMPLETE: CEO
+================================================================================
+Entities: 1
+Relationships: 1
+
+================================================================================
+EXTRACTING RELATION: HAS_METRIC
+================================================================================
+Source: Company
+Target: Metric
+Relationship: HAS_METRIC
+
+✓ Using 6/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.589)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 162
+  Page: 183
+  Text preview: All other research and development costs are recognized in net income as incurred.
+
+#### (bb) Dividends
+
+Provision is made for the amount of any dividend declared, being appropriately authorized and n...
+  Full text:
+--------------------------------------------------------------------------------
+All other research and development costs are recognized in net income as incurred.
+
+#### (bb) Dividends
+
+Provision is made for the amount of any dividend declared, being appropriately authorized and no longer at the discretion of the Company, on or before the end of the reporting period but not distributed at the end of the reporting period.
+
+#### (cc) Earnings per share
+
+#### (i) Basic earnings per share
+
+Basic earnings per share is calculated by dividing:
+
+- the net income attributable to the ordinary shareholders of the Company.
+
+--------------------------------------------------------------------------------
+  ✓ Found 2 entities:
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Net Income (2024))
+      Properties: {
+        "value": "106.2",
+        "unit": "billion",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "Net Income"
+}
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: EBIT (2024))
+      Properties: {
+        "value": "19.3",
+        "unit": "million",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "EBIT"
+}
+
+Chunk 2/6 (similarity: 0.570)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 205
+  Page: 121
+  Text preview: For the purpose of calculating performance-linked dividends, external investments include acquisition of affiliates, net of cash acquired, additional investments in joint ventures and associates, and ...
+  Full text:
+--------------------------------------------------------------------------------
+For the purpose of calculating performance-linked dividends, external investments include acquisition of affiliates, net of cash acquired, additional investments in joint ventures and associates, and certain amounts recognized in net investment in securities. Please see the consolidated statement of cash flows for more information.
+--------------------------------------------------------------------------------
+  ✓ Found 2 entities:
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Net Income (2024))
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Net Investment in Securities (2024))
+      Properties: {
+        "value": "8.3",
+        "unit": "billion",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "Net Investment in Securities"
+}
+
+Chunk 3/6 (similarity: 0.564)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 72
+  Page: 44
+  Text preview: Aramco uses free cash flow to evaluate its cash available for financing activities, including dividend payments. Aramco defines free cash flow as net cash provided by operating activities less capital...
+  Full text:
+--------------------------------------------------------------------------------
+Aramco uses free cash flow to evaluate its cash available for financing activities, including dividend payments. Aramco defines free cash flow as net cash provided by operating activities less capital expenditures.
+
+Free cash flow in 2024 was # 319,998 (\$85,333) compared to # 379,506 (\$101,202), in 2023, a decrease of # 59,508 (\$15,869) or 15.7%. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/6 (similarity: 0.511)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 74
+  Page: 44
+  Text preview: Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts a...
+  Full text:
+--------------------------------------------------------------------------------
+Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts and investors.
+
+EBIT for 2024 was # 772,296 (\$205,946) compared to # 865,037 (\$230,677), in 2023. This decrease of #92,741 (\$24,731) or 10.7% was primarily due to lower revenue and other income related to sales as well as higher operating costs compared to the previous year.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.506)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 204
+  Page: 121
+  Text preview: All shares have the same entitlement to any dividends declared by the Board and any dividends are and will be distributed in compliance with applicable tax laws.
+
+In 2023 and 2024, the Company's base ...
+  Full text:
+--------------------------------------------------------------------------------
+All shares have the same entitlement to any dividends declared by the Board and any dividends are and will be distributed in compliance with applicable tax laws.
+
+In 2023 and 2024, the Company's base dividend payments totaled # 292.7 billion (\$78.0 billion) and # 304.3 billion (\$81.15 billion), respectively.
+
+On March 3, 2025, the Board declared a base dividend of # 79.3 billion (\$21.14 billion) for the fourth quarter of 2024.
+
+In addition to the base dividend, in 2023, the Company introduced a mechanism for performance-linked dividends to support its aim to deliver a balanced mix of growth and yield to shareholders, which is intended to be paid in the amount of 50-70% of the Group's annual free cash flow, net of the base dividend and other amounts including external investments<sup>1</sup>. The first performance-linked dividends were calculated based on the Group's combined full-year results of 2022 and 2023 and was paid over six quarters, commencing in the third quarter of 2023.
+
+In 2023 and 2024, the Company's performance-linked dividend payments totaled # 74.0 billion (\$19.8 billion) and # 161.6 billion (\$43.09 billion), respectively.
+
+On March 3, 2025, the Board declared performance-linked dividends in the amount of #0.8 billion (\$0.22 billion) based on full-year results of 2024 to be paid in the first quarter of 2025.
+
+1. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.501)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 168
+  Page: 60
+  Text preview: #### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the ...
+  Full text:
+--------------------------------------------------------------------------------
+#### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the corporate outreach and citizenship activities. 
+--------------------------------------------------------------------------------
+  ✓ Found 3 entities:
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Net Income (2024))
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Revenue (2024))
+      Properties: {
+        "value": "103.1",
+        "unit": "billion",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "Revenue"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: EBIT (2024))
+
+================================================================================
+EXTRACTION COMPLETE: HAS_METRIC
+================================================================================
+Entities: 4
+Relationships: 4
+
+================================================================================
+EXTRACTING RELATION: FACES_RISK
+================================================================================
+Source: Company
+Target: Risk
+Relationship: FACES_RISK
+
+✓ Using 6/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.548)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 51
+  Page: 81
+  Text preview: The occurrence of any of these risks may be burdensome and could have a material adverse effect on Aramco's business, financial position, and results of operations....
+  Full text:
+--------------------------------------------------------------------------------
+The occurrence of any of these risks may be burdensome and could have a material adverse effect on Aramco's business, financial position, and results of operations.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/6 (similarity: 0.499)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 118
+  Page: 149
+  Text preview: In light of these risks, uncertainties and assumptions, the forward-looking events described in this Annual Report may not occur in the manner described or may not occur at all.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+In light of these risks, uncertainties and assumptions, the forward-looking events described in this Annual Report may not occur in the manner described or may not occur at all.
+
+
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Company Name) --[FACES_RISK]--> (Risk: Oil Price Volatility)
+      Properties: {
+        "description": "describes a potential volatility in oil prices that could impact the company\u2019s financial performance and growth prospects.",
+        "severity": "High"
+}
+
+Chunk 3/6 (similarity: 0.490)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 143
+  Page: 181
+  Text preview: Due to the complexity of the valuation, the underlying assumptions and the long-term nature of these plans, such estimates are subject to significant uncertainty. ...
+  Full text:
+--------------------------------------------------------------------------------
+Due to the complexity of the valuation, the underlying assumptions and the long-term nature of these plans, such estimates are subject to significant uncertainty. 
+--------------------------------------------------------------------------------
+  ✓ Found 3 entities:
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Oil Price Volatility)
+      Properties: {
+        "description": "detailed description of the risk, paraphrased to be less than 180 characters.",
+        "severity": "High"
+}
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Cybersecurity Threats)
+      Properties: {
+        "description": "paraphrased to be less than 180 characters.",
+        "severity": "High"
+}
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Regulatory Changes)
+      Properties: {
+        "description": "paraphrased to be less than 180 characters.",
+        "severity": "High"
+}
+
+Chunk 4/6 (similarity: 0.483)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 337
+  Page: 216
+  Text preview: The amount and timing of settlement in respect of these provisions are uncertain and dependent on various factors that are not always within management's control. ...
+  Full text:
+--------------------------------------------------------------------------------
+The amount and timing of settlement in respect of these provisions are uncertain and dependent on various factors that are not always within management's control. 
+--------------------------------------------------------------------------------
+  ✓ Found 2 entities:
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Oil Price Volatility)
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Regulatory Changes)
+
+Chunk 5/6 (similarity: 0.471)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 10
+  Page: 159
+  Text preview: |
+
+As part of designing our audit, we determined materiality and assessed the risks of material misstatement in the consolidated financial statements. In particular, we considered where the Board of D...
+  Full text:
+--------------------------------------------------------------------------------
+|
+
+As part of designing our audit, we determined materiality and assessed the risks of material misstatement in the consolidated financial statements. In particular, we considered where the Board of Directors made subjective judgments; for example, in respect of significant accounting estimates that involved making assumptions and considering future events that are inherently uncertain. As in all of our audits, we also addressed the risk of management override of internal controls, including among other matters, consideration of whether there was evidence of bias that represented a risk of material misstatement due to fraud.
+
+#### **Materiality**
+
+The scope of our audit was influenced by our application of materiality. An audit is designed to obtain reasonable assurance whether the consolidated financial statements are free from material misstatement. Misstatements may arise due to fraud or error. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.464)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 4
+  Page: 74
+  Text preview: ### **Risk management**
+
+# **Managing risk exposure**
+
+### **Risk objectives**
+
+Aramco operates in an industry characterized by market volatility, hazardous operations, and uncertain project outcomes....
+  Full text:
+--------------------------------------------------------------------------------
+### **Risk management**
+
+# **Managing risk exposure**
+
+### **Risk objectives**
+
+Aramco operates in an industry characterized by market volatility, hazardous operations, and uncertain project outcomes. Taking informed risks is an inherent and necessary part of doing business. Aramco manages its strategic, operational, compliance, and financial risks by continuously assessing them and undertaking appropriate responses. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: FACES_RISK
+================================================================================
+Entities: 4
+Relationships: 4
+
+================================================================================
+EXTRACTING RELATION: OPERATES_IN
+================================================================================
+Source: Company
+Target: Industry
+Relationship: OPERATES_IN
+
+✓ Using 3/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/3 (similarity: 0.491)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 433
+  Page: 230
+  Text preview: | Marketing support services                                   | 100%                              | <b>USA</b>                                               | 50                                  | 38...
+  Full text:
+--------------------------------------------------------------------------------
+| Marketing support services                                   | 100%                              | <b>USA</b>                                               | 50                                  | 38                                                                                       | 2                                                                                                                    |
+| Saudi Petroleum Overseas, Ltd. <sup>4</sup>                                          | Marketing support and<br>tanker services                     | 100%                              | United Kingdom                                           |                                     | $\mathbf{1}$                                                                             |                                                                                                                      |
+| Saudi Refining, Inc.                                                                 | Refining and marketing                                       | 100%                              | <b>USA</b>                                               | 4,078                               | 67                                                                                       | 157                                                                                                                  |
+| Sofon Industries Company                                                             | Investment in maritime<br>activities                         | 100%                              | Saudi Arabia                                             | 303                                 | 171                                                                                      | 5                                                                                                                    |
+| Sofon Naval Industries Company                                                       | Manufacturing of<br>naval vessels                            | 100%                              | Saudi Arabia                                             | 17                                  | 25                                                                                       |                                                                                                                      |
+| Stellar Insurance, Ltd.                                                              | Insurance                                                    | 100%                              | Bermuda                                                  | 2,967                               | 509                                                                                      | 349                                                                                                                  |
+| U.S. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Saudi Aramco) --[OPERATES_IN]--> (Industry: Oil & Gas)
+      Properties: {
+        "sector": "Energy"
+}
+
+Chunk 2/3 (similarity: 0.478)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 75
+  Page: 141
+  Text preview: | Netherlands                              | 100%                           | Investing/holding company                        | <b>EUR</b>      | 394.4             |
+| Valvoline Italy S.r.l.         ...
+  Full text:
+--------------------------------------------------------------------------------
+| Netherlands                              | 100%                           | Investing/holding company                        | <b>EUR</b>      | 394.4             |
+| Valvoline Italy S.r.l.                                            | Italy                                    | 100%                           | Product sales                                    | <b>EUR</b>      | 0.4               |
+| Valvoline Lubricants & Solutions India Private<br>Limited         | India                                    | 100%                           | Payroll/employment                               | <b>INR</b>      | 137.6             |
+| Valvoline ME FZE                                                  | <b>UAE</b>                               | 100%                           | Product sales                                    | <b>USD</b>      |                   |
+| Valvoline Middle East DMCC                                        | <b>UAE</b>                               | 100%                           | Holding company                                  | <b>USD</b>      |                   |
+| Valvoline New Zealand Limited                                     | New Zealand                              | 100%                           | Product sales                                    | <b>NZD</b>      | 0.6               |
+| Valvoline Poland Sp. z.o.o.                                       
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[OPERATES_IN]--> (Industry: Oil & Gas)
+
+Chunk 3/3 (similarity: 0.460)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 475
+  Page: 237
+  Text preview: | E-fuels demo production                       | 50%                               | Spain                                             | 77                                | 6                         ...
+  Full text:
+--------------------------------------------------------------------------------
+| E-fuels demo production                       | 50%                               | Spain                                             | 77                                | 6                                                                                                    |                                                                                                                     |
+| Tas'helat Marketing Company                                                    | Marketing                                     | 50%                               | Saudi Arabia                                      | 124                               | 2,022                                                                                                |                                                                                                                     |
+| Tuwaig Casting & Forging Company                                               | Metals                                        | 15%                               | Saudi Arabia                                      | 139                               | 35                                                                                                   |                                                                                                                     |
+| Valvoline Cummins Argentina S.A.                                               | Product sales                                 | 50%                               | Argentina                                         | 29                                | 35                                                                                                   |                                                                                                                     |
+| Valvoline Cummins Private Limited                                              | Product sales                                 | 50%                               | India                                             | 155                               | 204                                                                                                  |                                                                                                                     |
+| Valvoline de Colombia S.A.S.                                                   | Product sales                                 | 51%                               | Colombia                                          | 6                                 | $\overline{2}$                                                                                       |                                                                                                                     |
+| VC Lubricating Oil Co., Ltd.                                                   | Holding company                               | 50%                               | Hong Kong, China                                  | 174                               | 70                                                                                                   |                                                                                                                     |
+| Advanced Energy Storage System<br>Investment Company ("AESSIC") <sup>3,4</sup> | Renewable energy                              | 34.1%                             | Saudi Arabia                                      |                                   |                                                                                                      |                                                                                                                     |
+| Al-Jubail Petrochemical Company ("KEMYA") <sup>4</sup>                         | Petrochemicals                                | 35%                               | Saudi Arabia                                      |                                   |                                                                                                      |                                                                                                                     |
+| Cosmar Company ("COSMAR") <sup>4</sup>                                         | Petrochemicals                                | 35%                               | <b>USA</b>                                        |                                   |                                                                                                      |                                                                                                                     |
+| Eastern Petrochemical Company ("SHARQ") <sup>4</sup>                           | Petrochemicals                                | 35%                               | Saudi Arabia                                      |                                   |                                                                                                      |                                                                                                                     |
+| ETG Inputs Holdco Limited ("EIHL") <sup>4</sup>                                | Agri-nutrients                                | 17.2%                             | <b>UAE</b>                                        |                                   |                                                                                                      |                                                                                                                     |
+| Isotopes Company ("IHC") <sup>4</sup>                                          | Machinery equipment                           | 9.4%                              | Saudi Arabia                                      |                                   |                                                                                                      |                                                                                                                     |
+| SABIC Fujian Petrochemicals Co., Ltd. ("FUJIAN") <sup>4</sup> Petrochemicals   |                                               | 35.7%                             | China                                             |                                   |                                                                                                      |                                                                                                                     |
+| SABIC Plastic Energy Advanced Recycling BV<br>$("SPEAR")^4$                    | Petrochemicals                                | 35%                               | Netherlands                                       |                                   |                                                                                                      |                                                                                                                     |
+| SABIC SK Nexelene Company Pte. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: OPERATES_IN
+================================================================================
+Entities: 1
+Relationships: 1
+
+================================================================================
+EXTRACTING RELATION: OFFERS
+================================================================================
+Source: Company
+Target: Product
+Relationship: OFFERS
+
+✓ Using 0/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+================================================================================
+EXTRACTION COMPLETE: OFFERS
+================================================================================
+Entities: 0
+Relationships: 0

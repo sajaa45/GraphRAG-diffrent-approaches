@@ -1,0 +1,151 @@
+
+================================================================================
+EXTRACTING RELATION: CEO
+================================================================================
+Source: Person
+Target: Organization
+Relationship: CEO_OF
+
+
+✓ Using 6/6 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.515)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 168
+  Page: 117
+  Text preview: RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                     ...
+  Full text:
+--------------------------------------------------------------------------------
+RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                      |               |                   |         |                      |             |            |
+
+5. ORGANIZATIONAL
+
+### **Senior Executives remuneration**
+
+Table 2 sets out the aggregated remuneration paid to the Company's five highest paid Senior Executives, inclusive of the CEO and CFO positions.
+
+#### Table 2: Total remuneration paid to the five highest paid executives including CEO and CFO
+
+|                          |              |                      | Fixed remuneration |            |                  |                          |            | Variable remuneration |                  |                                 |             |               |                |
+|--------------------------|--------------|----------------------|--------------------|------------|------------------|--------------------------|------------|-----------------------|------------------|---------------------------------|-------------|---------------|----------------|
+| All<br>amounts<br>in SAR | alarie<br>ιñ |                      | fits<br>₹          |            | tior<br>Periodic | ofits                    |            |                       | จ<br>ᇹ<br>ᅙ<br>Ğ |                                 | ᢦ<br>Ó<br>屲 | Total<br>Boar |                |
+| <b>Total</b>             |              | 17,006,550 9,774,343 | 3,116,801          | 29,897,694 | $\equiv$         | $\overline{\phantom{0}}$ | 24,893,526 |                       |                  | 3,351,366 22,479,590 50,724,482 | 35,277,516  |               | $-115,899,692$ |
+
+The Company's compensation framework for its Senior Executives is designed to provide a competitive compensation package that includes base pay, variable pay, and benefits as follows:
+
+- With respect to fixed remuneration, the Company considers the level and demands of the position, including duties and responsibilities, as well as the educational qualifications, practical experience, skills, performance, and seniority of the individual, all within the context of market conditions and pay practices of peers and other relevant companies;
+- With respect to variable remuneration, the Company offers variable compensation that is market-aligned and subject to the fulfillment of predefined performance goals. Two variable pay plans are used: a Short-Term Incentive Plan and a Long-Term Incentive Plan. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/6 (similarity: 0.511)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 96
+  Page: 108
+  Text preview: | • Executive and/or other significant leadership experience.                                                                                                                        ...
+  Full text:
+--------------------------------------------------------------------------------
+| • Executive and/or other significant leadership experience.                                                                                                                        
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.485)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 54
+  Page: 102
+  Text preview: Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. ...
+  Full text:
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/6 (similarity: 0.436)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 26
+  Page: 96
+  Text preview: Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Man...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Managing Director of BP's Asia and Americas Department from 2009 to 2010, President and CEO of TNK-BP from 2003 to 2009, and Director, Gas, Power and Renewables at BP Amoco from 2001 to 2002.
+
+#### **Qualifications**
+
+∩∩
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.435)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 52
+  Page: 102
+  Text preview: The Business Line and Service Line Heads report directly to the President & CEO.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+The Business Line and Service Line Heads report directly to the President & CEO.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.424)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 102
+  Page: 109
+  Text preview: | 8              |
+| <b>Executive leadership experience</b>                                 | Possesses a deep understanding of organizations and strategy to assist the<br>Board in oversight of the Co...
+  Full text:
+--------------------------------------------------------------------------------
+| 8              |
+| <b>Executive leadership experience</b>                                 | Possesses a deep understanding of organizations and strategy to assist the<br>Board in oversight of the Company's global operations and strategic planning.                                       | 11             |
+| Technology, innovation,<br>cybersecurity, and scientific<br>experience | Assists the Board in overseeing the Company's leadership<br>in technological change and innovation and related risks, including with<br>respect to the Company's sustainability initiatives.      | 6              |
+| Other public company<br><b>Board experience</b>                        | Aids the Board with an understanding of issues commonly faced by public<br>companies, and provides insight on corporate governance practices and trends.                                          | 8              |
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: CEO
+================================================================================
+Entities: 0
+Relationships: 0
+
+
+================================================================================
+EXTRACTING RELATION: HAS_METRIC
+================================================================================
+Source: Company
+Target: Metric
+Relationship: HAS_METRIC
+
+
+✓ Using 3/3 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================

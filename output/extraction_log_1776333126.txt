@@ -1,0 +1,711 @@
+
+================================================================================
+EXTRACTING RELATION: CEO
+================================================================================
+Source: Person
+Target: Organization
+Relationship: CEO_OF
+
+
+✓ Using 6/6 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.515)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 168
+  Page: 117
+  Text preview: RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                     ...
+  Full text:
+--------------------------------------------------------------------------------
+RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                      |               |                   |         |                      |             |            |
+
+5. ORGANIZATIONAL
+
+### **Senior Executives remuneration**
+
+Table 2 sets out the aggregated remuneration paid to the Company's five highest paid Senior Executives, inclusive of the CEO and CFO positions.
+
+#### Table 2: Total remuneration paid to the five highest paid executives including CEO and CFO
+
+|                          |              |                      | Fixed remuneration |            |                  |                          |            | Variable remuneration |                  |                                 |             |               |                |
+|--------------------------|--------------|----------------------|--------------------|------------|------------------|--------------------------|------------|-----------------------|------------------|---------------------------------|-------------|---------------|----------------|
+| All<br>amounts<br>in SAR | alarie<br>ιñ |                      | fits<br>₹          |            | tior<br>Periodic | ofits                    |            |                       | จ<br>ᇹ<br>ᅙ<br>Ğ |                                 | ᢦ<br>Ó<br>屲 | Total<br>Boar |                |
+| <b>Total</b>             |              | 17,006,550 9,774,343 | 3,116,801          | 29,897,694 | $\equiv$         | $\overline{\phantom{0}}$ | 24,893,526 |                       |                  | 3,351,366 22,479,590 50,724,482 | 35,277,516  |               | $-115,899,692$ |
+
+The Company's compensation framework for its Senior Executives is designed to provide a competitive compensation package that includes base pay, variable pay, and benefits as follows:
+
+- With respect to fixed remuneration, the Company considers the level and demands of the position, including duties and responsibilities, as well as the educational qualifications, practical experience, skills, performance, and seniority of the individual, all within the context of market conditions and pay practices of peers and other relevant companies;
+- With respect to variable remuneration, the Company offers variable compensation that is market-aligned and subject to the fulfillment of predefined performance goals. Two variable pay plans are used: a Short-Term Incentive Plan and a Long-Term Incentive Plan. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/6 (similarity: 0.512)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 96
+  Page: 108
+  Text preview: | • Executive and/or other significant leadership experience.                                                                                                                        ...
+  Full text:
+--------------------------------------------------------------------------------
+| • Executive and/or other significant leadership experience.                                                                                                                        
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.492)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 54
+  Page: 102
+  Text preview: Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. ...
+  Full text:
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+--------------------------------------------------------------------------------
+    ~ CEO candidate: Amin H. Nasser (confidence: 0.492)
+
+Chunk 4/6 (similarity: 0.471)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 26
+  Page: 96
+  Text preview: Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Man...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Managing Director of BP's Asia and Americas Department from 2009 to 2010, President and CEO of TNK-BP from 2003 to 2009, and Director, Gas, Power and Renewables at BP Amoco from 2001 to 2002.
+
+#### **Qualifications**
+
+∩∩
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.458)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 29
+  Page: 96
+  Text preview: Previously, Ms. Elsenhans has served as the President and CEO of Sunoco, Inc. from 2008 to 2012, CEO of Sunoco Logistics Partners in 2010, and as an Executive at Royal Dutch Shell from 1980 to 2008, h...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Ms. Elsenhans has served as the President and CEO of Sunoco, Inc. from 2008 to 2012, CEO of Sunoco Logistics Partners in 2010, and as an Executive at Royal Dutch Shell from 1980 to 2008, holding several senior executive roles, including Executive Vice President Global Manufacturing.
+
+#### **Qualifications**
+
+Ms. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.441)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 52
+  Page: 102
+  Text preview: The Business Line and Service Line Heads report directly to the President & CEO.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+The Business Line and Service Line Heads report directly to the President & CEO.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+  Processing 1 CEO candidates...
+    ~ Amin H. Nasser: semantic_score=80, similarity=0.492
+  ✓ Selected CEO: Amin H. Nasser (semantic_score: 80, similarity: 0.492)
+
+================================================================================
+EXTRACTION COMPLETE: CEO
+================================================================================
+Entities: 1
+Relationships: 1
+
+
+================================================================================
+EXTRACTING RELATION: HAS_METRIC
+================================================================================
+Source: Company
+Target: Metric
+Relationship: HAS_METRIC
+
+
+✓ Using 6/6 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.592)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 72
+  Page: 44
+  Text preview: Aramco uses free cash flow to evaluate its cash available for financing activities, including dividend payments. Aramco defines free cash flow as net cash provided by operating activities less capital...
+  Full text:
+--------------------------------------------------------------------------------
+Aramco uses free cash flow to evaluate its cash available for financing activities, including dividend payments. Aramco defines free cash flow as net cash provided by operating activities less capital expenditures.
+
+Free cash flow in 2024 was # 319,998 (\$85,333) compared to # 379,506 (\$101,202), in 2023, a decrease of # 59,508 (\$15,869) or 15.7%. 
+--------------------------------------------------------------------------------
+    - (Company: Aramco) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
+      Properties: {
+        "value": "85333",
+        "unit": "million",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "Free Cash Flow"
+}
+
+Chunk 2/6 (similarity: 0.591)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 205
+  Page: 121
+  Text preview: For the purpose of calculating performance-linked dividends, external investments include acquisition of affiliates, net of cash acquired, additional investments in joint ventures and associates, and ...
+  Full text:
+--------------------------------------------------------------------------------
+For the purpose of calculating performance-linked dividends, external investments include acquisition of affiliates, net of cash acquired, additional investments in joint ventures and associates, and certain amounts recognized in net investment in securities. Please see the consolidated statement of cash flows for more information.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.577)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 162
+  Page: 183
+  Text preview: All other research and development costs are recognized in net income as incurred.
+
+#### (bb) Dividends
+
+Provision is made for the amount of any dividend declared, being appropriately authorized and n...
+  Full text:
+--------------------------------------------------------------------------------
+All other research and development costs are recognized in net income as incurred.
+
+#### (bb) Dividends
+
+Provision is made for the amount of any dividend declared, being appropriately authorized and no longer at the discretion of the Company, on or before the end of the reporting period but not distributed at the end of the reporting period.
+
+#### (cc) Earnings per share
+
+#### (i) Basic earnings per share
+
+Basic earnings per share is calculated by dividing:
+
+- the net income attributable to the ordinary shareholders of the Company.
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/6 (similarity: 0.507)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 168
+  Page: 60
+  Text preview: #### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the ...
+  Full text:
+--------------------------------------------------------------------------------
+#### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the corporate outreach and citizenship activities. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.500)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 74
+  Page: 44
+  Text preview: Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts a...
+  Full text:
+--------------------------------------------------------------------------------
+Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts and investors.
+
+EBIT for 2024 was # 772,296 (\$205,946) compared to # 865,037 (\$230,677), in 2023. This decrease of #92,741 (\$24,731) or 10.7% was primarily due to lower revenue and other income related to sales as well as higher operating costs compared to the previous year.
+--------------------------------------------------------------------------------
+    - (Company: the Company) --[HAS_METRIC]--> (Metric: EBIT (2024))
+      Properties: {
+        "value": "772296",
+        "unit": "thousand",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "EBIT"
+}
+    - (Company: the Company) --[HAS_METRIC]--> (Metric: EBIT (2023))
+      Properties: {
+        "value": "865037",
+        "unit": "thousand",
+        "currency": "SAR",
+        "year": "2023",
+        "metric_type": "EBIT"
+}
+
+Chunk 6/6 (similarity: 0.494)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 204
+  Page: 121
+  Text preview: All shares have the same entitlement to any dividends declared by the Board and any dividends are and will be distributed in compliance with applicable tax laws.
+
+In 2023 and 2024, the Company's base ...
+  Full text:
+--------------------------------------------------------------------------------
+All shares have the same entitlement to any dividends declared by the Board and any dividends are and will be distributed in compliance with applicable tax laws.
+
+In 2023 and 2024, the Company's base dividend payments totaled # 292.7 billion (\$78.0 billion) and # 304.3 billion (\$81.15 billion), respectively.
+
+On March 3, 2025, the Board declared a base dividend of # 79.3 billion (\$21.14 billion) for the fourth quarter of 2024.
+
+In addition to the base dividend, in 2023, the Company introduced a mechanism for performance-linked dividends to support its aim to deliver a balanced mix of growth and yield to shareholders, which is intended to be paid in the amount of 50-70% of the Group's annual free cash flow, net of the base dividend and other amounts including external investments<sup>1</sup>. The first performance-linked dividends were calculated based on the Group's combined full-year results of 2022 and 2023 and was paid over six quarters, commencing in the third quarter of 2023.
+
+In 2023 and 2024, the Company's performance-linked dividend payments totaled # 74.0 billion (\$19.8 billion) and # 161.6 billion (\$43.09 billion), respectively.
+
+On March 3, 2025, the Board declared performance-linked dividends in the amount of #0.8 billion (\$0.22 billion) based on full-year results of 2024 to be paid in the first quarter of 2025.
+
+1. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: HAS_METRIC
+================================================================================
+Entities: 3
+Relationships: 3
+
+
+================================================================================
+EXTRACTING RELATION: FACES_RISK
+================================================================================
+Source: Company
+Target: Risk
+Relationship: FACES_RISK
+
+
+✓ Using 6/6 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.524)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 59
+  Page: 83
+  Text preview: However, there is no assurance that Aramco will prevail on the basis of these defenses in the future in connection with OPEC-related or other lawsuits, and Aramco and its affiliates could be subject t...
+  Full text:
+--------------------------------------------------------------------------------
+However, there is no assurance that Aramco will prevail on the basis of these defenses in the future in connection with OPEC-related or other lawsuits, and Aramco and its affiliates could be subject to similar claims elsewhere. In addition, there is a risk that laws could be enacted in the future that would expressly remove or weaken certain sovereign defenses.
+
+Also, increasing attention on climate change risks may result in increased litigation against Aramco and its affiliates. Claims relating to climate change matters have been filed against companies in the oil and gas industry by private parties, shareholders of such companies, public interest organizations, state attorneys general, cities and other localities, especially in the United States and Europe. 
+--------------------------------------------------------------------------------
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: Litigation Risks due to Climate Change Matters)
+      Properties: {
+        "description": "Increasing legal actions against Aramco and its affiliates regarding climate change issues, particularly in the United States and Europe.",
+        "severity": "High"
+}
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: Legislative Risks for Weakened or Removed Sovereign Defenses)
+      Properties: {
+        "description": "Risk of laws being enacted that could weaken or remove certain sovereign defenses, potentially affecting Aramco and its affiliates.",
+        "severity": "High"
+}
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: OPEC-related Lawsuit Risks)
+      Properties: {
+        "description": "Potential legal disputes related to OPEC, which could impact Aramco and its affiliates.",
+        "severity": "Medium"
+}
+
+Chunk 2/6 (similarity: 0.486)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 170
+  Page: 184
+  Text preview: At December 31, 2024 and 2023, a change in fair value due to a movement of 5% in the unit price of equities and mutual and hedge funds would result in a change in income before income taxes and zakat ...
+  Full text:
+--------------------------------------------------------------------------------
+At December 31, 2024 and 2023, a change in fair value due to a movement of 5% in the unit price of equities and mutual and hedge funds would result in a change in income before income taxes and zakat of #31 and #26, respectively.
+
+#### b) Commodity derivative contracts
+
+Saudi Aramco trades crude, natural gas liquids and various refined and bulk petrochemical products and uses commodity derivatives as a means of managing price and timing of risks arising from this trading. In effecting these transactions, Saudi Aramco operates within policies and procedures designed to ensure that risks, including those related to the default of counterparties, are managed within authorized limits.
+
+
+--------------------------------------------------------------------------------
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Price Volatility Risk in Commodity Derivatives Trading)
+      Properties: {
+        "description": "A fluctuation of 5% in the unit price of equities and mutual/hedge funds may materially affect income before taxes and zakat.",
+        "severity": "High"
+}
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Counterparty Default Risk in Commodity Derivatives Trading)
+      Properties: {
+        "description": "Risks associated with the default of counterparties are managed within authorized limits.",
+        "severity": "High"
+}
+
+Chunk 3/6 (similarity: 0.484)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 61
+  Page: 83
+  Text preview: Furthermore, oil and gas companies have been subject to a growing number of lawsuits alleging damages from the companies' contributions to climate change, failure to protect the environment from the e...
+  Full text:
+--------------------------------------------------------------------------------
+Furthermore, oil and gas companies have been subject to a growing number of lawsuits alleging damages from the companies' contributions to climate change, failure to protect the environment from the effects of their operations, concealing information about the consequences of the use of their products on climate change and similar matters. Motiva has been named in several of these lawsuits, and Aramco and its affiliates may be named in similar lawsuits in the future.
+
+In addition, oil and gas companies are also increasingly subject to lawsuits based on allegations that certain public statements regarding ESG matters or net-zero or carbon neutrality targets are false and misleading "greenwashing" campaigns or that climaterelated disclosures made by companies are inadequate. Aramco could be subject to, and Motiva has been named in and is defending, this type of lawsuit.
+
+
+--------------------------------------------------------------------------------
+    - (Company: Motiva, Aramco) --[FACES_RISK]--> (Risk: Lawsuits alleging damages from contributions to climate change)
+      Properties: {
+        "description": "Allegations of causing environmental damage and concealing information about the consequences of product use on climate change.",
+        "severity": "High"
+}
+    - (Company: Aramco, Motiva) --[FACES_RISK]--> (Risk: Lawsuits based on false or misleading 'greenwashing' campaigns)
+      Properties: {
+        "description": "Allegations of making false statements regarding ESG matters or net-zero/carbon neutrality targets.",
+        "severity": "High"
+}
+    - (Company: Motiva) --[FACES_RISK]--> (Risk: Lawsuits based on inadequate climaterelated disclosures)
+      Properties: {
+        "description": "Allegations of insufficient disclosure of climate-related information.",
+        "severity": "High"
+}
+
+Chunk 4/6 (similarity: 0.472)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 58
+  Page: 83
+  Text preview: litigation has involved allegations of violations of antitrust laws arising, in part, from the Kingdom's membership and participation in OPEC. Such antitrust litigation sought extensive relief, includ...
+  Full text:
+--------------------------------------------------------------------------------
+litigation has involved allegations of violations of antitrust laws arising, in part, from the Kingdom's membership and participation in OPEC. Such antitrust litigation sought extensive relief, including treble damages, divestiture of assets in the United States, and disgorgement of profits. If granted, this relief could have had a material adverse impact on Aramco. To date, the OPECrelated antitrust lawsuits have been dismissed on the basis of various sovereign defenses under U.S. law. 
+--------------------------------------------------------------------------------
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: OPEC-related Antitrust Lawsuits)
+      Properties: {
+        "description": "Allegations of violating antitrust laws, seeking extensive relief such as treble damages and asset divestiture, which could have a material adverse impact on the Company.",
+        "severity": "High"
+}
+
+Chunk 5/6 (similarity: 0.440)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 56
+  Page: 137
+  Text preview: The outcome of litigation and other legal matters, including Government investigations or other trade actions, is inherently uncertain. Aramco believes it has valid defenses to the legal matters curre...
+  Full text:
+--------------------------------------------------------------------------------
+The outcome of litigation and other legal matters, including Government investigations or other trade actions, is inherently uncertain. Aramco believes it has valid defenses to the legal matters currently pending against it as a party. Certain trade actions that do not involve Aramco as a party may instead involve its products or industry, other products or industries impacting its operations, or the countries in which it operates. Trade actions may be taken without prior notice, or with retroactive effect. Actual outcomes of these legal, regulatory, and other proceedings may materially differ from current estimates. To date, none of these types of litigation or trade matters has had a material impact on Aramco's operations or financial position. 
+--------------------------------------------------------------------------------
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: Inherently uncertain outcome of legal matters and government investigations)
+      Properties: {
+        "description": "Legal proceedings can result in materially different outcomes from current estimates, potentially impacting the company's operations or financial position.",
+        "severity": "High"
+}
+    - (Company: Aramco) --[FACES_RISK]--> (Risk: Unexpected trade actions)
+      Properties: {
+        "description": "Trade matters can be initiated without prior notice or with retroactive effect, potentially impacting the company's operations, products, or the countries it operates in.",
+        "severity": "Medium"
+}
+
+Chunk 6/6 (similarity: 0.439)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 60
+  Page: 83
+  Text preview: These lawsuits seek a variety of remedies, including financial compensation for alleged past and future damages resulting from climate change and court orders requiring energy companies to reduce GHG ...
+  Full text:
+--------------------------------------------------------------------------------
+These lawsuits seek a variety of remedies, including financial compensation for alleged past and future damages resulting from climate change and court orders requiring energy companies to reduce GHG emissions. 
+--------------------------------------------------------------------------------
+    - (Company: Energy Companies) --[FACES_RISK]--> (Risk: Financial Compensation Risk)
+      Properties: {
+        "description": "Risk of being ordered to pay financial compensation for alleged past and future damages resulting from climate change.",
+        "severity": "High"
+}
+
+================================================================================
+EXTRACTION COMPLETE: FACES_RISK
+================================================================================
+Entities: 12
+Relationships: 12
+
+
+================================================================================
+EXTRACTING RELATION: OPERATES_IN
+================================================================================
+Source: Company
+Target: Industry
+Relationship: OPERATES_IN
+
+
+✓ Using 3/3 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/3 (similarity: 0.500)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 52
+  Page: 136
+  Text preview: Downstream technology development is dedicated primarily to maximizing value across the hydrocarbon chain and finding new and improved methods of producing products. ...
+  Full text:
+--------------------------------------------------------------------------------
+Downstream technology development is dedicated primarily to maximizing value across the hydrocarbon chain and finding new and improved methods of producing products. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/3 (similarity: 0.496)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 180
+  Page: 155
+  Text preview: 3 SUSTAINARILITY
+
+**6. ADDITIONAL FINANCIAL AND LEGAL INFORMATION** 
+
+CONSOLIDATED FINANCIAL **STATEMENTS** 
+
+## **SAIL**
+
+Saudi Accelerated Innovation Lab.
+
+#### **Sanabil Investments**
+
+Saudi Arabia...
+  Full text:
+--------------------------------------------------------------------------------
+3 SUSTAINARILITY
+
+**6. ADDITIONAL FINANCIAL AND LEGAL INFORMATION** 
+
+CONSOLIDATED FINANCIAL **STATEMENTS** 
+
+## **SAIL**
+
+Saudi Accelerated Innovation Lab.
+
+#### **Sanabil Investments**
+
+Saudi Arabian Investment Company, a wholly-owned subsidiary of the PIF.
+
+## SAPCO
+
+Saudi Aramco Power Company.
+
+## **SASREF**
+
+Saudi Aramco Jubail Refinery Company, a subsidiary of Aramco, formerly known as Saudi Aramco Shell Refinery Company.
+
+## **SATORP**
+
+Saudi Aramco Total Refining and Petrochemical Company, a joint venture established by Aramco and Total Refining Saudi Arabia SAS in 2008.
+
+#### Saudi Aramco/Aramco/Group
+
+Saudi Arabian Oil Company, together with its consolidated subsidiaries, and where the context requires, its joint operations, joint ventures and associates.
+
+Any reference to "us," "we," or "our" refers to Aramco except where otherwise stated.
+
+Unless otherwise stated, the text does not distinguish between the activities and operations of the Company and those of its subsidiaries.
+
+
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company (Aramco)) --[OPERATES_IN]--> (Industry: Oil & Gas)
+      Properties: {
+        "sector": "Energy"
+}
+    - (Company: Saudi Aramco Power Company (SAPCO)) --[OPERATES_IN]--> (Industry: Power Generation)
+      Properties: {
+        "sector": "Energy"
+}
+    - (Company: Saudi Aramco Jubail Refinery Company (SASREF)) --[OPERATES_IN]--> (Industry: Refining)
+      Properties: {
+        "sector": "Energy"
+}
+    - (Company: Saudi Aramco Total Refining and Petrochemical Company (SATORP)) --[OPERATES_IN]--> (Industry: Refining)
+      Properties: {
+        "sector": "Chemicals"
+}
+
+Chunk 3/3 (similarity: 0.496)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 19
+  Page: 130
+  Text preview: ("Hyundai Oilbank")                     | 33,660   |
+| Fujian Refining and Petrochemical Company Limited ("FREP")       | 14,813   |
+| Power and Water Utility Company for Jubail and Yanbu ("Marafiq") ...
+  Full text:
+--------------------------------------------------------------------------------
+("Hyundai Oilbank")                     | 33,660   |
+| Fujian Refining and Petrochemical Company Limited ("FREP")       | 14,813   |
+| Power and Water Utility Company for Jubail and Yanbu ("Marafiq") | 2,006    |
+| Others                                                           | 888      |
+|                                                                  | 85,766   |
+|                                                                  |          |
+| Other revenue                                                    |          |
+| <b>Others</b>                                                    | 218      |
+|                                                                  | 218      |
+|                                                                  |          |
+| Interest income                                                  |          |
+| Others                                                           | 353      |
+|                                                                  | 353      |
+|                                                                  |          |
+| <b>Purchases</b>                                                 |          |
+| Rabigh Refining and Petrochemical Company ("Petro Rabigh")       | 33,660   |
+| Hyundai Oilbank Co. Ltd. ("Hyundai Oilbank")                     | 13,541   |
+| Power and Water Utility Company for Jubail and Yanbu ("Marafiq") | 1,208    |
+| National Shipping Company of Saudi Arabia ("Bahri")              | 3,473    |
+| Ma'aden Wa'ad Al-Shamal Phosphate Company ("MWSPC")              | 1,384    |
+| Ma'aden Phosphate Company ("MPC")                                | 1,718    |
+| Fujian Refining and Petrochemical Company Limited ("FREP")       | 848      |
+| Others                                                           | 1,986    |
+|                                                                  | 57,818   |
+|                                                                  |          |
+| Service expenses                                                 |          |
+| Others                                                           | 180      |
+|                                                                  | 180      |
+|                                                                  |          |
+| Other assets and receivables                                     |          |
+| Rabigh Refining and Petrochemical Company ("Petro Rabigh")       | 3,728    |
+| Others                                                           | 103      |
+|                                                                  | 3,831    |
+|                                                                  |          |
+| <b>Trade receivables</b>                                         |          |
+| Rabigh Refining and Petrochemical Company ("Petro Rabigh")       | 14,749   |
+| Fujian Refining and Petrochemical Company Limited ("FREP")       | 1,706    |
+| Hyundai Oilbank Co. Ltd. 
+--------------------------------------------------------------------------------
+    - (Company: Rabigh Refining and Petrochemical Company) --[OPERATES_IN]--> (Industry: Oil & Gas, Petrochemicals, Refining)
+      Properties: {
+        "sector": "Energy"
+}
+    - (Company: Fujian Refining and Petrochemical Company Limited) --[OPERATES_IN]--> (Industry: Oil & Gas, Petrochemicals, Refining)
+      Properties: {
+        "sector": "Energy"
+}
+    - (Company: Hyundai Oilbank Co. Ltd.) --[OPERATES_IN]--> (Industry: Oil & Gas, Petrochemicals, Refining)
+      Properties: {
+        "sector": "Energy"
+}
+
+================================================================================
+EXTRACTION COMPLETE: OPERATES_IN
+================================================================================
+Entities: 7
+Relationships: 7
+
+
+================================================================================
+EXTRACTING RELATION: OFFERS
+================================================================================
+Source: Company
+Target: Product
+Relationship: OFFERS
+
+
+✓ Using 6/6 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.546)
+  Section: Aramco Overview & Strat
+  Section ID: 1
+  Chunk Index: 95
+  Page: 26
+  Text preview: Domestic gas demand growth is driven by power generation, water desalination, petrochemical production, and other industrial consumption in the Kingdom.
+
+An important additional benefit of Aramco's ga...
+  Full text:
+--------------------------------------------------------------------------------
+Domestic gas demand growth is driven by power generation, water desalination, petrochemical production, and other industrial consumption in the Kingdom.
+
+An important additional benefit of Aramco's gas production is the significant NGL and condensate yields, which supplement crude oil production and provide feedstock to the refining and petrochemical industries.
+
+Internationally, Aramco anticipates strong demand-led growth for LNG as the world continues on its energy transition journey, with gas being a vital fuel and feedstock in various industries, and critical to meeting the world's need for secure, accessible, and more sustainable energy. As a result, Aramco plans to develop an integrated global LNG business, and is pursuing investment opportunities.
+--------------------------------------------------------------------------------
+    - (Company: Aramco) --[OFFERS]--> (Product: Crude Oil Production)
+      Properties: {
+        "category": "Product",
+        "description": "Fuel for power generation and feedstock for refining industries"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Power Generation)
+      Properties: {
+        "category": "Service",
+        "description": "Supplying power to the Kingdom"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Water Desalination)
+      Properties: {
+        "category": "Service",
+        "description": "Providing desalinated water in the Kingdom"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Petrochemical Production)
+      Properties: {
+        "category": "Product",
+        "description": "Production of petrochemicals for various industries"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Industrial Consumption)
+      Properties: {
+        "category": "Service",
+        "description": "Supplying gas to various industrial applications in the Kingdom"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: NGL and Condensate Yields)
+      Properties: {
+        "category": "Product",
+        "description": "Byproducts that supplement crude oil production"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Refining Industries Feedstock)
+      Properties: {
+        "category": "Product",
+        "description": "NGL and condensate used in refining processes"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: LNG Production)
+      Properties: {
+        "category": "Product",
+        "description": "Anticipated growth area due to global demand-led expansion"
+}
+    - (Company: Aramco) --[OFFERS]--> (Product: Global LNG Business Development)
+      Properties: {
+        "category": "Solution",
+        "description": "Strategic plan to expand in the global LNG market"
+}
+
+Chunk 2/6 (similarity: 0.544)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 101
+  Page: 50
+  Text preview: The supply of natural gas to domestic customers is regulated by the Energy Supply Law (which superseded the GSPR and became effective in March 2023), and the prices paid by domestic customers are set ...
+  Full text:
+--------------------------------------------------------------------------------
+The supply of natural gas to domestic customers is regulated by the Energy Supply Law (which superseded the GSPR and became effective in March 2023), and the prices paid by domestic customers are set by resolutions issued from time to time by the Council of Ministers. Aramco also exports a portion of its NGL production and is assessing LNG investments internationally.
+
+
+--------------------------------------------------------------------------------

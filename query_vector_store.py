@@ -167,13 +167,23 @@ class VectorStoreQuery:
                         chunk_similarity = 1 - chunk_dist
                         print(f"    Chunk {j}: Similarity {chunk_similarity:.3f}")
                         
-                        results['chunks'].append({
+                        chunk_data = {
                             "section_title": section_title,
                             "section_id": section_id,
                             "chunk_index": chunk_meta.get('chunk_index', j),
                             "similarity": round(chunk_similarity, 3),
                             "text": chunk_doc
-                        })
+                        }
+                        
+                        # Add page information if available
+                        if 'source_page' in chunk_meta:
+                            chunk_data['source_page'] = chunk_meta['source_page']
+                            chunk_data['section_page_range'] = chunk_meta.get('section_page_range')
+                        elif 'start_page' in chunk_meta:
+                            chunk_data['start_page'] = chunk_meta['start_page']
+                            chunk_data['end_page'] = chunk_meta.get('end_page')
+                        
+                        results['chunks'].append(chunk_data)
         else:
             # Fallback: Direct chunk search
             print(f"\nStep 2: Direct chunk search (no relevant sections)")
@@ -210,13 +220,24 @@ class VectorStoreQuery:
                     })
                     
                     for chunk in chunks:
-                        results['chunks'].append({
+                        chunk_data = {
                             "section_title": section_title,
                             "section_id": chunk['metadata'].get('section_id'),
                             "chunk_index": chunk['metadata'].get('chunk_index'),
                             "similarity": round(chunk['similarity'], 3),
                             "text": chunk['text']
-                        })
+                        }
+                        
+                        # Add page information if available
+                        meta = chunk['metadata']
+                        if 'source_page' in meta:
+                            chunk_data['source_page'] = meta['source_page']
+                            chunk_data['section_page_range'] = meta.get('section_page_range')
+                        elif 'start_page' in meta:
+                            chunk_data['start_page'] = meta['start_page']
+                            chunk_data['end_page'] = meta.get('end_page')
+                        
+                        results['chunks'].append(chunk_data)
         
         return results
     

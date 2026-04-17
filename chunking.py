@@ -621,14 +621,26 @@ def apply_chunking_to_sections_progressive(sections, chunker_func, method_name,
         # Process page-by-page if pages_data is available
         section_chunk_data = []
         
-        if pages_data:
+        # Check if section has page_contents (from content-based sectioning)
+        has_page_contents = 'page_contents' in section and section['page_contents']
+        
+        if has_page_contents or pages_data:
             # Chunk each page individually to track exact source page
             for page_num in section['pages']:
-                page_key = str(page_num)
-                if page_key not in pages_data:
-                    continue
+                # Get page text from page_contents or pages_data
+                page_text = None
                 
-                page_text = pages_data[page_key]
+                if has_page_contents:
+                    # Extract from page_contents array
+                    page_content = next((p for p in section['page_contents'] if p['page_number'] == page_num), None)
+                    if page_content:
+                        page_text = page_content.get('content', '')
+                elif pages_data:
+                    # Extract from pages_data dictionary
+                    page_key = str(page_num)
+                    if page_key in pages_data:
+                        page_text = pages_data[page_key]
+                
                 if not page_text or not page_text.strip():
                     continue
                 
@@ -997,6 +1009,34 @@ def main():
             print(f"Flattened to {len(sections)} total sections")
         else:
             print(f"Loaded {len(sections)} flat sections")
+            
+            # For flat sections, try to load pages_data from the source JSON file
+            filename = data.get('filename', '')
+            if not filename and sections:
+                # Try to infer filename from section data or input file
+                input_basename = os.path.splitext(os.path.basename(section_files[0]))[0]
+                # Remove _sections suffix if present
+                if input_basename.endswith('_sections'):
+                    filename = input_basename[:-9]  # Remove '_sections'
+            
+            if filename:
+                # Look for the source JSON file
+                base_name = os.path.splitext(os.path.basename(filename))[0] if '.' in filename else filename
+                pages_json_file = os.path.join(input_dir, f"{base_name}.json")
+                
+                if os.path.exists(pages_json_file):
+                    print(f"Loading page text from: {pages_json_file}")
+                    with open(pages_json_file, 'r', encoding='utf-8') as f:
+                        pages_data = json.load(f)
+                    print(f"Loaded {len(pages_data)} pages for page-by-page chunking")
+                else:
+                    print(f"Warning: Could not find pages JSON file: {pages_json_file}")
+                    print("Will chunk sections as-is without individual page tracking")
+                    pages_data = {}
+            else:
+                print("Warning: No filename found, cannot load individual page data")
+                print("Will chunk sections as-is without individual page tracking")
+                pages_data = {}
         
     except Exception as e:
         print(f"Error loading sections: {e}")

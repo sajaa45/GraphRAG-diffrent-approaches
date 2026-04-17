@@ -11,8 +11,8 @@ RUN pip install --upgrade pip && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install git+https://github.com/MinishLab/model2vec.git && \
-    pip install --force-reinstall "chonkie[model2vec]"
+RUN pip install --no-cache-dir google-genai
+
 
 # Copy all application files
 COPY json_text_processor.py .
@@ -34,6 +34,7 @@ COPY unified_pipeline.py .
 COPY query_vector_store.py .
 COPY build_kg_from_query.py .
 COPY relation_extraction_config.py .
+COPY industry_to_sic.py .
 COPY multi_relation_kg_builder.py .
 
 # Create directories for input, output, and samples

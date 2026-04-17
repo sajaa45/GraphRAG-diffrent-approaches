@@ -1,0 +1,360 @@
+
+================================================================================
+EXTRACTING RELATION: CEO
+================================================================================
+Source: Person
+Target: Organization
+Relationship: CEO_OF
+
+✓ Using 6/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.547)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 80
+  Text preview: Prior to his current appointment, he held the positions of Chief Technology Officer, and Chief Engineer.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+Prior to his current appointment, he held the positions of Chief Technology Officer, and Chief Engineer.
+
+
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Abdulhakim Murad (confidence: 0.547)
+
+Chunk 2/6 (similarity: 0.533)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 54
+  Text preview: Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. ...
+  Full text:
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.527)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 32
+  Text preview: Previously, Mr. Gulliver served as an Executive at HSBC Holdings plc, holding several senior executive roles including Group Chief Executive Officer from 2011 to 2018, Group Managing Director from 200...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Gulliver served as an Executive at HSBC Holdings plc, holding several senior executive roles including Group Chief Executive Officer from 2011 to 2018, Group Managing Director from 2004 to 2011, CEO, Global Banking Markets & Global Asset Management from 2006 to 2010, Co-head of Corporate Investment Banking and Markets from 2003 to 2006, Group General Manager from 2000 to 2004, Head of Treasury and Capital Markets Asia Pacific from 1996 to 2002, and as a graduate trainee in 1980.
+
+6. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Mr. Gulliver (confidence: 0.527)
+
+Chunk 4/6 (similarity: 0.523)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 61
+  Text preview: Mr. Ziad T. Al Murshed **Executive Vice President & Chief Financial Officer** 
+
+#### **Experience**
+
+Ziad T. Al Murshed was appointed as Executive Vice President & Chief Financial Officer in May 2022....
+  Full text:
+--------------------------------------------------------------------------------
+Mr. Ziad T. Al Murshed **Executive Vice President & Chief Financial Officer** 
+
+#### **Experience**
+
+Ziad T. Al Murshed was appointed as Executive Vice President & Chief Financial Officer in May 2022. He has served as a member of Executive Management since June 2018.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.513)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 29
+  Text preview: Previously, Ms. Elsenhans has served as the President and CEO of Sunoco, Inc. from 2008 to 2012, CEO of Sunoco Logistics Partners in 2010, and as an Executive at Royal Dutch Shell from 1980 to 2008, h...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Ms. Elsenhans has served as the President and CEO of Sunoco, Inc. from 2008 to 2012, CEO of Sunoco Logistics Partners in 2010, and as an Executive at Royal Dutch Shell from 1980 to 2008, holding several senior executive roles, including Executive Vice President Global Manufacturing.
+
+#### **Qualifications**
+
+Ms. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.513)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 26
+  Text preview: Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Man...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Managing Director of BP's Asia and Americas Department from 2009 to 2010, President and CEO of TNK-BP from 2003 to 2009, and Director, Gas, Power and Renewables at BP Amoco from 2001 to 2002.
+
+#### **Qualifications**
+
+∩∩
+
+Mr. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ~ CEO candidate: Mr. Dudley (confidence: 0.513)
+
+  Processing 3 CEO candidates...
+  ✓ Selected CEO: Abdulhakim Murad (confidence: 0.547)
+
+================================================================================
+EXTRACTION COMPLETE: CEO
+================================================================================
+Entities: 1
+Relationships: 1
+
+================================================================================
+EXTRACTING RELATION: HAS_METRIC
+================================================================================
+Source: Company
+Target: Metric
+Relationship: HAS_METRIC
+
+✓ Using 6/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.596)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 92
+  Text preview: Earnings before interest, income taxes and zakat (EBIT) for the year ended December 31, 2024, totaled ± 801,047 (\$213,613), compared to #863,549 (\$230,280) in 2023. The decrease in EBIT resulted pri...
+  Full text:
+--------------------------------------------------------------------------------
+Earnings before interest, income taxes and zakat (EBIT) for the year ended December 31, 2024, totaled ± 801,047 (\$213,613), compared to #863,549 (\$230,280) in 2023. The decrease in EBIT resulted primarily from lower volumes sold and lower crude oil prices, partly offset by lower crude oil production royalties.
+
+Capital expenditures in 2024 increased by 19.1%, compared to the year ended December 31, 2023, from # 123,543 (\$32,945) to # 147,135 (\$39,236). This increase reflects progress of crude oil increments aimed at maintaining an MSC of 12.0 mmbpd and advancement of multiple gas projects supporting the strategic expansion of the Company's gas business.
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: EBIT (2024))
+      Properties: {
+        "value": "801,047",
+        "unit": "thousands of dollars",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "EBIT"
+}
+
+Chunk 2/6 (similarity: 0.593)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 125
+  Text preview: To the extent assumptions regarding future profitability change, there can be an increase or decrease in the amounts recognized in respect of deferred income tax assets as well as in the amounts recog...
+  Full text:
+--------------------------------------------------------------------------------
+To the extent assumptions regarding future profitability change, there can be an increase or decrease in the amounts recognized in respect of deferred income tax assets as well as in the amounts recognized in net income in the period in which the change occurs. At December 31, 2024, the Company continued to apply 20% income tax rate to its Downstream activities. Refer to Note 8 for further details.
+
+
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Revenue (2024))
+      Properties: {
+        "value": "123.4",
+        "unit": "billion",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "Revenue"
+}
+
+Chunk 3/6 (similarity: 0.586)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 168
+  Text preview: #### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the ...
+  Full text:
+--------------------------------------------------------------------------------
+#### Earnings (losses) before interest, income taxes and zakat (EBIT)
+
+are principally driven by the cost of the corporate organization, the affiliates recognized under the corporate segment, and the corporate outreach and citizenship activities. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    ⊘ Skipping duplicate: (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Revenue (2024))
+
+Chunk 4/6 (similarity: 0.586)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 74
+  Text preview: Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts a...
+  Full text:
+--------------------------------------------------------------------------------
+Aramco defines EBIT as net income plus finance costs and income taxes and zakat, less finance income. Aramco believes EBIT provides useful information regarding its financial performance to analysts and investors.
+
+EBIT for 2024 was # 772,296 (\$205,946) compared to # 865,037 (\$230,677), in 2023. This decrease of #92,741 (\$24,731) or 10.7% was primarily due to lower revenue and other income related to sales as well as higher operating costs compared to the previous year.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.573)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 127
+  Text preview: Earnings (losses) before interest, income taxes and zakat (EBIT) for the year ended December 31, 2024, was a loss of # 10,998 (\$2,933), compared to a profit of # 21,184 (\$5,649) in 2023. ...
+  Full text:
+--------------------------------------------------------------------------------
+Earnings (losses) before interest, income taxes and zakat (EBIT) for the year ended December 31, 2024, was a loss of # 10,998 (\$2,933), compared to a profit of # 21,184 (\$5,649) in 2023. 
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Saudi Aramco) --[HAS_METRIC]--> (Metric: Earnings (losses) before interest, income taxes and zakat (EBIT) (2024))
+      Properties: {
+        "value": "10998",
+        "unit": "billion",
+        "currency": "USD",
+        "year": "2024",
+        "metric_type": "Earnings (losses) before interest, income taxes and zakat (EBIT)"
+}
+
+Chunk 6/6 (similarity: 0.496)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 73
+  Text preview: This decrease largely reflects lower operating cash flows mainly due to lower earnings, partially offset by a reduction in cash paid for the settlement of income, zakat and other taxes, and higher ups...
+  Full text:
+--------------------------------------------------------------------------------
+This decrease largely reflects lower operating cash flows mainly due to lower earnings, partially offset by a reduction in cash paid for the settlement of income, zakat and other taxes, and higher upstream capital expenditures.
+
+### Earnings before interest, income taxes and zakat (EBIT)
+
+|                                                  |                               | <b>SAR</b> |         | USD*<br><b>Year ended December 31</b> |  |
+|--------------------------------------------------|-------------------------------|------------|---------|---------------------------------------|--|
+|                                                  | <b>Year ended December 31</b> |            |         |                                       |  |
+| All amounts in millions unless otherwise stated  | 2024                          | 2023       | 2024    | 2023                                  |  |
+| Net income                                       | 398,422                       | 454.764    | 106.246 | 121,271                               |  |
+| Finance income                                   | (20, 254)                     | (31, 216)  | (5,401) | (8, 324)                              |  |
+| Finance costs                                    | 10.540                        | 8.186      | 2.811   | 2.183                                 |  |
+| Income taxes and zakat                           | 383.588                       | 433.303    | 102.290 | 115,547                               |  |
+| Earnings before interest, income taxes and zakat | 772,296                       | 865.037    | 205.946 | 230,677                               |  |
+
+Supplementary information is converted at a fixed rate of U.S. dollar 1.00 = SAR 3.75 for convenience only.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: HAS_METRIC
+================================================================================
+Entities: 3
+Relationships: 3
+
+================================================================================
+EXTRACTING RELATION: FACES_RISK
+================================================================================
+Source: Company
+Target: Risk
+Relationship: FACES_RISK
+
+✓ Using 5/6 chunks (threshold: 0.45)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/5 (similarity: 0.528)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 118
+  Text preview: In light of these risks, uncertainties and assumptions, the forward-looking events described in this Annual Report may not occur in the manner described or may not occur at all.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+In light of these risks, uncertainties and assumptions, the forward-looking events described in this Annual Report may not occur in the manner described or may not occur at all.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/5 (similarity: 0.514)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 143
+  Text preview: Due to the complexity of the valuation, the underlying assumptions and the long-term nature of these plans, such estimates are subject to significant uncertainty. ...
+  Full text:
+--------------------------------------------------------------------------------
+Due to the complexity of the valuation, the underlying assumptions and the long-term nature of these plans, such estimates are subject to significant uncertainty. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/5 (similarity: 0.486)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 4
+  Text preview: ### **Risk management**
+
+# **Managing risk exposure**
+
+### **Risk objectives**
+
+Aramco operates in an industry characterized by market volatility, hazardous operations, and uncertain project outcomes....
+  Full text:
+--------------------------------------------------------------------------------
+### **Risk management**
+
+# **Managing risk exposure**
+
+### **Risk objectives**
+
+Aramco operates in an industry characterized by market volatility, hazardous operations, and uncertain project outcomes. Taking informed risks is an inherent and necessary part of doing business. Aramco manages its strategic, operational, compliance, and financial risks by continuously assessing them and undertaking appropriate responses. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/5 (similarity: 0.478)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 51
+  Text preview: The occurrence of any of these risks may be burdensome and could have a material adverse effect on Aramco's business, financial position, and results of operations....
+  Full text:
+--------------------------------------------------------------------------------
+The occurrence of any of these risks may be burdensome and could have a material adverse effect on Aramco's business, financial position, and results of operations.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/5 (similarity: 0.471)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 11
+  Text preview: This ensures risk-informed decisions related to potential opportunities are taken throughout the Company.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+This ensures risk-informed decisions related to potential opportunities are taken throughout the Company.
+
+
+--------------------------------------------------------------------------------
+  ✓ Found 1 entities:
+    - (Company: Saudi Aramco) --[FACES_RISK]--> (Risk: Oil Price Volatility Risk)
+      Properties: {
+        "description": "Significant fluctuations in global oil prices could adversely affect Saudi Aramco's bottom line and profitability.",
+        "severity": "High"
+}
+
+================================================================================
+EXTRACTION COMPLETE: FACES_RISK
+================================================================================
+Entities: 1
+Relationships: 1

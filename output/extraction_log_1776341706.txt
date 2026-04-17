@@ -1,0 +1,205 @@
+
+================================================================================
+EXTRACTING RELATION: OPERATES_IN
+================================================================================
+Source: Company
+Target: Industry
+Relationship: OPERATES_IN
+
+
+✓ Using 6/6 chunks (threshold: 0.4)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.610)
+  Section: Aramco Overview & Strat
+  Section ID: 1
+  Chunk Index: 51
+  Page: 16
+  Text preview: Low-cost, lower carbon intensity production
+
+Low-cost upstream production with a lower upstream carbon intensity associated with production of both oil and gas which is one of the lowest among major p...
+  Full text:
+--------------------------------------------------------------------------------
+Low-cost, lower carbon intensity production
+
+Low-cost upstream production with a lower upstream carbon intensity associated with production of both oil and gas which is one of the lowest among major producers, and operational flexibility to rapidly increase crude oil production.
+
+Upstream production is monetized through a high-quality external customer base and captive downstream system.
+
+#### **High-quality gas reserves**
+
+Exclusive access to extensive high-quality gas reserves and high success rates in locating new reserves in known hydrocarbon-bearing basins adjacent to existing fields and production infrastructure.
+
+**Total hydrocarbon** production<sup>5</sup> (mmboed)
+
+**Total liquids** production<sup>5</sup> (mmbpd)
+
+2. Integrated refining and chemical operations
+
+41
+
+Major integrated refiner and chemical producer with a global network of reliable assets in key regional markets and hubs.
+
+**Net refining Net chemicals** capacity production capacity<sup>6</sup> (million tons per year) (mmbpd)
+
+576
+
+#### 3. Kingdom-wide distribution network
+
+DURSTREAM & DOWNSTREAM ORRATIONS
+
+Kingdom-wide distribution network includes pipelines, bulk plants, air refueling sites, and terminals that deliver crude oil, NGL, natural gas, and refined products.
+
+MARKET
+
+**Maximum Sustainable** 
+
+Capacity
+
+(mmbpd)
+
+12.O
+
+Countries of operations
+
+50+
+--------------------------------------------------------------------------------
+    - (Company: Rabigh Refining and Petrochemical Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
+      Properties: {
+        "sector": "Energy"
+}
+
+Chunk 2/6 (similarity: 0.586)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 156
+  Page: 58
+  Text preview: As part of its strategy to unlock additional value, Aramco is expanding its crude oil, refined products, chemicals, and metals trading to significantly grow total traded volumes over the next few year...
+  Full text:
+--------------------------------------------------------------------------------
+As part of its strategy to unlock additional value, Aramco is expanding its crude oil, refined products, chemicals, and metals trading to significantly grow total traded volumes over the next few years. Trading activities are conducted primarily through ATC and its subsidiaries.
+
+Aramco sees the potential to expand product trading and has progressed a number of initiatives to offer crude oil with a lower upstream carbon intensity than that of other major producers, including the trading of biofuels.
+
+Aramco is well positioned to use its production and distribution network to optimize its supply and trading capabilities. By controlling the production, refining, and distribution processes and integrating them with its trading business, Aramco seeks to ensure that customers receive reliable service and consistent products. In addition, there is the potential to optimize product flows on a domestic and international basis across regional and global supply chains to maximize value.
+
+These operations support Aramco's upstream and downstream activities by enabling it to optimize crude oil sales and product placement through its significant infrastructure network of pipelines and terminals, and access to shipping and logistics
+
+resources. 
+--------------------------------------------------------------------------------
+    ⊘ Skipping duplicate: (Company: Rabigh Refining and Petrochemical Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
+
+Chunk 3/6 (similarity: 0.577)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 121
+  Page: 53
+  Text preview: 3 SUSTAINARILITY
+
+6. ADDITIONAL FINANCIAL AND LEGAL **INFORMATION** 
+
+CONSOLIDATED FINANCIAL STATEMENTS
+
+## Downstream operations
+
+- A Business Model page 12
+- (2) Integrated value chain page 16
+- A R...
+  Full text:
+--------------------------------------------------------------------------------
+3 SUSTAINARILITY
+
+6. ADDITIONAL FINANCIAL AND LEGAL **INFORMATION** 
+
+CONSOLIDATED FINANCIAL STATEMENTS
+
+## Downstream operations
+
+- A Business Model page 12
+- (2) Integrated value chain page 16
+- A Refining page 50
+- → Chemicals page 52
+- → Base oils and lubricants page 53
+	- Retail operations page 53
+	- → Pipelines, distribution, and terminals page 54
+		- $\Rightarrow$  Supply and trading **page 54**
+		- → Power page 55
+
+# Competitive strengths
+
+#### **Captive downstream system**
+
+Ability to monetize upstream production into a high-quality external customer base and through a captive downstream system.
+
+#### **Reliable supplier**
+
+Strong track record of supply reliability<sup>1</sup>.
+
+#### **Major integrated refiner**
+
+Major integrated refiner and base oils and lubricants producer with a global network of complex, reliable assets in key regional markets and hubs.
+
+#### Large global refining and chemical portfolio
+
+Scale advantage with one of the largest refining and chemical portfolios globally.
+
+STREAM & DOWNSTREAM DREE
+
+#### **Globally integrated trading**
+
+Globally integrated trading activities, optimize product supply to maximize returns.
+
+#### **World-class partners**
+
+World-class partners provide access to additional geographies, technological expertise, operational know-how, and marketing capabilities.
+
+
+--------------------------------------------------------------------------------
+    ⊘ Skipping duplicate: (Company: Rabigh Refining and Petrochemical Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
+
+Chunk 4/6 (similarity: 0.569)
+  Section: Aramco Overview & Strat
+  Section ID: 1
+  Chunk Index: 17
+  Page: 10
+  Text preview: In 2024, we made investments in refining and petrochemical projects in key markets, while extending our retail presence in select geographies globally. For example, in recent years we have made a numb...
+  Full text:
+--------------------------------------------------------------------------------
+In 2024, we made investments in refining and petrochemical projects in key markets, while extending our retail presence in select geographies globally. For example, in recent years we have made a number of low-equity investments with high crude placement rights in China as part of our long-term intention of increasing our liquids-to-chemicals business. By strategically expanding our downstream portfolio, we are positioning ourselves to be able to place more of the crude oil and natural gas liquids we produce into refineries and petrochemical complexes that we either wholly own or in which we have an equity interest. This will serve to provide further resilience during inevitable fluctuations in the oil market.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.567)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 118
+  Page: 52
+  Text preview: To create additional value, the Downstream segment plans to increase refining capacity in strategic location, grow its liquids-tochemicals business, expand trading activities, increase its marketing b...
+  Full text:
+--------------------------------------------------------------------------------
+To create additional value, the Downstream segment plans to increase refining capacity in strategic location, grow its liquids-tochemicals business, expand trading activities, increase its marketing business for retail and lubricants, and leverage the Downstream transformation program to further enhance its earning potential.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.565)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 194
+  Page: 188
+  Text preview: Downstream activities consist primarily of refining and petrochemical manufacturing, supply and trading, base oils and lubricants, retail, distribution and power generation, logistics, and marketing o...
+  Full text:
+--------------------------------------------------------------------------------
+Downstream activities consist primarily of refining and petrochemical manufacturing, supply and trading, base oils and lubricants, retail, distribution and power generation, logistics, and marketing of crude oil and related services to international and domestic customers. Corporate activities include primarily supporting services including Human Resources, Finance and IT, that are not allocated to Upstream and Downstream. 
+--------------------------------------------------------------------------------
+    ⊘ Skipping duplicate: (Company: Rabigh Refining and Petrochemical Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
+
+================================================================================
+EXTRACTION COMPLETE: OPERATES_IN
+================================================================================
+Entities: 1
+Relationships: 1

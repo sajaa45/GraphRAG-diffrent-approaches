@@ -1,8 +1,8 @@
 {
   "source_file": "/app/output/parsed_sections.json",
   "total_sections": 7,
-  "total_chunks": 1133,
-  "created_at": "2026-04-12 11:44:03",
+  "total_chunks": 1328,
+  "created_at": "2026-04-14 13:37:50",
   "sections": [
     {
       "section_id": 1,
@@ -10,7 +10,7 @@
       "level": 1,
       "start_page": 4,
       "end_page": 29,
-      "chunks_count": 88
+      "chunks_count": 108
     },
     {
       "section_id": 2,
@@ -18,7 +18,7 @@
       "level": 1,
       "start_page": 30,
       "end_page": 61,
-      "chunks_count": 148
+      "chunks_count": 177
     },
     {
       "section_id": 3,
@@ -26,7 +26,7 @@
       "level": 1,
       "start_page": 62,
       "end_page": 71,
-      "chunks_count": 43
+      "chunks_count": 52
     },
     {
       "section_id": 4,
@@ -34,7 +34,7 @@
       "level": 1,
       "start_page": 72,
       "end_page": 89,
-      "chunks_count": 92
+      "chunks_count": 107
     },
     {
       "section_id": 5,
@@ -42,7 +42,7 @@
       "level": 1,
       "start_page": 90,
       "end_page": 123,
-      "chunks_count": 185
+      "chunks_count": 212
     },
     {
       "section_id": 6,
@@ -50,7 +50,7 @@
       "level": 1,
       "start_page": 124,
       "end_page": 155,
-      "chunks_count": 172
+      "chunks_count": 191
     },
     {
       "section_id": 7,
@@ -58,7 +58,7 @@
       "level": 1,
       "start_page": 156,
       "end_page": 238,
-      "chunks_count": 405
+      "chunks_count": 481
     }
   ]
 }
