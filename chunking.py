@@ -30,7 +30,7 @@ def load_json_sections(file_path: str) -> Optional[List[Dict]]:
         return data.get('sections', [])
     except FileNotFoundError:
         print(f"File not found: {file_path}")
-        print("Please run json_text_processor.py first to process JSON files")
+        print("Please run sections_merging_pages.py first to process JSON files")
         return None
     except Exception as e:
         print(f"Error loading JSON sections: {e}")
@@ -39,7 +39,7 @@ def load_json_sections(file_path: str) -> Optional[List[Dict]]:
 
 def flatten_hierarchical_sections(sections, parent_path="", pages_data=None):
     """
-    Flatten hierarchical sections from parse_pdf.py into a list with section paths.
+    Flatten hierarchical sections from sections_parser_pdf.py into a list with section paths.
     
     Args:
         sections: List of hierarchical sections
@@ -952,17 +952,17 @@ def main():
     output_dir = "/app/output" if os.path.exists("/app/output") else "output"
     input_dir = "/app/input" if os.path.exists("/app/input") else "."
     
-    # Find JSON section files (prioritize parsed_sections.json from parse_pdf.py)
+    # Find JSON section files (prioritize parsed_sections.json from sections_parser_pdf.py)
     section_files = []
     if os.path.exists(output_dir):
-        # Look for parsed_sections.json first (from parse_pdf.py)
+        # Look for parsed_sections.json first (from sections_parser_pdf.py)
         if os.path.exists(os.path.join(output_dir, 'parsed_sections.json')):
             section_files = ['parsed_sections.json']
         else:
             section_files = [f for f in os.listdir(output_dir) if f.endswith('_sections.json')]
     
     if not section_files:
-        print("No JSON section files found. Please run parse_pdf.py first.")
+        print("No JSON section files found. Please run sections_parser_pdf.py first.")
         return
     
     # Use the first section file found
@@ -978,11 +978,11 @@ def main():
             print("No sections found in file")
             return
         
-        # Check if sections are hierarchical (from parse_pdf.py)
+        # Check if sections are hierarchical (from sections_parser_pdf.py)
         is_hierarchical = any('subsections' in section for section in sections)
         
         if is_hierarchical:
-            print(f"Detected hierarchical sections from parse_pdf.py")
+            print(f"Detected hierarchical sections from sections_parser_pdf.py")
             
             # Load pages data from the source JSON file
             filename = data.get('filename', '')

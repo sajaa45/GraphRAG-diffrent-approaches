@@ -30,7 +30,7 @@ docker-compose up --build
 docker-compose up neo4j knowledge-graph
 
 # Or run locally (requires Neo4j running)
-NEO4J_PASSWORD=your_password python build_knowledge_graph.py
+NEO4J_PASSWORD=your_password python lexical_wrapper_kg.py
 ```
 
 **Knowledge Graph Features:**
@@ -49,7 +49,7 @@ python test_pipeline.py
 
 2. **Process JSON files only:**
 ```bash
-python json_text_processor.py
+python sections_merging_pages.py
 ```
 
 3. **Run chunking comparison only:**
@@ -59,7 +59,7 @@ python chunking_comparison.py
 
 4. **Build knowledge graph only:**
 ```bash
-python neo4j_knowledge_graph.py
+python lexical_kG_building.py
 ```
 
 ##  JSON Format Expected
@@ -324,7 +324,7 @@ docker-compose up neo4j knowledge-graph
 **Local Setup:**
 ```bash
 # Install Neo4j locally, then:
-NEO4J_PASSWORD=your_password python build_knowledge_graph.py
+NEO4J_PASSWORD=your_password python lexical_wrapper_kg.py
 ```
 
 ##  Chunking Methods Compared
@@ -360,10 +360,10 @@ NEO4J_PASSWORD=your_password python build_knowledge_graph.py
 ├── docker-compose.yml              # Easy pipeline execution + Neo4j
 ├── Dockerfile                      # Container definition
 ├── main_pipeline.py                # Automated pipeline
-├── json_text_processor.py          # JSON → chunks conversion
+├── sections_merging_pages.py          # JSON → chunks conversion
 ├── chunking_comparison.py          # Chunking analysis
-├── neo4j_knowledge_graph.py        # Knowledge graph builder
-├── build_knowledge_graph.py        # Local KG builder script
+├── lexical_kG_building.py        # Knowledge graph builder
+├── lexical_wrapper_kg.py        # Local KG builder script
 ├── requirements.txt                # Dependencies (includes neo4j)
 ├── output/                         # Generated files
 │   ├── pdf2_sections.json         # Page sections with metadata

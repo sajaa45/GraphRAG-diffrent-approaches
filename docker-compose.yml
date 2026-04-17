@@ -29,7 +29,7 @@ services:
     working_dir: /app
     environment:
       - PYTHONUNBUFFERED=1
-    command: python parse_pdf.py /app/input/saudi-aramco-ara-2024-english.pdf --output /app/output/parsed_sections.json
+    command: python sections_parser_pdf.py /app/input/saudi-aramco-ara-2024-english.pdf --output /app/output/parsed_sections.json
 
   vector-store:
     build: .
@@ -41,43 +41,7 @@ services:
     working_dir: /app
     environment:
       - PYTHONUNBUFFERED=1
-    command: python unified_pipeline.py /app/output/parsed_sections.json --collection financial_docs --db-path /app/chroma_db
-
-  query-store:
-    build: .
-    container_name: vector-store-query
-    volumes:
-      - ./:/app/input
-      - ./output:/app/output
-      - ./chroma_db:/app/chroma_db
-    working_dir: /app
-    environment:
-      - PYTHONUNBUFFERED=1
-      - QUERY=${QUERY:-CEO}
-    command: sh -c "python query_vector_store_fixed.py \"$QUERY\" --collection financial_docs --db-path /app/chroma_db --stats"
-
-  build-kg-from-query:
-    build: .
-    container_name: kg-builder-from-query
-    depends_on:
-      neo4j:
-        condition: service_healthy
-    volumes:
-      - ./:/app/input
-      - ./output:/app/output
-      - ./chroma_db:/app/chroma_db
-    working_dir: /app
-    environment:
-      - PYTHONUNBUFFERED=1
-      - NEO4J_URI=bolt://neo4j:7687
-      - NEO4J_USERNAME=neo4j
-      - NEO4J_PASSWORD=Lexical12345
-      - OLLAMA_URL=http://host.docker.internal:11434
-      - OLLAMA_MODEL=llama3.2:1b
-      - QUERY=${QUERY:-CEO}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    command: sh -c "python build_kg_from_query.py \"$QUERY\" --collection financial_docs --db-path /app/chroma_db --clear"
+    command: python chunking_vectorestore_pipeline.py /app/output/parsed_sections.json --collection financial_docs --db-path /app/chroma_db
 
   multi-relation-kg:
     build: .
@@ -103,7 +67,7 @@ services:
       - RELATIONS=${RELATIONS:-}
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sh -c "python multi_relation_kg_builder.py --all --collection financial_docs --db-path /app/chroma_db --clear"
+    command: sh -c "python domain_multi_relation_kg_builder.py --all --collection financial_docs --db-path /app/chroma_db --clear"
 
   kg-ceo:
     build: .
@@ -127,7 +91,7 @@ services:
       - GEMINI_MODEL=${GEMINI_MODEL:-gemma-3-27b-it}
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sh -c "python multi_relation_kg_builder.py ceo --collection financial_docs --db-path /app/chroma_db"
+    command: sh -c "python domain_multi_relation_kg_builder.py ceo --collection financial_docs --db-path /app/chroma_db"
 
   kg-metrics:
     build: .
@@ -151,7 +115,7 @@ services:
       - GEMINI_MODEL=${GEMINI_MODEL:-gemma-3-27b-it}
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sh -c "python multi_relation_kg_builder.py has_metric --collection financial_docs --db-path /app/chroma_db"
+    command: sh -c "python domain_multi_relation_kg_builder.py has_metric --collection financial_docs --db-path /app/chroma_db"
 
   kg-risks:
     build: .
@@ -175,7 +139,7 @@ services:
       - GEMINI_MODEL=${GEMINI_MODEL:-gemma-3-27b-it}
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sh -c "python multi_relation_kg_builder.py faces_risk --collection financial_docs --db-path /app/chroma_db"
+    command: sh -c "python domain_multi_relation_kg_builder.py faces_risk --collection financial_docs --db-path /app/chroma_db"
 
   kg-industry:
     build: .
@@ -200,7 +164,51 @@ services:
       - GEMINI_MODEL=${GEMINI_MODEL:-gemma-3-27b-it}
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: sh -c "python multi_relation_kg_builder.py operates_in --collection financial_docs --db-path /app/chroma_db"
+    command: sh -c "python domain_multi_relation_kg_builder.py operates_in --collection financial_docs --db-path /app/chroma_db"
+
+  # ============================================================
+  # LEXICAL GRAPHRAG (chunk-based KG with NEXT/PREV traversal)
+  # Files: lexical_wrapper_kg.py, lexical_kG_building.py,
+  #        lexical_graphrag_system.py, sections_merging_pages.py
+  # ============================================================
+  lexical-kg-build:
+    build: .
+    container_name: lexical-kg-builder
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=Lexical12345
+    command: python lexical_wrapper_kg.py
+
+  lexical-kg-query:
+    build: .
+    container_name: lexical-kg-query
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./:/app/input
+      - ./output:/app/output
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=Lexical12345
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-mistral:latest}
+      - QUERY=${QUERY:-What is the company revenue?}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: sh -c "python lexical_graphrag_system.py \"$QUERY\""
 
 volumes:
   neo4j_data:

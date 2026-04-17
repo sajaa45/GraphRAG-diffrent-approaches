@@ -15,27 +15,16 @@ RUN pip install --no-cache-dir google-genai
 
 
 # Copy all application files
-COPY json_text_processor.py .
+COPY sections_merging_pages.py .
+COPY sections_parser_pdf.py .
 COPY chunking.py .
-COPY main_pipeline.py .
-COPY neo4j_knowledge_graph.py .
-COPY build_knowledge_graph.py .
-COPY update_knowledge_graph.py .
-COPY graphrag_system.py .
-COPY test_embeddings.py .
-COPY test_simple_embeddings.py .
-COPY test_chunking_models.py .
-COPY test_embedding_models.py .
-COPY parse_pdf.py .
-COPY content_based_sectioning.py .
-COPY chunk_sections.py .
-COPY vector_store_pipeline.py .
-COPY unified_pipeline.py .
-COPY query_vector_store.py .
-COPY build_kg_from_query.py .
-COPY relation_extraction_config.py .
-COPY industry_to_sic.py .
-COPY multi_relation_kg_builder.py .
+COPY chunking_vectorestore_pipeline.py .
+COPY domain_relation_extraction_config.py .
+COPY domain_industry_node_to_sic.py .
+COPY domain_multi_relation_kg_builder.py .
+COPY lexical_wrapper_kg.py .
+COPY lexical_kG_building.py .
+COPY lexical_graphrag_system.py .
 
 # Create directories for input, output, and samples
 RUN mkdir -p /app/input /app/output /app/samples
@@ -43,4 +32,4 @@ RUN mkdir -p /app/input /app/output /app/samples
 ENV PYTHONUNBUFFERED=1
 
 # Use the new pipeline script that handles JSON processing and chunking
-CMD ["python", "main_pipeline.py"]
+CMD ["python", "chunking_vectorestore_pipeline.py"]
