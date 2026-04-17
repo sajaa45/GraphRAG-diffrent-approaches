@@ -22,13 +22,13 @@ class RelationConfig:
 
 
 # ============================================================================
-# ENTITY PARSERS (fixed - no more hard-coded Saudi Aramco)
+# ENTITY PARSERS 
 # ============================================================================
 
-def parse_person_entity(entity: Dict) -> Dict:
+def parse_person_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
     person = str(entity.get('person', '')).strip()
     role = str(entity.get('role', '')).strip()
-    org = str(entity.get('organization', 'the Company')).strip()
+    org = str(entity.get('organization', main_company)).strip() or main_company
     is_current = entity.get('is_current', False)
 
     if not person or len(person) <= 2 or not is_current:
@@ -56,13 +56,13 @@ def parse_person_entity(entity: Dict) -> Dict:
     }
 
 
-def parse_metric_entity(entity: Dict) -> Dict:
+def parse_metric_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
     metric = str(entity.get('metric', '')).strip()
     value = str(entity.get('value', '')).strip()
     unit = str(entity.get('unit', '')).strip()
     currency = str(entity.get('currency', 'USD')).strip()
     year = str(entity.get('year', '')).strip()
-    org = str(entity.get('organization', 'the Company')).strip()
+    org = str(entity.get('organization', main_company)).strip() or main_company
 
     if not metric or not value:
         return None
@@ -100,11 +100,11 @@ def parse_metric_entity(entity: Dict) -> Dict:
     }
 
 
-def parse_risk_entity(entity: Dict) -> Dict:
+def parse_risk_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
     risk_type = str(entity.get('risk_type', '')).strip()
     description = str(entity.get('description', '')).strip()
     severity = str(entity.get('severity', 'Unknown')).strip()
-    org = str(entity.get('organization', 'the Company')).strip()
+    org = str(entity.get('organization', main_company)).strip() or main_company
 
     if not risk_type:
         return None
@@ -146,7 +146,7 @@ def parse_industry_entity(entity: Dict, main_company: str = 'the Company') -> Di
 
 
 # ============================================================================
-# RELATION CONFIGURATIONS (now properly wrapped)
+# RELATION CONFIGURATIONS 
 # ============================================================================
 
 RELATION_CONFIGS: Dict[str, RelationConfig] = {
@@ -161,19 +161,22 @@ RELATION_CONFIGS: Dict[str, RelationConfig] = {
 
 Text: {text}
 
+The company in this document is: {main_company}
+
 Return ONLY a valid JSON array (no other text):
 [
-  {{"person": "Full Name", "role": "CEO", "organization": "Company Name", "is_current": true}}
+  {{"person": "Full Name", "role": "CEO", "organization": "{main_company}", "is_current": true}}
 ]
 
 STRICT Rules:
 - Extract ONLY the person explicitly called "President and CEO", "Chief Executive Officer", or "CEO" who currently holds the position.
 - Ignore anyone with titles like "Chairman", "Director", "CFO", "Executive Vice President", or past tense.
-- organization: Use the actual company name mentioned; if only "the Company", use "the Company".
+- organization: ALWAYS use "{main_company}".
 - Extract exactly ONE person.
 - Return empty array [] if no current CEO is clearly identified.
 """,
-        entity_parser=parse_person_entity
+        entity_parser=parse_person_entity,
+        entity_parser_kwargs={}
     ),
 
     'HAS_METRIC': RelationConfig(
@@ -187,9 +190,11 @@ STRICT Rules:
 
 Text: {text}
 
+The company in this document is: {main_company}
+
 Return ONLY a valid JSON array (no other text):
 [
-  {{"metric": "Free Cash Flow", "value": "85333", "unit": "million", "currency": "USD", "year": "2024", "organization": "Company Name"}}
+  {{"metric": "Free Cash Flow", "value": "85333", "unit": "million", "currency": "USD", "year": "2024", "organization": "{main_company}"}}
 ]
 
 CRITICAL Rules:
@@ -201,11 +206,12 @@ CRITICAL Rules:
 - unit: "billion", "million", "thousand", "percent" (infer from context like "billion" or "M" or "B")
 - currency: "USD" or "SAR" based on symbol ($ = USD, ₹ or # = SAR)
 - year: extract from text (e.g., "in 2024", "for 2024")
-- organization: actual company name or "the Company"
+- organization: ALWAYS use "{main_company}"
 - If you cannot find a clear number in the text, return empty array []
 - DO NOT use your knowledge of the company - only extract what's written
 """,
-        entity_parser=parse_metric_entity
+        entity_parser=parse_metric_entity,
+        entity_parser_kwargs={}
     ),
 
     'FACES_RISK': RelationConfig(
@@ -219,9 +225,11 @@ CRITICAL Rules:
 
 Text: {text}
 
+The company in this document is: {main_company}
+
 Return ONLY a valid JSON array (no other text):
 [
-  {{"risk_type": "Specific Risk Name from Text", "description": "exact description from text, paraphrased to 120-180 chars", "severity": "High", "organization": "Company Name"}}
+  {{"risk_type": "Specific Risk Name from Text", "description": "exact description from text, paraphrased to 120-180 chars", "severity": "High", "organization": "{main_company}"}}
 ]
 
 CRITICAL Rules:
@@ -232,11 +240,12 @@ CRITICAL Rules:
   * "High" if text says "material adverse effect", "significant impact", "could materially affect"
   * "Medium" if text says "could affect", "may impact"
   * "Low" if text says "potential", "possible"
-- organization: actual company name or "the Company"
+- organization: ALWAYS use "{main_company}"
 - If the text only mentions "risks" generically without naming specific ones, return empty array []
 - DO NOT use your knowledge of typical industry risks - only extract what's written
 """,
-        entity_parser=parse_risk_entity
+        entity_parser=parse_risk_entity,
+        entity_parser_kwargs={}
     ),
 
     'OPERATES_IN': RelationConfig(
@@ -261,7 +270,7 @@ Rules:
 - If unclear, return []
 """,
         entity_parser=parse_industry_entity,
-        entity_parser_kwargs={}  # main_company injected at runtime via set_main_company()
+        entity_parser_kwargs={}  
     )
 }
 
@@ -272,9 +281,8 @@ def get_relation_config(relation_name: str) -> RelationConfig:
 
 
 def set_main_company(company_name: str):
-    """Inject the main company name into OPERATES_IN config at runtime."""
-    cfg = RELATION_CONFIGS.get('OPERATES_IN')
-    if cfg:
+    """Inject the main company name into all relation configs at runtime."""
+    for cfg in RELATION_CONFIGS.values():
         cfg.entity_parser_kwargs['main_company'] = company_name
 
 

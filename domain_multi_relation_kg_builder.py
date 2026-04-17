@@ -29,12 +29,12 @@ from domain_industry_node_to_sic import get_sic_code
 # ============================================================================
 TOP_N_SECTIONS = 2
 TOP_N_CHUNKS_PER_SECTION = 3
-SECTION_SIMILARITY_THRESHOLD = 0.25  # Lowered from 0.35 for better recall
-CHUNK_SIMILARITY_THRESHOLD = 0.3  # Lowered from 0.4 — metrics/risks often score lower
+SECTION_SIMILARITY_THRESHOLD = 0.25  
+CHUNK_SIMILARITY_THRESHOLD = 0.3  
 OLLAMA_URL = "http://host.docker.internal:11434"
 OLLAMA_MODEL = "mistral:latest"
-OLLAMA_TIMEOUT = None  # No timeout - wait indefinitely
-OLLAMA_MAX_RETRIES = 1  # No retries needed without timeout
+OLLAMA_TIMEOUT = None  
+OLLAMA_MAX_RETRIES = 1  
 # ============================================================================
 
 

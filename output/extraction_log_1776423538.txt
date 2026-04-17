@@ -1,0 +1,687 @@
+
+================================================================================
+EXTRACTING RELATION: CEO
+================================================================================
+Source: Person
+Target: Organization
+Relationship: CEO_OF
+
+
+✓ Using 6/6 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.515)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 168
+  Page: 117
+  Text preview: RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                     ...
+  Full text:
+--------------------------------------------------------------------------------
+RISK | <b>GOVERNANCE</b>    | INFORMATION | STATEMENTS |
+|                      |               |                   |         |                      |             |            |
+|                      |               |                   |         |                      |             |            |
+
+5. ORGANIZATIONAL
+
+### **Senior Executives remuneration**
+
+Table 2 sets out the aggregated remuneration paid to the Company's five highest paid Senior Executives, inclusive of the CEO and CFO positions.
+
+#### Table 2: Total remuneration paid to the five highest paid executives including CEO and CFO
+
+|                          |              |                      | Fixed remuneration |            |                  |                          |            | Variable remuneration |                  |                                 |             |               |                |
+|--------------------------|--------------|----------------------|--------------------|------------|------------------|--------------------------|------------|-----------------------|------------------|---------------------------------|-------------|---------------|----------------|
+| All<br>amounts<br>in SAR | alarie<br>ιñ |                      | fits<br>₹          |            | tior<br>Periodic | ofits                    |            |                       | จ<br>ᇹ<br>ᅙ<br>Ğ |                                 | ᢦ<br>Ó<br>屲 | Total<br>Boar |                |
+| <b>Total</b>             |              | 17,006,550 9,774,343 | 3,116,801          | 29,897,694 | $\equiv$         | $\overline{\phantom{0}}$ | 24,893,526 |                       |                  | 3,351,366 22,479,590 50,724,482 | 35,277,516  |               | $-115,899,692$ |
+
+The Company's compensation framework for its Senior Executives is designed to provide a competitive compensation package that includes base pay, variable pay, and benefits as follows:
+
+- With respect to fixed remuneration, the Company considers the level and demands of the position, including duties and responsibilities, as well as the educational qualifications, practical experience, skills, performance, and seniority of the individual, all within the context of market conditions and pay practices of peers and other relevant companies;
+- With respect to variable remuneration, the Company offers variable compensation that is market-aligned and subject to the fulfillment of predefined performance goals. Two variable pay plans are used: a Short-Term Incentive Plan and a Long-Term Incentive Plan. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 2/6 (similarity: 0.511)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 96
+  Page: 108
+  Text preview: | • Executive and/or other significant leadership experience.                                                                                                                        ...
+  Full text:
+--------------------------------------------------------------------------------
+| • Executive and/or other significant leadership experience.                                                                                                                        
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.485)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 54
+  Page: 102
+  Text preview: Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. ...
+  Full text:
+--------------------------------------------------------------------------------
+Amin H. Nasser
+
+**President & Chief Executive Officer** 
+
+Mr. 
+--------------------------------------------------------------------------------
+    ~ CEO candidate: Amin H. Nasser (confidence: 0.485)
+
+Chunk 4/6 (similarity: 0.436)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 26
+  Page: 96
+  Text preview: Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Man...
+  Full text:
+--------------------------------------------------------------------------------
+Previously, Mr. Dudley served as an Executive at Amoco and then BP from 1979 to 2020, holding several senior executive roles including Group Chief Executive Officer of BP p.l.c. from 2010 to 2020, Managing Director of BP's Asia and Americas Department from 2009 to 2010, President and CEO of TNK-BP from 2003 to 2009, and Director, Gas, Power and Renewables at BP Amoco from 2001 to 2002.
+
+#### **Qualifications**
+
+∩∩
+
+Mr. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.435)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 52
+  Page: 102
+  Text preview: The Business Line and Service Line Heads report directly to the President & CEO.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+The Business Line and Service Line Heads report directly to the President & CEO.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.424)
+  Section: Corp Governance
+  Section ID: 5
+  Chunk Index: 102
+  Page: 109
+  Text preview: | 8              |
+| <b>Executive leadership experience</b>                                 | Possesses a deep understanding of organizations and strategy to assist the<br>Board in oversight of the Co...
+  Full text:
+--------------------------------------------------------------------------------
+| 8              |
+| <b>Executive leadership experience</b>                                 | Possesses a deep understanding of organizations and strategy to assist the<br>Board in oversight of the Company's global operations and strategic planning.                                       | 11             |
+| Technology, innovation,<br>cybersecurity, and scientific<br>experience | Assists the Board in overseeing the Company's leadership<br>in technological change and innovation and related risks, including with<br>respect to the Company's sustainability initiatives.      | 6              |
+| Other public company<br><b>Board experience</b>                        | Aids the Board with an understanding of issues commonly faced by public<br>companies, and provides insight on corporate governance practices and trends.                                          | 8              |
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+  Processing 1 CEO candidates...
+    ~ Amin H. Nasser: semantic_score=80, similarity=0.485
+  ✓ Selected CEO: Amin H. Nasser (semantic_score: 80, similarity: 0.485)
+
+================================================================================
+EXTRACTION COMPLETE: CEO
+================================================================================
+Entities: 1
+Relationships: 1
+
+
+================================================================================
+EXTRACTING RELATION: HAS_METRIC
+================================================================================
+Source: Company
+Target: Metric
+Relationship: HAS_METRIC
+
+
+✓ Using 3/3 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/3 (similarity: 0.371)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 6
+  Page: 126
+  Text preview: Consequently, the Company continues to apply the 20% income tax rate to its Downstream activities.
+
+## Summarized consolidated balance sheet
+
+|                                                     | As...
+  Full text:
+--------------------------------------------------------------------------------
+Consequently, the Company continues to apply the 20% income tax rate to its Downstream activities.
+
+## Summarized consolidated balance sheet
+
+|                                                     | As at December 31 |           |           |           |           |  |
+|-----------------------------------------------------|-------------------|-----------|-----------|-----------|-----------|--|
+| All amounts in millions SAR unless otherwise stated | 2024              | 2023      | 2022      | 2021      | 2020      |  |
+| Total assets                                        | 2,423,630         | 2,477,940 | 2,492,924 | 2.162.690 | 1.914.261 |  |
+| Total liabilities                                   | 772.275           | 740.848   | 826.777   | 882.022   | 813.167   |  |
+| Net assets (total equity)                           | 1,651,355         | 1.737.092 | 1.666.147 | .280.668  | 1,101,094 |  |
+
+## Summarized consolidated statement of cash flows
+
+|                                                     | <b>Year ended December 31</b> |           |            |           |           |
+|-----------------------------------------------------|-------------------------------|-----------|------------|-----------|-----------|
+| All amounts in millions SAR unless otherwise stated | 2024                          | 2023      | 2022       | 2021      | 2020      |
+| Net cash provided by operating activities           | 508,888                       | 537.814   | 698.152    | 522.601   | 285.297   |
+| Net cash used in investing activities               | (2,861)                       | (54.019)  | (389.009)  | (135.741) | (20, 899) |
+| Net cash used in financing activities               | (488, 358)                    | (510.869) | (382, 675) | (294.513) | (234,872) |
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net assets (total equity) (2024))
+      Properties: {
+        "value": "1651355",
+        "unit": "millions",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "Net assets (total equity)"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net cash provided by operating activities (2024))
+      Properties: {
+        "value": "508888",
+        "unit": "millions",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "Net cash provided by operating activities"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net cash used in investing activities (2024))
+      Properties: {
+        "value": "2861",
+        "unit": "millions",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "Net cash used in investing activities"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net cash used in financing activities (2024))
+      Properties: {
+        "value": "488358",
+        "unit": "millions",
+        "currency": "SAR",
+        "year": "2024",
+        "metric_type": "Net cash used in financing activities"
+}
+
+Chunk 2/3 (similarity: 0.370)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 72
+  Page: 141
+  Text preview: ADDITIONAL<br>FINANCIAL<br>AND LEGAL
+
+**INFORMATION** 
+
+7. CONSOLIDATED<br>FINANCIAL<br>STATEMENTS
+
+|                                                                   |                               ...
+  Full text:
+--------------------------------------------------------------------------------
+ADDITIONAL<br>FINANCIAL<br>AND LEGAL
+
+**INFORMATION** 
+
+7. CONSOLIDATED<br>FINANCIAL<br>STATEMENTS
+
+|                                                                   |                                          |                                |                                                  | Share capital   |                   |
+|-------------------------------------------------------------------|------------------------------------------|--------------------------------|--------------------------------------------------|-----------------|-------------------|
+|                                                                   | Place of business/                       | Percent                        |                                                  |                 | Amount            |
+| Name of entity<br>Saudi Aramco Entrepreneurship Center            | country of incorporation<br>Saudi Arabia | ownership <sup>2</sup><br>100% | Principal business activity                      | Currency<br>SAR | (millions)<br>0.5 |
+| Company Limited                                                   |                                          |                                | Financing                                        |                 |                   |
+| Saudi Aramco Entrepreneurship Venture<br>Company Limited          | Saudi Arabia                             | 100%                           | Investment                                       | <b>SAR</b>      | 0.5               |
+| Saudi Aramco Jubail Refinery Company                              | Saudi Arabia                             | 100%                           | Refining                                         | <b>SAR</b>      | 1,600.0           |
+| Saudi Aramco Power Company                                        | Saudi Arabia                             | 100%                           | Holding company                                  | SAR             | 0.1               |
+| Saudi Aramco Sukuk Company                                        | Saudi Arabia                             | 100%                           | Investment                                       | SAR             | 0.5               |
+| Saudi Aramco Technologies Company                                 | Saudi Arabia                             | 100%                           | Research and commercialization                   | <b>USD</b>      | 0.1               |
+| Saudi Aramco Upstream Technology Company                          | Saudi Arabia                             | 100%                           | Research and commercialization                   | <b>USD</b>      | 0.1               |
+| Saudi Petroleum International, Inc.                               | <b>USA</b>                               | 100%                           | Marketing support services                       | <b>USD</b>      | 0.0               |
+| Saudi Petroleum Overseas, Ltd. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/3 (similarity: 0.369)
+  Section: Additional financial and legal information
+  Section ID: 6
+  Chunk Index: 110
+  Page: 147
+  Text preview: ADDITIONAL<br>FINANCIAL<br>AND LEGAL
+
+**INFORMATION** 
+
+7. CONSOLIDATED<br>FINANCIAL<br>STATEMENTS
+
+|                                                                               |                   ...
+  Full text:
+--------------------------------------------------------------------------------
+ADDITIONAL<br>FINANCIAL<br>AND LEGAL
+
+**INFORMATION** 
+
+7. CONSOLIDATED<br>FINANCIAL<br>STATEMENTS
+
+|                                                                               |                                                                       |         |                                        | Share capital |                          |
+|-------------------------------------------------------------------------------|-----------------------------------------------------------------------|---------|----------------------------------------|---------------|--------------------------|
+| Name of entity                                                                | Place of business/<br>country of incorporation ownership <sup>2</sup> | Percent | Principal business activity            | Currency      | Amount<br>(millions)     |
+| Sadara Chemical Company                                                       | Saudi Arabia                                                          | 65%     | Petrochemicals                         | <b>USD</b>    | 9,500.0                  |
+| Sadara Basic Services Company                                                 | Saudi Arabia                                                          | 65%     | Petrochemical manufacture<br>and sales | <b>USD</b>    | 2.0                      |
+| Sadara Sukuk Wahid BV                                                         | <b>Netherlands</b>                                                    | 65%     | Investment                             | <b>USD</b>    | 0.1                      |
+| Sadara Sukuk Ithnayn BV                                                       | Netherlands                                                           | 65%     | Investment                             | <b>USD</b>    | 0.1                      |
+| Sadara Sukuk Thalatha BV                                                      | <b>Netherlands</b>                                                    | 65%     | Investment                             | <b>USD</b>    | 0.1                      |
+| Sadara Sukuk Arba'a BV                                                        | <b>Netherlands</b>                                                    | 65%     | Investment                             | <b>USD</b>    | 0.1                      |
+| Sadara Sukuk Khamsa BV                                                        | <b>Netherlands</b>                                                    | 65%     | Investment                             | <b>USD</b>    | 0.1                      |
+| Saudi Hydrogen Peroxide Company                                               | Saudi Arabia                                                          | 32.5%   | Petrochemical manufacture              | SAR           | 242.0                    |
+| SABIC Fujian Petrochemicals Co., Ltd.<br>$('FUJIAN")^3$                       | China                                                                 | 35.7%   | Petrochemicals                         | <b>CNY</b>    | 967.2                    |
+| SABIC Plastic Energy Advanced Recycling BV<br>$("SPEAR")^3$                   | <b>Netherlands</b>                                                    | 35%     | Petrochemicals                         | <b>EUR</b>    | 97.6                     |
+| SABIC SK Nexelene Company Pte. Ltd.<br>$("SSNC")^3$                           | Singapore                                                             | 35%     | Petrochemicals                         | <b>SAR</b>    | 1,125.0                  |
+| Sahel Cafe Food Services Company                                              | Saudi Arabia                                                          | 50%     | Retail services                        | <b>SAR</b>    | 0.1                      |
+| Sahel Mart Company                                                            | Saudi Arabia                                                          | 50%     | Retail services                        | SAR           | 40.0                     |
+| Sahel Transportation Company                                                  | Saudi Arabia                                                          | 50%     | Retail services                        | <b>SAR</b>    | 0.5                      |
+| Saudi Arabian Industrial Investment Company                                   | Saudi Arabia                                                          | 42.5%   | Investment                             | <b>SAR</b>    | 3,600.0                  |
+| Saudi Engines Manufacturing Company                                           | Saudi Arabia                                                          | 55%     | Manufacturing                          | SAR           | 156.0                    |
+| Saudi Yanbu Petrochemical Company<br>$(''YANPET'')$ <sup>3</sup>              | Saudi Arabia                                                          | 35%     | Petrochemicals                         | <b>SAR</b>    | 4,596.0                  |
+| Shanghai ZhiSheng Automobile Technology<br>Co., Ltd.                          
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+      Properties: {
+        "value": "0.5",
+        "unit": "millions",
+        "currency": "SAR",
+        "year": "None",
+        "metric_type": "Share capital"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Share capital (None))
+
+================================================================================
+EXTRACTION COMPLETE: HAS_METRIC
+================================================================================
+Entities: 5
+Relationships: 5
+
+
+================================================================================
+EXTRACTING RELATION: FACES_RISK
+================================================================================
+Source: Company
+Target: Risk
+Relationship: FACES_RISK
+
+
+✓ Using 6/6 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.511)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 55
+  Page: 82
+  Text preview: Cyber incidents may<br>negatively impact these or other functions and,<br>particularly in relation to industrial control<br>systems, may result in physical damage, injury<br>or loss of life and enviro...
+  Full text:
+--------------------------------------------------------------------------------
+Cyber incidents may<br>negatively impact these or other functions and,<br>particularly in relation to industrial control<br>systems, may result in physical damage, injury<br>or loss of life and environmental harm. Aramco's<br>systems are a high-profile target for sophisticated<br>cyberattacks by nation states, and criminal<br>hackers, and it routinely fends off malicious<br>attempts to gain unauthorized systems access. | infrastructure to protect against critical data loss<br>and to ensure operational integrity and continuity,<br>there is a risk that determined attackers with<br>access to the necessary resources could<br>successfully penetrate its systems. To date, none<br>of these attempts have been material to Aramco's<br>financial performance or reputation. Nonetheless,<br>the nature and breadth of any potential future<br>cyberattack remain unknown and technology<br>that has allowed an increase in remote working<br>arrangements may increase the risk of<br>cybersecurity incidents, data breaches, or<br>cyberattacks. Such incidents could result in<br>significant costs, including investigation and<br>remediation expenses, regulatory scrutiny,<br>legal liability, and the loss of personal or sensitive<br>business or third-party information, and could<br>have a material adverse effect on Aramco's |
+
+While Aramco seeks to maintain a secure network operations and reputation.
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Cyberattacks)
+      Properties: {
+        "description": "Aramco is a high-profile target for sophisticated cyberattacks by nation states and criminal hackers, requiring ongoing defense against unauthorized access attempts.",
+        "severity": "High"
+}
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Data Breaches)
+      Properties: {
+        "description": "Increased remote working arrangements may increase the risk of cybersecurity incidents, data breaches, or cyberattacks, potentially leading to significant costs.",
+        "severity": "High"
+}
+
+Chunk 2/6 (similarity: 0.457)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 59
+  Page: 83
+  Text preview: However, there is no assurance that Aramco will prevail on the basis of these defenses in the future in connection with OPEC-related or other lawsuits, and Aramco and its affiliates could be subject t...
+  Full text:
+--------------------------------------------------------------------------------
+However, there is no assurance that Aramco will prevail on the basis of these defenses in the future in connection with OPEC-related or other lawsuits, and Aramco and its affiliates could be subject to similar claims elsewhere. In addition, there is a risk that laws could be enacted in the future that would expressly remove or weaken certain sovereign defenses.
+
+Also, increasing attention on climate change risks may result in increased litigation against Aramco and its affiliates. Claims relating to climate change matters have been filed against companies in the oil and gas industry by private parties, shareholders of such companies, public interest organizations, state attorneys general, cities and other localities, especially in the United States and Europe. 
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: OPEC-related Lawsuits)
+      Properties: {
+        "description": "There is no assurance Aramco will prevail in future OPEC-related lawsuits, and affiliates could face similar claims elsewhere, potentially impacting defenses.",
+        "severity": "Medium"
+}
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Climate Change Litigation)
+      Properties: {
+        "description": "Increasing attention on climate change risks may result in increased litigation against Aramco and its affiliates, relating to environmental damage.",
+        "severity": "Medium"
+}
+
+Chunk 3/6 (similarity: 0.436)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 61
+  Page: 83
+  Text preview: Furthermore, oil and gas companies have been subject to a growing number of lawsuits alleging damages from the companies' contributions to climate change, failure to protect the environment from the e...
+  Full text:
+--------------------------------------------------------------------------------
+Furthermore, oil and gas companies have been subject to a growing number of lawsuits alleging damages from the companies' contributions to climate change, failure to protect the environment from the effects of their operations, concealing information about the consequences of the use of their products on climate change and similar matters. Motiva has been named in several of these lawsuits, and Aramco and its affiliates may be named in similar lawsuits in the future.
+
+In addition, oil and gas companies are also increasingly subject to lawsuits based on allegations that certain public statements regarding ESG matters or net-zero or carbon neutrality targets are false and misleading "greenwashing" campaigns or that climaterelated disclosures made by companies are inadequate. Aramco could be subject to, and Motiva has been named in and is defending, this type of lawsuit.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/6 (similarity: 0.424)
+  Section: Aramco Risk
+  Section ID: 4
+  Chunk Index: 58
+  Page: 83
+  Text preview: litigation has involved allegations of violations of antitrust laws arising, in part, from the Kingdom's membership and participation in OPEC. Such antitrust litigation sought extensive relief, includ...
+  Full text:
+--------------------------------------------------------------------------------
+litigation has involved allegations of violations of antitrust laws arising, in part, from the Kingdom's membership and participation in OPEC. Such antitrust litigation sought extensive relief, including treble damages, divestiture of assets in the United States, and disgorgement of profits. If granted, this relief could have had a material adverse impact on Aramco. To date, the OPECrelated antitrust lawsuits have been dismissed on the basis of various sovereign defenses under U.S. law. 
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Antitrust Lawsuits)
+      Properties: {
+        "description": "Litigation involving alleged violations of antitrust laws arising from the Kingdom's participation in OPEC could seek significant relief, impacting Aramco.",
+        "severity": "High"
+}
+
+Chunk 5/6 (similarity: 0.418)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 170
+  Page: 184
+  Text preview: At December 31, 2024 and 2023, a change in fair value due to a movement of 5% in the unit price of equities and mutual and hedge funds would result in a change in income before income taxes and zakat ...
+  Full text:
+--------------------------------------------------------------------------------
+At December 31, 2024 and 2023, a change in fair value due to a movement of 5% in the unit price of equities and mutual and hedge funds would result in a change in income before income taxes and zakat of #31 and #26, respectively.
+
+#### b) Commodity derivative contracts
+
+Saudi Aramco trades crude, natural gas liquids and various refined and bulk petrochemical products and uses commodity derivatives as a means of managing price and timing of risks arising from this trading. In effecting these transactions, Saudi Aramco operates within policies and procedures designed to ensure that risks, including those related to the default of counterparties, are managed within authorized limits.
+
+
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Commodity Derivative Default)
+      Properties: {
+        "description": "Risks related to the default of counterparties in commodity derivative contracts used to manage price and timing risks arising from trading activities.",
+        "severity": "Medium"
+}
+
+Chunk 6/6 (similarity: 0.408)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 168
+  Page: 184
+  Text preview: #### a) Investments in securities
+
+Saudi Aramco has limited exposure to price risk with such risk mainly arising from investments in securities carried at fair value.
+
+...
+  Full text:
+--------------------------------------------------------------------------------
+#### a) Investments in securities
+
+Saudi Aramco has limited exposure to price risk with such risk mainly arising from investments in securities carried at fair value.
+
+
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Investment Security Price Risk)
+      Properties: {
+        "description": "Saudi Aramco has limited exposure to price risk mainly arising from investments in securities carried at fair value, subject to market fluctuations.",
+        "severity": "Medium"
+}
+
+================================================================================
+EXTRACTION COMPLETE: FACES_RISK
+================================================================================
+Entities: 7
+Relationships: 7
+
+
+================================================================================
+EXTRACTING RELATION: OPERATES_IN
+================================================================================
+Source: Company
+Target: Industry
+Relationship: OPERATES_IN
+
+
+✓ Using 6/6 chunks (threshold: 0.3)
+
+================================================================================
+EXTRACTING ENTITIES WITH LLM
+================================================================================
+
+Chunk 1/6 (similarity: 0.610)
+  Section: Aramco Overview & Strat
+  Section ID: 1
+  Chunk Index: 51
+  Page: 16
+  Text preview: Low-cost, lower carbon intensity production
+
+Low-cost upstream production with a lower upstream carbon intensity associated with production of both oil and gas which is one of the lowest among major p...
+  Full text:
+--------------------------------------------------------------------------------
+Low-cost, lower carbon intensity production
+
+Low-cost upstream production with a lower upstream carbon intensity associated with production of both oil and gas which is one of the lowest among major producers, and operational flexibility to rapidly increase crude oil production.
+
+Upstream production is monetized through a high-quality external customer base and captive downstream system.
+
+#### **High-quality gas reserves**
+
+Exclusive access to extensive high-quality gas reserves and high success rates in locating new reserves in known hydrocarbon-bearing basins adjacent to existing fields and production infrastructure.
+
+**Total hydrocarbon** production<sup>5</sup> (mmboed)
+
+**Total liquids** production<sup>5</sup> (mmbpd)
+
+2. Integrated refining and chemical operations
+
+41
+
+Major integrated refiner and chemical producer with a global network of reliable assets in key regional markets and hubs.
+
+**Net refining Net chemicals** capacity production capacity<sup>6</sup> (million tons per year) (mmbpd)
+
+576
+
+#### 3. Kingdom-wide distribution network
+
+DURSTREAM & DOWNSTREAM ORRATIONS
+
+Kingdom-wide distribution network includes pipelines, bulk plants, air refueling sites, and terminals that deliver crude oil, NGL, natural gas, and refined products.
+
+MARKET
+
+**Maximum Sustainable** 
+
+Capacity
+
+(mmbpd)
+
+12.O
+
+Countries of operations
+
+50+
+--------------------------------------------------------------------------------
+    - (Company: Saudi Arabian Oil Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
+      Properties: {
+        "sector": "Energy"
+}
+      SIC: (Industry: Oil & Gas) --[HAS_SIC_CODE]--> (SICCode: 1311)
+
+Chunk 2/6 (similarity: 0.586)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 156
+  Page: 58
+  Text preview: As part of its strategy to unlock additional value, Aramco is expanding its crude oil, refined products, chemicals, and metals trading to significantly grow total traded volumes over the next few year...
+  Full text:
+--------------------------------------------------------------------------------
+As part of its strategy to unlock additional value, Aramco is expanding its crude oil, refined products, chemicals, and metals trading to significantly grow total traded volumes over the next few years. Trading activities are conducted primarily through ATC and its subsidiaries.
+
+Aramco sees the potential to expand product trading and has progressed a number of initiatives to offer crude oil with a lower upstream carbon intensity than that of other major producers, including the trading of biofuels.
+
+Aramco is well positioned to use its production and distribution network to optimize its supply and trading capabilities. By controlling the production, refining, and distribution processes and integrating them with its trading business, Aramco seeks to ensure that customers receive reliable service and consistent products. In addition, there is the potential to optimize product flows on a domestic and international basis across regional and global supply chains to maximize value.
+
+These operations support Aramco's upstream and downstream activities by enabling it to optimize crude oil sales and product placement through its significant infrastructure network of pipelines and terminals, and access to shipping and logistics
+
+resources. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 3/6 (similarity: 0.577)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 121
+  Page: 53
+  Text preview: 3 SUSTAINARILITY
+
+6. ADDITIONAL FINANCIAL AND LEGAL **INFORMATION** 
+
+CONSOLIDATED FINANCIAL STATEMENTS
+
+## Downstream operations
+
+- A Business Model page 12
+- (2) Integrated value chain page 16
+- A R...
+  Full text:
+--------------------------------------------------------------------------------
+3 SUSTAINARILITY
+
+6. ADDITIONAL FINANCIAL AND LEGAL **INFORMATION** 
+
+CONSOLIDATED FINANCIAL STATEMENTS
+
+## Downstream operations
+
+- A Business Model page 12
+- (2) Integrated value chain page 16
+- A Refining page 50
+- → Chemicals page 52
+- → Base oils and lubricants page 53
+	- Retail operations page 53
+	- → Pipelines, distribution, and terminals page 54
+		- $\Rightarrow$  Supply and trading **page 54**
+		- → Power page 55
+
+# Competitive strengths
+
+#### **Captive downstream system**
+
+Ability to monetize upstream production into a high-quality external customer base and through a captive downstream system.
+
+#### **Reliable supplier**
+
+Strong track record of supply reliability<sup>1</sup>.
+
+#### **Major integrated refiner**
+
+Major integrated refiner and base oils and lubricants producer with a global network of complex, reliable assets in key regional markets and hubs.
+
+#### Large global refining and chemical portfolio
+
+Scale advantage with one of the largest refining and chemical portfolios globally.
+
+STREAM & DOWNSTREAM DREE
+
+#### **Globally integrated trading**
+
+Globally integrated trading activities, optimize product supply to maximize returns.
+
+#### **World-class partners**
+
+World-class partners provide access to additional geographies, technological expertise, operational know-how, and marketing capabilities.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 4/6 (similarity: 0.569)
+  Section: Aramco Overview & Strat
+  Section ID: 1
+  Chunk Index: 17
+  Page: 10
+  Text preview: In 2024, we made investments in refining and petrochemical projects in key markets, while extending our retail presence in select geographies globally. For example, in recent years we have made a numb...
+  Full text:
+--------------------------------------------------------------------------------
+In 2024, we made investments in refining and petrochemical projects in key markets, while extending our retail presence in select geographies globally. For example, in recent years we have made a number of low-equity investments with high crude placement rights in China as part of our long-term intention of increasing our liquids-to-chemicals business. By strategically expanding our downstream portfolio, we are positioning ourselves to be able to place more of the crude oil and natural gas liquids we produce into refineries and petrochemical complexes that we either wholly own or in which we have an equity interest. This will serve to provide further resilience during inevitable fluctuations in the oil market.
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 5/6 (similarity: 0.567)
+  Section: Aramco Results&Performance
+  Section ID: 2
+  Chunk Index: 118
+  Page: 52
+  Text preview: To create additional value, the Downstream segment plans to increase refining capacity in strategic location, grow its liquids-tochemicals business, expand trading activities, increase its marketing b...
+  Full text:
+--------------------------------------------------------------------------------
+To create additional value, the Downstream segment plans to increase refining capacity in strategic location, grow its liquids-tochemicals business, expand trading activities, increase its marketing business for retail and lubricants, and leverage the Downstream transformation program to further enhance its earning potential.
+
+
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+Chunk 6/6 (similarity: 0.565)
+  Section: consolidated financial statements
+  Section ID: 7
+  Chunk Index: 194
+  Page: 188
+  Text preview: Downstream activities consist primarily of refining and petrochemical manufacturing, supply and trading, base oils and lubricants, retail, distribution and power generation, logistics, and marketing o...
+  Full text:
+--------------------------------------------------------------------------------
+Downstream activities consist primarily of refining and petrochemical manufacturing, supply and trading, base oils and lubricants, retail, distribution and power generation, logistics, and marketing of crude oil and related services to international and domestic customers. Corporate activities include primarily supporting services including Human Resources, Finance and IT, that are not allocated to Upstream and Downstream. 
+--------------------------------------------------------------------------------
+    ✗ No entities extracted
+
+================================================================================
+EXTRACTION COMPLETE: OPERATES_IN
+================================================================================
+Entities: 1
+Relationships: 1

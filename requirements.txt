@@ -9,3 +9,6 @@ PyMuPDF>=1.23.0
 chromadb>=0.4.22
 langchain-text-splitters>=0.0.1
 groq
+fastapi>=0.110.0
+uvicorn>=0.29.0
+python-multipart>=0.0.9
