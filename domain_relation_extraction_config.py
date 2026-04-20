@@ -73,10 +73,20 @@ def parse_metric_entity(entity: Dict, main_company: str = 'the Company') -> Dict
         return None
 
     import re
+    # Strip internal spaces from OCR-spaced thousands (e.g. "216, 642" → "216,642")
+    value = re.sub(r'(\d),\s+(\d)', r'\1,\2', value)
     # Strip commas, currency symbols, and trailing 'x'/'times'
     value_clean = value.replace(',', '').strip()
     value_clean = re.sub(r'[₹#$€£¥\s]', '', value_clean)
     value_clean = re.sub(r'[xX]$', '', value_clean).strip()
+    # Normalize OCR period-as-comma artifact: "393.891" → "393891"
+    # Pattern: 1-3 digits, period, exactly 3 digits (OCR comma in large round numbers)
+    if re.match(r'^\d{1,3}\.\d{3}$', value_clean):
+        value_clean = value_clean.replace('.', '')
+    # Convert accounting negatives: (78078) → -78078
+    m = re.match(r'^\(([0-9.]+)\)$', value_clean)
+    if m:
+        value_clean = '-' + m.group(1)
 
     try:
         float(value_clean)
@@ -103,22 +113,20 @@ def parse_metric_entity(entity: Dict, main_company: str = 'the Company') -> Dict
 
 
 def parse_risk_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
-    risk_type = str(entity.get('risk_type', '')).strip()
+    risk_name = str(entity.get('risk_name', '')).strip()
     description = str(entity.get('description', '')).strip()
-    severity = str(entity.get('severity', 'Unknown')).strip()
     org = str(entity.get('organization', main_company)).strip() or main_company
 
-    if not risk_type:
+    if not risk_name:
         return None
 
     return {
         'source': {'type': 'Company', 'name': org},
         'target': {
             'type': 'Risk',
-            'name': risk_type,
+            'name': risk_name,
             'properties': {
                 'description': description,
-                'severity': severity
             }
         },
         'relationship': 'FACES_RISK',
@@ -203,20 +211,41 @@ STRICT Rules:
         n_chunks_per_section=3,
         extraction_prompt_template="""Extract ALL financial metrics that appear with explicit numeric values in the text.
 
-Use these standard metric names where applicable (but also extract any other clearly stated financial metric):
-  - Gearing Ratio            (net debt / total equity, as %)
-  - Net Debt                 (total borrowings minus cash)
-  - Free Cash Flow           (operating cash flow minus capex)
-  - EBITDA                   (earnings before interest, tax, depreciation & amortization)
-  - ROACE                    (return on average capital employed)
-  - Capital Expenditure      (capex / investment spending)
-  - Net Income               (profit attributable to shareholders)
-  - Revenue                  (total sales / turnover)
-  - Interest Coverage Ratio  (EBIT / interest expense)
-  - Total Debt               (total borrowings / financial liabilities)
-  - Cash and Equivalents     (cash on hand / short-term liquidity)
-  - Debt-to-Equity Ratio     (total debt / equity)
-  - Current Ratio            (current assets / current liabilities)
+ROW-LABEL → STANDARD NAME MAPPING
+Match the row label from the table (case-insensitive). Use the standard name shown on the right.
+
+  Row label variants                                                  → Standard metric name
+  "Gearing" / "Gearing ratio"                                         → "Gearing Ratio"
+  "Net debt" / "Net debt (cash)"                                       → "Net Debt"
+  "Free cash flow"                                                     → "Free Cash Flow"
+  "EBITDA" / "Adjusted EBITDA"                                         → "EBITDA"
+  "ROACE"                                                              → "ROACE"
+  "Capital expenditures" / "Capital expenditures - cash basis"         → "Capital Expenditure"
+  "Net income" / "Net income attributable to the ordinary shareholders" → "Net Income"
+  "Earnings per share" / "Basic earnings per share"                    → "Earnings per Share"
+  "Revenue" / "Total revenues" / "External revenue" (Consolidated only)→ "Revenue"
+  "Earnings (losses) before interest, income taxes and zakat"
+    / "Operating income" / "EBIT"                                      → "EBIT"
+  "Total borrowings" / "Total borrowings (current and non-current)"    → "Total Debt"
+  "Cash and cash equivalents"                                          → "Cash and Equivalents"
+  "Short-term investments"                                             → "Short-term Investments"
+
+CRITICAL — DO NOT confuse these:
+  ✗ "Acquisition of right-of-use assets"         ≠  Capital Expenditure (it is a lease asset addition)
+  ✗ "Net cash provided by operating activities"  ≠  Free Cash Flow
+  ✗ "Net cash used in investing activities"      ≠  any listed metric
+  ✗ "Net cash used in financing activities"      ≠  any listed metric
+  ✗ "Total liabilities"                          ≠  Net Debt
+  ✗ "Total equity" / "Total assets"              ≠  any listed metric
+  ✗ Upstream / Downstream / Corporate column values in a segment table — skip them;
+     extract ONLY from the "Consolidated" (rightmost total) column.
+  ✗ Do NOT write negative values for asset metrics (Cash and Equivalents, Short-term Investments).
+     These appear as deductions inside gearing calculations but are always positive assets —
+     strip the minus sign and write the absolute value.
+
+OCR ARTIFACT RULE:
+  Values like "393.891" or "452.753" (1–3 digits, period, exactly 3 digits) are large financial
+  amounts where the PDF comma was misread as a period. Write "393.891" as "393891", etc.
 
 Text: {text}
 
@@ -224,18 +253,24 @@ The company in this document is: {main_company}
 
 Return ONLY a valid JSON array (no other text):
 [
-  {{"metric": "Gearing Ratio", "value": "12.3", "unit": "%", "year": "2024", "organization": "{main_company}"}}
+  {{"metric": "Gearing Ratio", "value": "4.5", "unit": "%", "year": "2024", "organization": "{main_company}"}},
+  {{"metric": "Net Debt", "value": "78078", "unit": "SAR million", "year": "2024", "organization": "{main_company}"}}
 ]
 
 STRICT Rules:
-- Only extract a metric if its numeric value is EXPLICITLY stated in the text — no calculation, no inference.
-- metric: Use the standard name from the list above if it matches; otherwise use the exact name as written in the text.
-- value: The raw number only (e.g. "12.3", "454.3"). Strip commas and currency symbols.
-- unit: use "%" for percentages/ratios, "USD billion", "SAR billion", or "USD million" based on context.
-- year: extract from context (e.g. "year ended December 31, 2024" → "2024"). Leave "" if not found.
+- Only extract a metric when its row label matches one of the mappings above.
+- value: Take the most recent year column. Strip commas. Apply the OCR artifact rule.
+  Values in parentheses are negative: "(216,642)" → "-216642".
+- unit: Read from the header note "All amounts in X unless otherwise stated".
+  Use "%" for Gearing Ratio and ROACE.
+  For Earnings per Share use "<currency> per share" (e.g. "SAR per share").
+  Net Income in the EPS table is in SAR millions (same scale as consolidated statements).
+  When both local-currency and USD columns exist, use the local-currency column.
+  If no header unit is present, write "million" without a currency prefix.
+- year: Most recent year shown.
 - organization: ALWAYS use "{main_company}".
-- Return [] if no metrics with a clear numeric value appear in the text.
-- DO NOT use external knowledge — only what is written in the text.
+- Return [] if no mapped row label appears in the text.
+- DO NOT use external knowledge.
 """,
         entity_parser=parse_metric_entity,
         entity_parser_kwargs={}
@@ -250,17 +285,7 @@ STRICT Rules:
         chunk_keywords='could materially adversely affect business financial condition operations results',
         n_sections=3,
         n_chunks_per_section=5,
-        extraction_prompt_template="""Extract ALL risks explicitly described in this text. Classify each into one of the categories below.
-
-Risk categories:
-  - Credit_Risk       : risk of counterparty or borrower default, impairment, receivables deterioration
-  - Liquidity_Risk    : insufficient cash, funding gaps, inability to meet short-term obligations
-  - Market_Risk       : interest rate, foreign exchange, or commodity price movements
-  - Operational_Risk  : system failures, process breakdowns, fraud, human error, cyber threats
-  - Regulatory_Risk   : regulatory changes, sanctions, legal/compliance requirements
-  - Geopolitical_Risk : political instability, armed conflict, war, sanctions, country risk
-  - Strategic_Risk    : competition, business model disruption, M&A integration, reputational damage
-  - Environmental_Risk: climate change, natural disasters, environmental liability
+        extraction_prompt_template="""Extract ALL risks explicitly disclosed in this text.
 
 Text: {text}
 
@@ -268,17 +293,15 @@ The company in this document is: {main_company}
 
 Return ONLY a valid JSON array (no other text):
 [
-  {{"risk_type": "Geopolitical_Risk", "description": "concise description from the text, 80-160 chars", "severity": "High", "organization": "{main_company}"}}
+  {{"risk_name": "Crude oil supply and demand fluctuations", "description": "concise description using the text's own wording, 80-160 chars", "organization": "{main_company}"}}
 ]
 
 STRICT Rules:
-- risk_type: Must be exactly one of the eight categories above.
+- risk_name: Use the exact heading or short title from the text (e.g. "Terrorism and armed conflict",
+  "Regulatory changes", "Climate change and GHG emissions targets"). Do NOT invent category labels
+  like "Geopolitical_Risk" or "Market_Risk" — use what the document actually says.
 - description: Paraphrase the text's own wording — 80-160 characters. No generic filler.
-- severity:
-    "High"   → text uses "material adverse", "significant", "could materially affect", "severely"
-    "Medium" → text uses "could affect", "may impact", "potential impact", "may result in"
-    "Low"    → text uses "possible", "minor", "limited", "unlikely"
-    "Unknown"→ severity not stated
+- Do NOT add a severity field. The report does not assign severity ratings.
 - organization: ALWAYS use "{main_company}".
 - Extract each distinct risk as a separate object. Merge near-duplicates into one.
 - Return [] if no risk is explicitly described in the text.

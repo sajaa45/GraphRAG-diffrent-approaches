@@ -356,7 +356,7 @@ def main():
     parser.add_argument("--neo4j-password", default=os.getenv("NEO4J_PASSWORD", "password"))
     parser.add_argument(
         "--bedrock-model",
-        default=os.getenv("BEDROCK_MODEL", "meta.llama3-8b-instruct-v1:0"),
+        default=os.getenv("BEDROCK_MODEL", "meta.llama3-70b-instruct-v1:0"),
     )
     parser.add_argument("--aws-region", default=os.getenv("AWS_REGION", "us-east-1"))
     parser.add_argument("--output-dir", default=os.getenv("OUTPUT_DIR", "output"))

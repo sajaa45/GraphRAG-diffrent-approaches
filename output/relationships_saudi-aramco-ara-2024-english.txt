@@ -1,12 +1,12 @@
-Started : 2026-04-20 13:44:51
-Finished: 2026-04-20 13:45:52
-Elapsed : 60.4s (1.0 min)
+Started : 2026-04-20 22:00:22
+Finished: 2026-04-20 22:19:24
+Elapsed : 1141.3s (19.0 min)
 ================================================================================
 
 
 ================================================================================
 EXTRACTING RELATION: CEO
-Started: 2026-04-20 13:44:51
+Started: 2026-04-20 22:00:22
 ================================================================================
 Source: Person
 Target: Organization
@@ -205,12 +205,12 @@ EXTRACTION COMPLETE: CEO
 ================================================================================
 Entities     : 1
 Relationships: 1
-Duration     : 1.5s (0.0 min)
+Duration     : 45.8s (0.8 min)
 
 
 ================================================================================
 EXTRACTING RELATION: HAS_METRIC
-Started: 2026-04-20 13:44:53
+Started: 2026-04-20 22:01:08
 ================================================================================
 Source: Company
 Target: Metric
@@ -253,7 +253,48 @@ Gearing is a measure of the degree to which Saudi Aramco's operations are financ
 
 Saudi Aramco's casualty loss risk strategy includes a risk retention and insurance program, including providing coverage to certain joint arrangements and associates limited to Saudi Aramco's percentage interest in the relevant entity. Current maximum risk retention is ± 3,301 per loss event (2023: ± 3,301) and various insurance limits apply, of which the risk retention forms a part. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Gearing Ratio (2024))
+      Properties: {
+        "value": "4.5",
+        "unit": "%",
+        "year": "2024",
+        "metric_type": "Gearing Ratio"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Debt (2024))
+      Properties: {
+        "value": "78078",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Net Debt"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
+      Properties: {
+        "value": "319290",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Total Debt"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cash and Equivalents (2024))
+      Properties: {
+        "value": "216642",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Cash and Equivalents"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Short-term Investments (2024))
+      Properties: {
+        "value": "13186",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Short-term Investments"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Equity (2024))
+      Properties: {
+        "value": "1651355",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Total Equity"
+}
 
 Chunk 2/52 (similarity: 0.451)
   Section: consolidated financial statements
@@ -275,48 +316,7 @@ Acquisition of right-of-use assets during the year ended December 31, 2024, amou
 | Fixtures, IT and office equipment   | 135                                                                   | 330                                                      | 128                                                                   | 263                                               |
 |                                     | 7,766                                                                 | 68,835                                                   | 13,264                                                                | 63,079                                            |
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Acquisition of right-of-use assets (2024))
-      Properties: {
-        "value": "1039",
-        "unit": "",
-        "year": "2024",
-        "metric_type": "Acquisition of right-of-use assets"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Acquisition of right-of-use assets (2023))
-      Properties: {
-        "value": "364",
-        "unit": "",
-        "year": "2023",
-        "metric_type": "Acquisition of right-of-use assets"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Depreciation expense (2024))
-      Properties: {
-        "value": "7766",
-        "unit": "",
-        "year": "2024",
-        "metric_type": "Depreciation expense"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Depreciation expense (2023))
-      Properties: {
-        "value": "13264",
-        "unit": "",
-        "year": "2023",
-        "metric_type": "Depreciation expense"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net carrying amount (2024))
-      Properties: {
-        "value": "68835",
-        "unit": "",
-        "year": "2024",
-        "metric_type": "Net carrying amount"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net carrying amount (2023))
-      Properties: {
-        "value": "63079",
-        "unit": "",
-        "year": "2023",
-        "metric_type": "Net carrying amount"
-}
+    ✗ No entities extracted
 
 Chunk 3/52 (similarity: 0.450)
   Section: consolidated financial statements
@@ -404,20 +404,7 @@ Such earnings would be taxed only upon distribution. There was no material cumul
 
 
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cumulative unused tax losses (2024))
-      Properties: {
-        "value": "68705",
-        "unit": "",
-        "year": "2024",
-        "metric_type": "Cumulative unused tax losses"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cumulative unused tax losses (2023))
-      Properties: {
-        "value": "52622",
-        "unit": "",
-        "year": "2023",
-        "metric_type": "Cumulative unused tax losses"
-}
+    ✗ No entities extracted
 
 Chunk 9/52 (similarity: 0.470)
   Section: consolidated financial statements
@@ -447,30 +434,16 @@ The following table reflects the net income and number of shares used in the ear
 --------------------------------------------------------------------------------
     - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Income (2024))
       Properties: {
-        "value": "393.891",
-        "unit": "SAR",
+        "value": "393891",
+        "unit": "SAR million",
         "year": "2024",
-        "metric_type": "Net Income"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Income (2023))
-      Properties: {
-        "value": "452.753",
-        "unit": "SAR",
-        "year": "2023",
         "metric_type": "Net Income"
 }
     - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Earnings per Share (2024))
       Properties: {
         "value": "1.63",
-        "unit": "SAR",
+        "unit": "SAR per share",
         "year": "2024",
-        "metric_type": "Earnings per Share"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Earnings per Share (2023))
-      Properties: {
-        "value": "1.87",
-        "unit": "SAR",
-        "year": "2023",
         "metric_type": "Earnings per Share"
 }
 
@@ -540,7 +513,48 @@ Information by segments is as follows:
 | Income before income taxes and zakat                      |           |            |           |                     | 888,067      |
 | Capital expenditures - cash basis                         | 123,543   | 32,735     | 2,030     |                     | 158,308      |
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
+      Properties: {
+        "value": "1637299",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Revenue"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2024))
+      Properties: {
+        "value": "772296",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "EBIT"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
+      Properties: {
+        "value": "188890",
+        "unit": "million",
+        "year": "2024",
+        "metric_type": "Capital Expenditure"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2023))
+      Properties: {
+        "value": "1653281",
+        "unit": "million",
+        "year": "2023",
+        "metric_type": "Revenue"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2023))
+      Properties: {
+        "value": "865037",
+        "unit": "million",
+        "year": "2023",
+        "metric_type": "EBIT"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2023))
+      Properties: {
+        "value": "158308",
+        "unit": "million",
+        "year": "2023",
+        "metric_type": "Capital Expenditure"
+}
 
 Chunk 13/52 (similarity: 0.501)
   Section: consolidated financial statements
@@ -677,7 +691,11 @@ In addition, finance costs amounting to #8,692 were capitalized in property, pla
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Debt (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Income (2024))
 
 Chunk 19/52 (similarity: 0.530)
   Section: consolidated financial statements
@@ -743,13 +761,7 @@ Aramco's gearing ratio was 4.5% as at December 31, 2024, compared to (6.3)% as a
 
 2. Comparative ratios for the years 2021 and 2020 have been amended to reflect Aramco's revised gearing definition.
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Gearing Ratio (2024))
-      Properties: {
-        "value": "4.5",
-        "unit": "%",
-        "year": "2024",
-        "metric_type": "Gearing Ratio"
-}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Gearing Ratio (2024))
 
 Chunk 23/52 (similarity: 0.454)
   Section: Aramco Results&Performance
@@ -783,7 +795,39 @@ Our strong results have once again enabled us to increase total dividend distrib
 
 We have consistently demonstrated our commitment to sharing our success with shareholders through dividend distributions. We have delivered on this promise by paying total dividends of #1,656.4 billion (\$441.7 billion) since our IPO. This significant payout underscores our dedication to providing value to our shareholders. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Gearing Ratio (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Dividend Distributions (2024))
+      Properties: {
+        "value": "465.9",
+        "unit": "billion",
+        "year": "2024",
+        "metric_type": "Dividend Distributions"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Dividend Distributions (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Base Dividends (2024))
+      Properties: {
+        "value": "304.3",
+        "unit": "billion",
+        "year": "2024",
+        "metric_type": "Base Dividends"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Base Dividends (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Performance-Linked Dividends (2024))
+      Properties: {
+        "value": "161.6",
+        "unit": "billion",
+        "year": "2024",
+        "metric_type": "Performance-Linked Dividends"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Performance-Linked Dividends (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Dividends Paid (2024))
+      Properties: {
+        "value": "1656.4",
+        "unit": "billion",
+        "year": "2024",
+        "metric_type": "Total Dividends Paid"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Dividends Paid (2024))
 
 Chunk 25/52 (similarity: 0.672)
   Section: Aramco Results&Performance
@@ -797,7 +841,22 @@ Aramco uses free cash flow to evaluate its cash available for financing activiti
 
 Free cash flow in 2024 was # 319,998 (\$85,333) compared to # 379,506 (\$101,202), in 2023, a decrease of # 59,508 (\$15,869) or 15.7%. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
+      Properties: {
+        "value": "319998",
+        "unit": "SAR",
+        "year": "2024",
+        "metric_type": "Free Cash Flow"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2023))
+      Properties: {
+        "value": "379506",
+        "unit": "SAR",
+        "year": "2023",
+        "metric_type": "Free Cash Flow"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2023))
 
 Chunk 26/52 (similarity: 0.520)
   Section: Aramco Results&Performance
@@ -827,7 +886,15 @@ Chunk 26/52 (similarity: 0.520)
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Provided by Operating Activities (2024))
+      Properties: {
+        "value": "508888",
+        "unit": "SAR million",
+        "year": "2024",
+        "metric_type": "Net Cash Provided by Operating Activities"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
 
 Chunk 27/52 (similarity: 0.507)
   Section: Aramco Results&Performance
@@ -849,7 +916,28 @@ Net cash provided by operating activities was #508,888 (\$135,704) for the year 
 
 Net cash used in investing activities was # 2,861 (\$763) for the year ended December 31, 2024, compared to #54,019 (\$14,405) in 2023, resulting in a change of #51,158 (\$13,642). This was primarily due to higher maturities of short-term investments, and the absence of cash consideration paid for the acquisition of Valvoline Inc's. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Provided by Operating Activities (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Provided by Operating Activities (2023))
+      Properties: {
+        "value": "537814",
+        "unit": "SAR",
+        "year": "2023",
+        "metric_type": "Net Cash Provided by Operating Activities"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Used in Investing Activities (2024))
+      Properties: {
+        "value": "2861",
+        "unit": "SAR",
+        "year": "2024",
+        "metric_type": "Net Cash Used in Investing Activities"
+}
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Used in Investing Activities (2023))
+      Properties: {
+        "value": "54019",
+        "unit": "SAR",
+        "year": "2023",
+        "metric_type": "Net Cash Used in Investing Activities"
+}
 
 Chunk 28/52 (similarity: 0.595)
   Section: Aramco Results&Performance
@@ -861,7 +949,8 @@ Chunk 28/52 (similarity: 0.595)
 --------------------------------------------------------------------------------
 Earnings (losses) before interest, income taxes and zakat (EBIT) for the year ended December 31, 2024, was a loss of # 10,998 (\$2,933), compared to a profit of # 21,184 (\$5,649) in 2023. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2023))
 
 Chunk 29/52 (similarity: 0.575)
   Section: Aramco Results&Performance
@@ -891,7 +980,8 @@ Aramco defines EBIT as net income plus finance costs and income taxes and zakat,
 
 EBIT for 2024 was # 772,296 (\$205,946) compared to # 865,037 (\$230,677), in 2023. This decrease of #92,741 (\$24,731) or 10.7% was primarily due to lower revenue and other income related to sales as well as higher operating costs compared to the previous year.
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: EBIT (2023))
 
 Chunk 31/52 (similarity: 0.684)
   Section: Aramco Results&Performance
@@ -965,13 +1055,7 @@ Revenue and other income related to sales for the year ended December 31, 2024, 
 
 
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
-      Properties: {
-        "value": "1801674",
-        "unit": "SAR million",
-        "year": "2024",
-        "metric_type": "Revenue"
-}
+    ✗ No entities extracted
 
 Chunk 36/52 (similarity: 0.449)
   Section: Aramco Results&Performance
@@ -991,7 +1075,13 @@ The decrease in production royalties was largely attributable to lower prices an
 
 Net Income decreased by #56,342 (\$15,025), or 12.4%. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Income)
+      Properties: {
+        "value": "-15025",
+        "unit": "SAR million",
+        "year": "",
+        "metric_type": "Net Income"
+}
 
 Chunk 37/52 (similarity: 0.331)
   Section: Aramco Results&Performance
@@ -1049,7 +1139,18 @@ Chunk 38/52 (similarity: 0.405)
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Provided by Operating Activities (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Used in Investing Activities (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Cash Used in Financing Activities (2024))
+      Properties: {
+        "value": "-488358",
+        "unit": "SAR million",
+        "year": "2024",
+        "metric_type": "Net Cash Used in Financing Activities"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cash and Equivalents (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
 
 Chunk 39/52 (similarity: 0.400)
   Section: Aramco Results&Performance
@@ -1089,7 +1190,12 @@ ADDITIONAL FINANCIAL AND LEGAL **INFORMATION**
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Gearing Ratio (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Debt (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cash and Equivalents (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Short-term Investments (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Equity (2024))
 
 Chunk 40/52 (similarity: 0.493)
   Section: Aramco Results&Performance
@@ -1135,20 +1241,9 @@ Consequently, the Company continues to apply the 20% income tax rate to its Down
 | Net cash used in investing activities               | (2,861)                       | (54.019)  | (389.009)  | (135.741) | (20, 899) |
 | Net cash used in financing activities               | (488, 358)                    | (510.869) | (382, 675) | (294.513) | (234,872) |
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Debt (2024))
-      Properties: {
-        "value": "772.275",
-        "unit": "SAR million",
-        "year": "2024",
-        "metric_type": "Net Debt"
-}
-    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
-      Properties: {
-        "value": "508888",
-        "unit": "SAR million",
-        "year": "2024",
-        "metric_type": "Free Cash Flow"
-}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Free Cash Flow (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Capital Expenditure (2024))
 
 Chunk 42/52 (similarity: 0.387)
   Section: Additional financial and legal information
@@ -1267,7 +1362,20 @@ The following table sets forth Aramco's material related party transaction balan
 | Trade payables and other liabilities                                                 | 2,799           |
 | <b>Borrowings</b>                                                                    | 26,393          |
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Interest income (2024))
+      Properties: {
+        "value": "206",
+        "unit": "SAR million",
+        "year": "2024",
+        "metric_type": "Interest income"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Interest income (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cash and Equivalents (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Short-term Investments (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
 
 Chunk 46/52 (similarity: 0.378)
   Section: Additional financial and legal information
@@ -1338,7 +1446,9 @@ Information on Aramco's total indebtedness as at December 31, 2024, is as follow
 
 1. Includes total facility amounts and carrying amounts for certain long-term loans being repaid in installments.
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Short-term Investments (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Cash and Equivalents (2024))
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Total Debt (2024))
 
 Chunk 47/52 (similarity: 0.396)
   Section: Additional financial and legal information
@@ -1374,7 +1484,15 @@ Chunk 47/52 (similarity: 0.396)
 
 1. Aramco sells certain hydrocarbons within the Kingdom at regulated prices mandated by the Government. 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Revenue (2024))
+    - (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Operating income (2024))
+      Properties: {
+        "value": "774625",
+        "unit": "SAR million",
+        "year": "2024",
+        "metric_type": "Operating income"
+}
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[HAS_METRIC]--> (Metric: Net Income (2024))
 
 Chunk 48/52 (similarity: 0.364)
   Section: Additional financial and legal information
@@ -1469,14 +1587,14 @@ In connection with the offering, the Government sold an aggregate of approximate
 ================================================================================
 EXTRACTION COMPLETE: HAS_METRIC
 ================================================================================
-Entities     : 16
-Relationships: 16
-Duration     : 46.0s (0.8 min)
+Entities     : 28
+Relationships: 28
+Duration     : 795.0s (13.2 min)
 
 
 ================================================================================
 EXTRACTING RELATION: FACES_RISK
-Started: 2026-04-20 13:45:39
+Started: 2026-04-20 22:14:23
 ================================================================================
 Source: Company
 Target: Risk
@@ -1501,11 +1619,7 @@ Any delays caused by factors that are under the Company's control (e.g. terminal
 
 
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Environmental_Risk)
-      Properties: {
-        "description": "Climate change, natural disasters, environmental liability may impact operations.",
-        "severity": "Medium"
-}
+    ✗ No entities extracted
 
 Chunk 2/15 (similarity: 0.462)
   Section: Additional financial and legal information
@@ -1531,11 +1645,7 @@ Aramco believes that it is not presently a party to any legal, regulatory, or ot
 
 1. 
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Strategic_Risk)
-      Properties: {
-        "description": "Competition, business model disruption, M&A integration, reputational damage may impact operations.",
-        "severity": "Medium"
-}
+    ✗ No entities extracted
 
 Chunk 3/15 (similarity: 0.435)
   Section: Additional financial and legal information
@@ -1632,35 +1742,13 @@ Chunk 5/15 (similarity: 0.414)
 --------------------------------------------------------------------------------
 The outcome of litigation and other legal matters, including Government investigations or other trade actions, is inherently uncertain. Aramco believes it has valid defenses to the legal matters currently pending against it as a party. Certain trade actions that do not involve Aramco as a party may instead involve its products or industry, other products or industries impacting its operations, or the countries in which it operates. Trade actions may be taken without prior notice, or with retroactive effect. Actual outcomes of these legal, regulatory, and other proceedings may materially differ from current estimates. To date, none of these types of litigation or trade matters has had a material impact on Aramco's operations or financial position. 
 --------------------------------------------------------------------------------
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Geopolitical_Risk)
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Litigation and other legal matters)
       Properties: {
-        "description": "Political instability, armed conflict, war, sanctions, country risk may impact operations.",
-        "severity": "High"
+        "description": "Uncertain outcomes of legal matters, including Government investigations or other trade actions"
 }
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Operational_Risk)
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Trade actions)
       Properties: {
-        "description": "System failures, process breakdowns, fraud, human error, cyber threats may impact operations.",
-        "severity": "High"
-}
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Regulatory_Risk)
-      Properties: {
-        "description": "Regulatory changes, sanctions, legal/compliance requirements may impact operations.",
-        "severity": "High"
-}
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Market_Risk)
-      Properties: {
-        "description": "Interest rate, foreign exchange, or commodity price movements may impact financial position.",
-        "severity": "Medium"
-}
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Credit_Risk)
-      Properties: {
-        "description": "Counterparty or borrower default, impairment, receivables deterioration may impact financial position.",
-        "severity": "Medium"
-}
-    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Liquidity_Risk)
-      Properties: {
-        "description": "Insufficient cash, funding gaps, inability to meet short-term obligations may impact financial position.",
-        "severity": "Medium"
+        "description": "Actions may be taken without prior notice, or with retroactive effect, impacting operations or financial position"
 }
 
 Chunk 6/15 (similarity: 0.503)
@@ -1751,7 +1839,10 @@ Any such<br>losses could have a material adverse effect on<br>Aramco's business,
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <b>Terrorism and</b><br>armed conflict<br><b>Terrorism and armed conflict</b><br>may materially and adversely<br>affect Aramco.                                                                                                                                                                                                           
 --------------------------------------------------------------------------------
-    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Geopolitical_Risk)
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Terrorism and armed conflict)
+      Properties: {
+        "description": "may materially and adversely affect Aramco"
+}
 
 Chunk 12/15 (similarity: 0.564)
   Section: Aramco Risk
@@ -1781,7 +1872,18 @@ of production could be impacted. These occurrences could result in Aramco recogn
 
 6. 
 --------------------------------------------------------------------------------
-    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Operational_Risk)
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Projects are delayed)
+      Properties: {
+        "description": "Projects are delayed, cost more than expected, or do not generate the expected return"
+}
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Cost more than expected)
+      Properties: {
+        "description": "Projects are delayed, cost more than expected, or do not generate the expected return"
+}
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Do not generate the expected return)
+      Properties: {
+        "description": "Projects are delayed, cost more than expected, or do not generate the expected return"
+}
 
 Chunk 14/15 (similarity: 0.516)
   Section: Aramco Risk
@@ -1805,19 +1907,22 @@ Chunk 15/15 (similarity: 0.502)
 --------------------------------------------------------------------------------
 Compliance by the Kingdom with any such commitments may directly or indirectly impact Aramco and could cause it to alter its operations in a manner that is costly or otherwise has a material adverse effect on its business, financial position, or results of operations. If the Kingdom is deemed to be non-compliant, Aramco's business operations could be exposed to scrutiny and Aramco or its affiliates' exports could be subject to potential remedial measures, such as duties, which could have a material adverse effect on Aramco's business, financial position, and results of operations.
 --------------------------------------------------------------------------------
-    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Geopolitical_Risk)
+    - (Company: Saudi Arabian Oil Company) --[FACES_RISK]--> (Risk: Compliance with commitments)
+      Properties: {
+        "description": "Non-compliance could expose business to scrutiny and remedial measures"
+}
 
 ================================================================================
 EXTRACTION COMPLETE: FACES_RISK
 ================================================================================
-Entities     : 8
-Relationships: 8
-Duration     : 8.7s (0.1 min)
+Entities     : 7
+Relationships: 7
+Duration     : 234.2s (3.9 min)
 
 
 ================================================================================
 EXTRACTING RELATION: OPERATES_IN
-Started: 2026-04-20 13:45:48
+Started: 2026-04-20 22:18:17
 ================================================================================
 Source: Company
 Target: Industry
@@ -1900,7 +2005,7 @@ Chunk 2/6 (similarity: 0.569)
 --------------------------------------------------------------------------------
 In 2024, we made investments in refining and petrochemical projects in key markets, while extending our retail presence in select geographies globally. For example, in recent years we have made a number of low-equity investments with high crude placement rights in China as part of our long-term intention of increasing our liquids-to-chemicals business. By strategically expanding our downstream portfolio, we are positioning ourselves to be able to place more of the crude oil and natural gas liquids we produce into refineries and petrochemical complexes that we either wholly own or in which we have an equity interest. This will serve to provide further resilience during inevitable fluctuations in the oil market.
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
 
 Chunk 3/6 (similarity: 0.551)
   Section: Aramco Overview & Strat
@@ -1946,7 +2051,7 @@ Aramco's dedicated system of domestic and international refineries provide secur
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
 
 Chunk 4/6 (similarity: 0.490)
   Section: Corp Governance
@@ -2021,11 +2126,11 @@ Prior to his current appointment, he led various organizations within the Compan
 
 
 --------------------------------------------------------------------------------
-    ✗ No entities extracted
+    ⊘ Skipping duplicate: (Company: Saudi Arabian Oil Company) --[OPERATES_IN]--> (Industry: Oil & Gas)
 
 ================================================================================
 EXTRACTION COMPLETE: OPERATES_IN
 ================================================================================
 Entities     : 1
 Relationships: 1
-Duration     : 3.9s (0.1 min)
+Duration     : 66.3s (1.1 min)

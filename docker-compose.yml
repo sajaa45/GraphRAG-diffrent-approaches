@@ -77,7 +77,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
       - GROQ_API_KEY=${GROQ_API_KEY}
       - RELATIONS=${RELATIONS:-}
     command: sh -c "python domain_multi_relation_kg_builder.py --all --collection financial_docs --qdrant-host qdrant --clear --source-file saudi-aramco-ara-2024-english.pdf"
@@ -104,7 +104,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
     command: sh -c "python domain_multi_relation_kg_builder.py ceo --collection financial_docs --qdrant-host qdrant"
 
   kg-metrics:
@@ -129,7 +129,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
     command: sh -c "python domain_multi_relation_kg_builder.py has_metric --collection financial_docs --qdrant-host qdrant"
 
   kg-risks:
@@ -154,7 +154,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
     command: sh -c "python domain_multi_relation_kg_builder.py faces_risk --collection financial_docs --qdrant-host qdrant"
 
   kg-industry:
@@ -179,7 +179,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
       - GROQ_API_KEY=${GROQ_API_KEY}
     command: sh -c "python domain_multi_relation_kg_builder.py operates_in --collection financial_docs --qdrant-host qdrant"
 
@@ -221,7 +221,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-8b-instruct-v1:0}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-meta.llama3-70b-instruct-v1:0}
       - MAIN_COMPANY=${MAIN_COMPANY:-}
       - QUERY=${QUERY:-}
     command: sh -c "if [ -n \"$QUERY\" ]; then python graphrag_credit_risk.py --query \"$QUERY\"; else python graphrag_credit_risk.py --analyze; fi"

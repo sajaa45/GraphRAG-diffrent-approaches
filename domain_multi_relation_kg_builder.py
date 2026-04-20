@@ -304,7 +304,7 @@ class MultiRelationKGBuilder:
         """Call AWS Bedrock via the Converse API (works for all model families)."""
         import boto3
         aws_key = os.getenv("AWS_ACCESS_KEY_ID")
-        model = os.getenv("BEDROCK_MODEL", "meta.llama3-8b-instruct-v1:0")
+        model = os.getenv("BEDROCK_MODEL", "meta.llama3-70b-instruct-v1:0")
         region = os.getenv("AWS_REGION", os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
         client = boto3.client(
             service_name="bedrock-runtime",
@@ -353,14 +353,15 @@ class MultiRelationKGBuilder:
             entities_data = json.loads(llm_output[json_start:json_end])
             results = []
             for e in entities_data:
-                # Find the best matching chunk for validation (most text overlap)
-                best_chunk = max(chunks, key=lambda c: sum(
-                    1 for w in str(e).lower().split() if w in c['text'].lower()
-                ))
-                if not self._validate_entity_in_text(e, best_chunk['text'], relation_config.name):
+                # Validate against full batch text (numbers won't word-match a single chunk)
+                if not self._validate_entity_in_text(e, chunks_text, relation_config.name):
                     continue
                 p = relation_config.entity_parser(e, **relation_config.entity_parser_kwargs)
                 if p:
+                    # Associate with the chunk whose text best overlaps (for logging/relationships)
+                    best_chunk = max(chunks, key=lambda c: sum(
+                        1 for w in str(e).lower().split() if w in c['text'].lower()
+                    ))
                     results.append((p, best_chunk))
             return results
         except Exception as e:
@@ -453,21 +454,19 @@ class MultiRelationKGBuilder:
             return True
         
         elif relation_type == 'FACES_RISK':
-            risk_type = str(entity.get('risk_type', '')).strip()
-            if not risk_type:
+            risk_name = str(entity.get('risk_name', '')).strip()
+            if not risk_name:
                 return False
 
-            # Validate that the description is grounded in the source text,
-            # not that the category name (e.g. "Geopolitical_Risk") literally appears.
+            # Validate that at least one word from the risk name or description appears in text
             description = str(entity.get('description', '')).strip()
-            if description:
-                desc_words = [w for w in re.split(r'\W+', description.lower()) if len(w) > 4]
-                if desc_words:
-                    matches = sum(1 for w in desc_words if w in text_lower)
-                    # Require at least 25% of significant description words to appear in text
-                    if matches < max(1, len(desc_words) // 4):
-                        print(f"      ⚠ Risk validation failed: description not grounded in text ({matches}/{len(desc_words)} words matched)")
-                        return False
+            combined = (risk_name + ' ' + description).lower()
+            words = [w for w in re.split(r'\W+', combined) if len(w) > 4]
+            if words:
+                matches = sum(1 for w in words if w in text_lower)
+                if matches < max(1, len(words) // 5):
+                    print(f"      ⚠ Risk validation failed: not grounded in text ({matches}/{len(words)} words matched)")
+                    return False
 
             return True
         
@@ -552,14 +551,6 @@ class MultiRelationKGBuilder:
         created = set()
         ceo_candidates = []
 
-        chunk_entity_pairs = []
-        n_batches = (len(filtered_chunks) + MAX_CHUNKS_PER_LLM_BATCH - 1) // MAX_CHUNKS_PER_LLM_BATCH
-        for batch_idx in range(n_batches):
-            batch = filtered_chunks[batch_idx * MAX_CHUNKS_PER_LLM_BATCH:(batch_idx + 1) * MAX_CHUNKS_PER_LLM_BATCH]
-            print(f"\n  Bedrock batch {batch_idx + 1}/{n_batches}: sending {len(batch)} chunks...")
-            batch_results = self._extract_entities_batch(batch, relation_config)
-            chunk_entity_pairs.extend(batch_results)
-
         with self.driver.session() as session:
             for i, chunk in enumerate(filtered_chunks, 1):
                 self._log(f"\nChunk {i}/{len(filtered_chunks)} (similarity: {chunk['similarity']:.3f})")
@@ -576,7 +567,7 @@ class MultiRelationKGBuilder:
 
                 print(f"\nChunk {i}/{len(filtered_chunks)} | Similarity: {chunk['similarity']:.3f} | Section: {chunk['section_title']}")
 
-                entities = [e for e, c in chunk_entity_pairs if c is chunk]
+                entities = self.extract_entities_with_llm(chunk['text'], relation_config)
 
                 if not entities:
                     self._log("    ✗ No entities extracted")
