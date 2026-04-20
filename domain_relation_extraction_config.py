@@ -19,10 +19,16 @@ class RelationConfig:
     entity_parser: Callable[..., Optional[Dict]]
     # Optional extra kwargs forwarded to entity_parser (e.g. main_company for OPERATES_IN)
     entity_parser_kwargs: Dict[str, Any] = field(default_factory=dict)
+    # Per-relation retrieval tuning (override global defaults)
+    n_sections: int = 2
+    n_chunks_per_section: int = 3
+    # If non-empty, one Qdrant query is issued per entry; results are union-deduplicated.
+    # Overrides chunk_keywords when set.
+    chunk_keywords_list: List[str] = field(default_factory=list)
 
 
 # ============================================================================
-# ENTITY PARSERS 
+# ENTITY PARSERS
 # ============================================================================
 
 def parse_person_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
@@ -59,22 +65,19 @@ def parse_person_entity(entity: Dict, main_company: str = 'the Company') -> Dict
 def parse_metric_entity(entity: Dict, main_company: str = 'the Company') -> Dict:
     metric = str(entity.get('metric', '')).strip()
     value = str(entity.get('value', '')).strip()
-    unit = str(entity.get('unit', '')).strip()
-    currency = str(entity.get('currency', 'USD')).strip()
+    unit = str(entity.get('unit', 'ratio')).strip()
     year = str(entity.get('year', '')).strip()
     org = str(entity.get('organization', main_company)).strip() or main_company
 
     if not metric or not value:
         return None
-    
-    # Clean value: remove commas, handle currency symbols
+
     import re
+    # Strip commas, currency symbols, and trailing 'x'/'times'
     value_clean = value.replace(',', '').strip()
-    
-    # Remove any currency symbols from value
     value_clean = re.sub(r'[₹#$€£¥\s]', '', value_clean)
-    
-    # Validate it's a number
+    value_clean = re.sub(r'[xX]$', '', value_clean).strip()
+
     try:
         float(value_clean)
     except ValueError:
@@ -90,7 +93,6 @@ def parse_metric_entity(entity: Dict, main_company: str = 'the Company') -> Dict
             'properties': {
                 'value': value_clean,
                 'unit': unit,
-                'currency': currency,
                 'year': year,
                 'metric_type': metric
             }
@@ -146,7 +148,7 @@ def parse_industry_entity(entity: Dict, main_company: str = 'the Company') -> Di
 
 
 # ============================================================================
-# RELATION CONFIGURATIONS 
+# RELATION CONFIGURATIONS
 # ============================================================================
 
 RELATION_CONFIGS: Dict[str, RelationConfig] = {
@@ -155,7 +157,7 @@ RELATION_CONFIGS: Dict[str, RelationConfig] = {
         source_entity_type='Person',
         target_entity_type='Organization',
         relationship_type='CEO_OF',
-        section_keywords='corporate governance board directors leadership executive management senior executives officers',
+        section_keywords='corporate governance overview introduction',
         chunk_keywords='president and ceo chief executive officer ceo president chief executive',
         extraction_prompt_template="""Extract ONLY the CURRENT CEO from this text. Ignore board members, CFOs, former executives.
 
@@ -184,9 +186,37 @@ STRICT Rules:
         source_entity_type='Company',
         target_entity_type='Metric',
         relationship_type='HAS_METRIC',
-        section_keywords='results performance financial highlights key metrics revenue income ebit cash flow dividends capital expenditures',
-        chunk_keywords='net income revenue ebit free cash flow capital expenditures dividends roace profit earnings cash flow',
-        extraction_prompt_template="""Extract ONLY financial metrics that have EXPLICIT numeric values in this text. DO NOT invent or infer numbers.
+        section_keywords='financial performance results earnings statements',
+        chunk_keywords='',  # Overridden by chunk_keywords_list below
+        chunk_keywords_list=[
+            'gearing ratio net debt total equity leverage debt ratio',
+            'free cash flow operating cash flow capital expenditure investment',
+            'EBITDA earnings before interest tax depreciation amortization operating profit',
+            'ROACE return on average capital employed return on equity',
+            'net income profit loss attributable earnings per share',
+            'revenue total sales income turnover',
+            'interest coverage ratio EBIT debt service fixed charge',
+            'current ratio quick ratio liquidity cash equivalents short-term',
+            'total debt borrowings long-term debt bonds notes payable',
+        ],
+        n_sections=3,
+        n_chunks_per_section=3,
+        extraction_prompt_template="""Extract ALL financial metrics that appear with explicit numeric values in the text.
+
+Use these standard metric names where applicable (but also extract any other clearly stated financial metric):
+  - Gearing Ratio            (net debt / total equity, as %)
+  - Net Debt                 (total borrowings minus cash)
+  - Free Cash Flow           (operating cash flow minus capex)
+  - EBITDA                   (earnings before interest, tax, depreciation & amortization)
+  - ROACE                    (return on average capital employed)
+  - Capital Expenditure      (capex / investment spending)
+  - Net Income               (profit attributable to shareholders)
+  - Revenue                  (total sales / turnover)
+  - Interest Coverage Ratio  (EBIT / interest expense)
+  - Total Debt               (total borrowings / financial liabilities)
+  - Cash and Equivalents     (cash on hand / short-term liquidity)
+  - Debt-to-Equity Ratio     (total debt / equity)
+  - Current Ratio            (current assets / current liabilities)
 
 Text: {text}
 
@@ -194,21 +224,18 @@ The company in this document is: {main_company}
 
 Return ONLY a valid JSON array (no other text):
 [
-  {{"metric": "Free Cash Flow", "value": "85333", "unit": "million", "currency": "USD", "year": "2024", "organization": "{main_company}"}}
+  {{"metric": "Gearing Ratio", "value": "12.3", "unit": "%", "year": "2024", "organization": "{main_company}"}}
 ]
 
-CRITICAL Rules:
-- Extract ONLY metrics where you can see the EXACT number in the text
-- Handle currency symbols: ₹ (SAR), # (SAR), $ (USD) - extract the number after the symbol
-- For dual currency like "₹319,998 ($85,333)", prefer the USD value in parentheses
-- Remove commas from numbers: "319,998" becomes "319998"
-- Metrics: Net Income, Revenue, EBIT, Free Cash Flow, Capital Expenditures, Dividends, ROACE, Basic EPS
-- unit: "billion", "million", "thousand", "percent" (infer from context like "billion" or "M" or "B")
-- currency: "USD" or "SAR" based on symbol ($ = USD, ₹ or # = SAR)
-- year: extract from text (e.g., "in 2024", "for 2024")
-- organization: ALWAYS use "{main_company}"
-- If you cannot find a clear number in the text, return empty array []
-- DO NOT use your knowledge of the company - only extract what's written
+STRICT Rules:
+- Only extract a metric if its numeric value is EXPLICITLY stated in the text — no calculation, no inference.
+- metric: Use the standard name from the list above if it matches; otherwise use the exact name as written in the text.
+- value: The raw number only (e.g. "12.3", "454.3"). Strip commas and currency symbols.
+- unit: use "%" for percentages/ratios, "USD billion", "SAR billion", or "USD million" based on context.
+- year: extract from context (e.g. "year ended December 31, 2024" → "2024"). Leave "" if not found.
+- organization: ALWAYS use "{main_company}".
+- Return [] if no metrics with a clear numeric value appear in the text.
+- DO NOT use external knowledge — only what is written in the text.
 """,
         entity_parser=parse_metric_entity,
         entity_parser_kwargs={}
@@ -219,9 +246,21 @@ CRITICAL Rules:
         source_entity_type='Company',
         target_entity_type='Risk',
         relationship_type='FACES_RISK',
-        section_keywords='risk factors risk management principal risks uncertainties threats challenges exposures',
-        chunk_keywords='risk factors geopolitical commodity price climate change operational regulatory cyber cybersecurity hazard litigation market volatility',
-        extraction_prompt_template="""Extract ONLY risk factors that are EXPLICITLY named or described in this text. DO NOT infer generic risks.
+        section_keywords='risk management exposure factors financial operational',
+        chunk_keywords='could materially adversely affect business financial condition operations results',
+        n_sections=3,
+        n_chunks_per_section=5,
+        extraction_prompt_template="""Extract ALL risks explicitly described in this text. Classify each into one of the categories below.
+
+Risk categories:
+  - Credit_Risk       : risk of counterparty or borrower default, impairment, receivables deterioration
+  - Liquidity_Risk    : insufficient cash, funding gaps, inability to meet short-term obligations
+  - Market_Risk       : interest rate, foreign exchange, or commodity price movements
+  - Operational_Risk  : system failures, process breakdowns, fraud, human error, cyber threats
+  - Regulatory_Risk   : regulatory changes, sanctions, legal/compliance requirements
+  - Geopolitical_Risk : political instability, armed conflict, war, sanctions, country risk
+  - Strategic_Risk    : competition, business model disruption, M&A integration, reputational damage
+  - Environmental_Risk: climate change, natural disasters, environmental liability
 
 Text: {text}
 
@@ -229,20 +268,21 @@ The company in this document is: {main_company}
 
 Return ONLY a valid JSON array (no other text):
 [
-  {{"risk_type": "Specific Risk Name from Text", "description": "exact description from text, paraphrased to 120-180 chars", "severity": "High", "organization": "{main_company}"}}
+  {{"risk_type": "Geopolitical_Risk", "description": "concise description from the text, 80-160 chars", "severity": "High", "organization": "{main_company}"}}
 ]
 
-CRITICAL Rules:
-- risk_type: Must be a specific risk explicitly mentioned (e.g., "Commodity Price Volatility", "Geopolitical Instability in Middle East")
-- DO NOT extract generic risks like "Oil Price Volatility" unless those exact words appear
-- description: Use the actual wording from the text, paraphrased to fit 120-180 characters
-- severity: 
-  * "High" if text says "material adverse effect", "significant impact", "could materially affect"
-  * "Medium" if text says "could affect", "may impact"
-  * "Low" if text says "potential", "possible"
-- organization: ALWAYS use "{main_company}"
-- If the text only mentions "risks" generically without naming specific ones, return empty array []
-- DO NOT use your knowledge of typical industry risks - only extract what's written
+STRICT Rules:
+- risk_type: Must be exactly one of the eight categories above.
+- description: Paraphrase the text's own wording — 80-160 characters. No generic filler.
+- severity:
+    "High"   → text uses "material adverse", "significant", "could materially affect", "severely"
+    "Medium" → text uses "could affect", "may impact", "potential impact", "may result in"
+    "Low"    → text uses "possible", "minor", "limited", "unlikely"
+    "Unknown"→ severity not stated
+- organization: ALWAYS use "{main_company}".
+- Extract each distinct risk as a separate object. Merge near-duplicates into one.
+- Return [] if no risk is explicitly described in the text.
+- DO NOT use external knowledge — only what is written.
 """,
         entity_parser=parse_risk_entity,
         entity_parser_kwargs={}
@@ -253,7 +293,7 @@ CRITICAL Rules:
         source_entity_type='Company',
         target_entity_type='Industry',
         relationship_type='OPERATES_IN',
-        section_keywords='overview strategy business operations segments activities portfolio upstream downstream refining petrochemicals',
+        section_keywords='overview strategy introduction',
         chunk_keywords='oil gas energy refining petrochemicals chemicals upstream downstream renewable energy marketing distribution production exploration',
         extraction_prompt_template="""Extract the PRIMARY industry of {main_company} ONLY.
 
@@ -270,7 +310,7 @@ Rules:
 - If unclear, return []
 """,
         entity_parser=parse_industry_entity,
-        entity_parser_kwargs={}  
+        entity_parser_kwargs={}
     )
 }
 

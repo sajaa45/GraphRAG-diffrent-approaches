@@ -83,8 +83,8 @@ def is_junk_heuristic(text: str, min_chars: int = 30, alpha_ratio: float = 0.05,
     Args:
         text: Page text content
         min_chars: Minimum character count (pages below this are junk)
-        alpha_ratio: Minimum ratio of alphanumeric characters (lowered to 0.05 - very lenient for tables)
-        dot_ratio: Maximum ratio any single character can appear (raised to 0.8 - very lenient)
+        alpha_ratio: Minimum ratio of alphanumeric characters 
+        dot_ratio: Maximum ratio any single character can appear 
     
     Returns:
         bool: True if page is likely junk
@@ -96,8 +96,8 @@ def is_junk_heuristic(text: str, min_chars: int = 30, alpha_ratio: float = 0.05,
         return True
     
     # Check for decorative/table pages with mostly symbols
-    if is_decorative_table_page(text_clean):
-        return True
+    #if is_decorative_table_page(text_clean):
+    #    return True
     
     # Calculate alpha ratio excluding table formatting characters AND numbers
     # Don't penalize legitimate tables for having | - = characters or numbers
@@ -215,7 +215,7 @@ def analyze_page_content(text: str, page_num: str) -> Dict[str, any]:
         max_char_ratio = char_counts[max_char] / len(text_clean)
     
     # Check decorative table detection
-    is_decorative = is_decorative_table_page(text_clean)
+    is_decorative = False
     
     # Calculate content diversity (generic measure)
     words = text_clean.lower().split()

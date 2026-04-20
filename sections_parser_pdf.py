@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-"""
-Simple PDF parser using PyMuPDF (fitz)
-Usage: python sections_parser_pdf.py <pdf_file_path> [--output <output_file>]
-"""
-
 import argparse
 import json
 import re
-import fitz  # PyMuPDF
+import fitz  
 
 
 def normalize_title(title):
@@ -33,7 +27,7 @@ def build_hierarchy(sections):
         return []
     
     root = []
-    stack = []  # Stack to track parent sections at each level
+    stack = []  
     
     for section in sections:
         level = section["level"]
@@ -103,22 +97,13 @@ def sections_parser_pdf(pdf_path, output_path=None):
             else:
                 end_page = len(doc)
             
-            # Don't extract text - chunking.py will get it from the JSON file
-            # Just calculate character count for reference
-            char_count = 0
-            for page_idx in range(page_num - 1, end_page):
-                if page_idx < len(doc):
-                    page = doc[page_idx]
-                    text = page.get_text()
-                    char_count += len(text)
             
             section = {
                 "level": level,
                 "title": normalized_title,
                 "original_title": title,
                 "start_page": page_num,
-                "end_page": end_page,
-                "char_count": char_count
+                "end_page": end_page
             }
             
             flat_sections.append(section)
@@ -182,7 +167,6 @@ def main():
             for section in result["sections"]:
                 print(f"\n{section['title']}")
                 print(f"Pages: {section['start_page']}-{section['end_page']}")
-                print(f"Characters: {section['char_count']}")
 
 
 if __name__ == "__main__":

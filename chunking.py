@@ -6,11 +6,6 @@ import numpy as np
 from typing import List, Dict, Any, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 
-# ---------------------------------------------------------------------------
-# OPTIMIZATION 1: Module-level precomputed sets
-# Before: is_decorative_chunk recreated these sets on every call (O(k) each time).
-# After:  defined once at import time — zero cost per call.
-# ---------------------------------------------------------------------------
 _BULLET_CHARS = frozenset({'•', '●', '○', '◦', '▪', '▫', '■', '□', '◆', '◇'})
 _ARABIC_NUMERALS = frozenset({'٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'})
 _DECORATIVE_SYMBOLS = _BULLET_CHARS | _ARABIC_NUMERALS  # Combined for faster lookup
@@ -318,10 +313,10 @@ def filter_chunks_with_embeddings(chunks, embed_model, min_length=30,
         for i, chunk_text in enumerate(chunks):
             if is_small_chunk(chunk_text, min_length):
                 filtered_count['small'] += 1
-            elif is_repetitive_chunk(chunk_text):
-                filtered_count['repetitive'] += 1
-            elif is_decorative_chunk(chunk_text):
-                filtered_count['decorative'] += 1
+            # elif is_repetitive_chunk(chunk_text):
+            #     filtered_count['repetitive'] += 1
+            # elif is_decorative_chunk(chunk_text):
+            #     filtered_count['decorative'] += 1
             else:
                 filtered_chunks.append({
                     'text': chunk_text,
@@ -331,9 +326,9 @@ def filter_chunks_with_embeddings(chunks, embed_model, min_length=30,
 
         return filtered_chunks, filtered_count
 
-    # Generate TOC keywords embedding once
-    toc_keywords = "table of contents contents index chapter section page number list overview summary outline"
-    toc_embedding = generate_embedding(toc_keywords, embed_model)
+    # # Generate TOC keywords embedding once
+    # toc_keywords = "table of contents contents index chapter section page number list overview summary outline"
+    # toc_embedding = generate_embedding(toc_keywords, embed_model)
 
     filtered_chunks = []
     filtered_count = {'small': 0, 'toc': 0, 'meaningless': 0, 'repetitive': 0, 'decorative': 0}
@@ -352,43 +347,43 @@ def filter_chunks_with_embeddings(chunks, embed_model, min_length=30,
         # Check if chunk is too small
         if is_small_chunk(chunk_text, min_length):
             filtered_count['small'] += 1
-            filtered_examples['small'].append(chunk_text)  # Store full text
+            filtered_examples['small'].append(chunk_text)
             if debug:
                 print(f"      Chunk {i+1}: FILTERED (small) - {len(chunk_text)} chars")
             continue
-        
-        # Check if chunk is decorative (before generating embedding)
-        if is_decorative_chunk(chunk_text):
-            filtered_count['decorative'] += 1
-            filtered_examples['decorative'].append(chunk_text)  # Store full text
-            if debug:
-                print(f"      Chunk {i+1}: FILTERED (decorative)")
-            continue
-        
-        # Check if chunk is repetitive (before generating embedding)
-        if is_repetitive_chunk(chunk_text):
-            filtered_count['repetitive'] += 1
-            filtered_examples['repetitive'].append(chunk_text)  # Store full text
-            if debug:
-                print(f"      Chunk {i+1}: FILTERED (repetitive)")
-            continue
+
+        # # Check if chunk is decorative (before generating embedding)
+        # if is_decorative_chunk(chunk_text):
+        #     filtered_count['decorative'] += 1
+        #     filtered_examples['decorative'].append(chunk_text)
+        #     if debug:
+        #         print(f"      Chunk {i+1}: FILTERED (decorative)")
+        #     continue
+
+        # # Check if chunk is repetitive (before generating embedding)
+        # if is_repetitive_chunk(chunk_text):
+        #     filtered_count['repetitive'] += 1
+        #     filtered_examples['repetitive'].append(chunk_text)
+        #     if debug:
+        #         print(f"      Chunk {i+1}: FILTERED (repetitive)")
+        #     continue
 
         # Generate embedding for this chunk
         embedding = generate_embedding(chunk_text, embed_model)
 
-        # Check if chunk is table of contents related (with pattern matching)
-        if is_table_of_contents_chunk(chunk_text, embedding, toc_embedding, toc_threshold):
-            filtered_count['toc'] += 1
-            filtered_examples['toc'].append(chunk_text)  # Store full text
-            if debug:
-                toc_similarity = cosine_similarity([embedding], [toc_embedding])[0][0] if embedding and toc_embedding else None
-                print(f"      Chunk {i+1}: FILTERED (TOC) - similarity={toc_similarity:.3f if toc_similarity else 'N/A'}, threshold={toc_threshold}")
-            continue
-        
+        # # Check if chunk is table of contents related (with pattern matching)
+        # if is_table_of_contents_chunk(chunk_text, embedding, toc_embedding, toc_threshold):
+        #     filtered_count['toc'] += 1
+        #     filtered_examples['toc'].append(chunk_text)
+        #     if debug:
+        #         toc_similarity = cosine_similarity([embedding], [toc_embedding])[0][0] if embedding and toc_embedding else None
+        #         print(f"      Chunk {i+1}: FILTERED (TOC) - similarity={toc_similarity:.3f if toc_similarity else 'N/A'}, threshold={toc_threshold}")
+        #     continue
+
         # Check if chunk contains meaningless content
         if is_meaningless_chunk(chunk_text, embedding, embed_model, meaningless_threshold):
             filtered_count['meaningless'] += 1
-            filtered_examples['meaningless'].append(chunk_text)  # Store full text
+            filtered_examples['meaningless'].append(chunk_text)
             if debug:
                 print(f"      Chunk {i+1}: FILTERED (meaningless)")
             continue
@@ -401,7 +396,7 @@ def filter_chunks_with_embeddings(chunks, embed_model, min_length=30,
         })
 
     total_filtered = sum(filtered_count.values())
-    print(f"    Filtered out: {filtered_count['small']} small, {filtered_count['decorative']} decorative, {filtered_count['toc']} TOC, {filtered_count['meaningless']} meaningless, {filtered_count['repetitive']} repetitive")
+    print(f"    Filtered out: {filtered_count['small']} small, {filtered_count['meaningless']} meaningless")
     print(f"    Total filtered: {total_filtered}, Kept: {len(filtered_chunks)} chunks")
     
     # Only write to file if not using accumulator (i.e., this is the final call or standalone call)

@@ -1,20 +1,14 @@
-#!/usr/bin/env python3
-"""
-Generalized Multi-Relation Knowledge Graph Builder
-Supports multiple relation types using embedding-based hierarchical retrieval
-"""
 
 import os
 import json
 import argparse
-import requests
 import time
 import re
 from typing import List, Dict, Any, Optional
 from neo4j import GraphDatabase
 from sentence_transformers import SentenceTransformer
-import chromadb
-from chromadb.config import Settings
+from qdrant_client import QdrantClient
+from qdrant_client.models import Filter, FieldCondition, MatchValue, MatchAny
 
 from domain_relation_extraction_config import (
     RelationConfig, 
@@ -29,61 +23,54 @@ from domain_industry_node_to_sic import get_sic_code
 # ============================================================================
 TOP_N_SECTIONS = 2
 TOP_N_CHUNKS_PER_SECTION = 3
-SECTION_SIMILARITY_THRESHOLD = 0.25  
-CHUNK_SIMILARITY_THRESHOLD = 0.3  
-OLLAMA_URL = "http://host.docker.internal:11434"
-OLLAMA_MODEL = "mistral:latest"
-OLLAMA_TIMEOUT = None  
-OLLAMA_MAX_RETRIES = 1  
+SECTION_SIMILARITY_THRESHOLD = 0.25
+CHUNK_SIMILARITY_THRESHOLD = 0.3
+MAX_CHUNKS_PER_LLM_BATCH = 8  # Keep well within 8192-token context window  
 # ============================================================================
 
 
 class MultiRelationKGBuilder:
     """Build Neo4j knowledge graph with multiple relation types"""
     
-    def __init__(self, 
-                 neo4j_uri: str, 
-                 neo4j_user: str, 
+    def __init__(self,
+                 neo4j_uri: str,
+                 neo4j_user: str,
                  neo4j_password: str,
                  collection_name: str = "financial_docs",
-                 persist_directory: str = "./chroma_db",
+                 qdrant_host: str = "localhost",
+                 qdrant_port: int = 6333,
                  embedding_model: str = "all-MiniLM-L6-v2",
-                 ollama_url: str = OLLAMA_URL,
-                 ollama_model: str = OLLAMA_MODEL,
                  output_dir: str = "/app/output",
-                 main_company: str = "the Company"):
-        
+                 main_company: str = "the Company",
+                 source_file: str = ""):
+
         self.driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
         print(f"✓ Connected to Neo4j at {neo4j_uri}")
-        
-        self.ollama_url = ollama_url
-        self.ollama_model = ollama_model
-        print(f"✓ Using Ollama at {ollama_url} with model {ollama_model}")
-        
+
         self.embedding_model = SentenceTransformer(embedding_model)
         print(f"✓ Loaded embedding model: {embedding_model}")
-        
-        self.client = chromadb.PersistentClient(
-            path=persist_directory,
-            settings=Settings(anonymized_telemetry=False)
-        )
-        self.collection = self.client.get_collection(name=collection_name)
-        print(f"✓ Connected to ChromaDB collection: {collection_name}")
-        
+
+        self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
+        self.collection_name = collection_name
+        print(f"✓ Connected to Qdrant collection: {collection_name}")
+
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
-        
+
         self.main_company = main_company
         if main_company == "the Company":
             self.main_company = self.detect_main_company()
         set_main_company(self.main_company)
         print(f"✓ Main company: {self.main_company}")
 
-        self._sic_cache: Dict[str, str] = {}  # sector -> SIC code cache
-        
-        timestamp = int(time.time())
-        self.log_file = os.path.join(self.output_dir, f"extraction_log_{timestamp}.txt")
+        self._sic_cache: Dict[str, str] = {}
+
+        # Derive log filename from source_file or fall back to collection name
+        base = os.path.splitext(os.path.basename(source_file))[0] if source_file else collection_name
+        self.log_file = os.path.join(self.output_dir, f"relationships_{base}.txt")
         self.log_buffer = []
+        self.start_time = time.time()
+
         print(f"✓ Logging to: {self.log_file}")
     
     def close(self):
@@ -97,9 +84,17 @@ class MultiRelationKGBuilder:
     
     def _save_log(self):
         if self.log_buffer:
+            elapsed = time.time() - self.start_time
+            header = (
+                f"Started : {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.start_time))}\n"
+                f"Finished: {time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+                f"Elapsed : {elapsed:.1f}s ({elapsed/60:.1f} min)\n"
+                f"{'='*80}\n\n"
+            )
             with open(self.log_file, 'w', encoding='utf-8') as f:
+                f.write(header)
                 f.write('\n'.join(self.log_buffer))
-            print(f"\n✓ Extraction log saved to: {self.log_file}")
+            print(f"\n✓ Relationships log saved to: {self.log_file}")
     
     def clear_database(self):
         with self.driver.session() as session:
@@ -129,19 +124,22 @@ class MultiRelationKGBuilder:
         print("  Auto-detecting main company from vector store...")
 
         try:
-            results = self.collection.query(
-                query_embeddings=[self.embedding_model.encode(["annual report company overview"])[0].tolist()],
-                n_results=4,
-                where={"type": "chunk"}
-            )
-            docs = results['documents'][0]
+            query_vec = self.embedding_model.encode(["annual report company overview"])[0].tolist()
+            results = self.client.query_points(
+                collection_name=self.collection_name,
+                query=query_vec,
+                query_filter=Filter(must=[FieldCondition(key="type", match=MatchValue(value="chunk"))]),
+                limit=4,
+                with_payload=True
+            ).points
+            docs = [r.payload["text"] for r in results]
         except Exception:
             self.company_aliases = set()
             return "the Company"
 
         context = "\n\n---\n\n".join(docs)
 
-        if os.getenv("GOOGLE_API_KEY"):
+        if os.getenv("AWS_ACCESS_KEY_ID"):
             try:
                 prompt = (
                     "Read the following excerpts from an annual report and return ONLY "
@@ -154,7 +152,7 @@ class MultiRelationKGBuilder:
                     self.company_aliases = {name}
                     return name
             except Exception as e:
-                print(f"  ⚠ Gemini detection failed ({e}), falling back to regex")
+                print(f"  ⚠ Bedrock detection failed ({e}), falling back to regex")
 
         # Regex fallback
         candidates: Dict[str, int] = {}
@@ -212,121 +210,126 @@ class MultiRelationKGBuilder:
     # ========================================================================
     # HIERARCHICAL RETRIEVAL
     # ========================================================================
-    def hierarchical_retrieval(self, relation_config, n_sections=TOP_N_SECTIONS, 
-                               n_chunks_per_section=TOP_N_CHUNKS_PER_SECTION, 
+    def hierarchical_retrieval(self, relation_config, n_sections=TOP_N_SECTIONS,
+                               n_chunks_per_section=TOP_N_CHUNKS_PER_SECTION,
                                section_threshold=SECTION_SIMILARITY_THRESHOLD):
         print(f"\n{'='*60}")
         print(f"Hierarchical Retrieval: {relation_config.name}")
         print(f"{'='*60}")
-        
-        # Step 1: Sections
-        section_embedding = self.embedding_model.encode([relation_config.section_keywords])[0]
-        section_results = self.collection.query(
-            query_embeddings=[section_embedding.tolist()],
-            n_results=n_sections,
-            where={"type": "section"}
-        )
-        
+
+        # Use per-relation overrides when set
+        n_sections = relation_config.n_sections
+        n_chunks_per_section = relation_config.n_chunks_per_section
+
+        # Build list of chunk embeddings: one per keyword string, or one from chunk_keywords
+        kw_list = relation_config.chunk_keywords_list or [relation_config.chunk_keywords]
+        chunk_embeddings = [
+            self.embedding_model.encode([kw])[0].tolist() for kw in kw_list
+        ]
+        print(f"  Using {len(chunk_embeddings)} chunk query vector(s)")
+
+        # Step 1: find relevant sections
+        section_embedding = self.embedding_model.encode([relation_config.section_keywords])[0].tolist()
+        section_results = self.client.query_points(
+            collection_name=self.collection_name,
+            query=section_embedding,
+            query_filter=Filter(must=[FieldCondition(key="type", match=MatchValue(value="section"))]),
+            limit=n_sections,
+            with_payload=True
+        ).points
+
         use_sections = False
-        if section_results['documents'][0]:
-            best_sim = 1 - section_results['distances'][0][0]
+        if section_results:
+            best_sim = section_results[0].score
             print(f"  Best section similarity: {best_sim:.3f}")
             if best_sim >= section_threshold:
                 use_sections = True
-                print(f"  ✓ Using {len(section_results['documents'][0])} relevant sections")
-        
+                print(f"  ✓ Using {len(section_results)} relevant sections")
+
+        seen_ids: set = set()
         all_chunks = []
-        chunk_embedding = self.embedding_model.encode([relation_config.chunk_keywords])[0]
-        
+
+        def _add_chunk(r, section_title, section_id):
+            if r.id in seen_ids:
+                return
+            seen_ids.add(r.id)
+            chunk_data = {
+                "section_title": section_title,
+                "section_id": section_id,
+                "chunk_index": r.payload.get("chunk_index"),
+                "similarity": r.score,
+                "text": r.payload["text"]
+            }
+            if "source_page" in r.payload:
+                chunk_data["source_page"] = r.payload["source_page"]
+            all_chunks.append(chunk_data)
+
         if use_sections:
-            for i, (doc, meta, dist) in enumerate(zip(
-                section_results['documents'][0],
-                section_results['metadatas'][0],
-                section_results['distances'][0]
-            ), 1):
-                section_id = meta['section_id']
-                section_title = meta['title']
-                chunk_results = self.collection.query(
-                    query_embeddings=[chunk_embedding.tolist()],
-                    n_results=n_chunks_per_section,
-                    where={"$and": [{"type": "chunk"}, {"section_id": section_id}]}
-                )
-                for doc, cmeta, cdist in zip(chunk_results['documents'][0], 
-                                           chunk_results['metadatas'][0], 
-                                           chunk_results['distances'][0]):
-                    chunk_data = {
-                        "section_title": section_title,
-                        "section_id": section_id,
-                        "chunk_index": cmeta.get('chunk_index'),
-                        "similarity": 1 - cdist,
-                        "text": doc
-                    }
-                    if 'source_page' in cmeta:
-                        chunk_data['source_page'] = cmeta['source_page']
-                    all_chunks.append(chunk_data)
+            for hit in section_results:
+                section_id = hit.payload["section_id"]
+                section_title = hit.payload["title"]
+                for emb in chunk_embeddings:
+                    chunk_results = self.client.query_points(
+                        collection_name=self.collection_name,
+                        query=emb,
+                        query_filter=Filter(must=[
+                            FieldCondition(key="type", match=MatchValue(value="chunk")),
+                            FieldCondition(key="section_id", match=MatchValue(value=section_id))
+                        ]),
+                        limit=n_chunks_per_section,
+                        with_payload=True
+                    ).points
+                    for r in chunk_results:
+                        _add_chunk(r, section_title, section_id)
         else:
             # Direct chunk fallback
-            n_chunks = n_sections * n_chunks_per_section
-            chunk_results = self.collection.query(
-                query_embeddings=[chunk_embedding.tolist()],
-                n_results=n_chunks,
-                where={"type": "chunk"}
-            )
-            for doc, meta, dist in zip(chunk_results['documents'][0], 
-                                     chunk_results['metadatas'][0], 
-                                     chunk_results['distances'][0]):
-                chunk_data = {
-                    "section_title": meta.get('section_title', 'Unknown'),
-                    "section_id": meta.get('section_id'),
-                    "chunk_index": meta.get('chunk_index'),
-                    "similarity": 1 - dist,
-                    "text": doc
-                }
-                if 'source_page' in meta:
-                    chunk_data['source_page'] = meta['source_page']
-                all_chunks.append(chunk_data)
-        
-        print(f"  ✓ Retrieved {len(all_chunks)} chunks total")
+            for emb in chunk_embeddings:
+                chunk_results = self.client.query_points(
+                    collection_name=self.collection_name,
+                    query=emb,
+                    query_filter=Filter(must=[FieldCondition(key="type", match=MatchValue(value="chunk"))]),
+                    limit=n_sections * n_chunks_per_section,
+                    with_payload=True
+                ).points
+                for r in chunk_results:
+                    _add_chunk(r, r.payload.get("section_title", "Unknown"), r.payload.get("section_id"))
+
+        print(f"  ✓ Retrieved {len(all_chunks)} chunks total (deduplicated)")
         return all_chunks
     
     # ========================================================================
     # LLM EXTRACTION
     # ========================================================================
     def _call_llm(self, prompt: str) -> str:
-        """Call either Gemini (if GOOGLE_API_KEY set) or Ollama. Returns raw text."""
-        google_key = os.getenv("GOOGLE_API_KEY")
-        if google_key:
-            from google import genai
-            from google.genai import types
-            client = genai.Client(api_key=google_key)
-            model = os.getenv("GEMINI_MODEL", "gemma-3-27b-it")
-            for attempt in range(5):
-                try:
-                    response = client.models.generate_content(
-                        model=model,
-                        contents=prompt,
-                        config=types.GenerateContentConfig(temperature=0.1)
-                    )
-                    return response.text.strip()
-                except Exception as e:
-                    err = str(e)
-                    is_503 = '503' in err
-                    is_429 = '429' in err
-                    if (is_429 or is_503) and attempt < 4:
-                        wait = 60 if is_503 else 30 * (attempt + 1)
-                        print(f"    ⚠ Gemini {'overloaded' if is_503 else 'rate limit'}... retrying in {wait}s ({attempt+1}/4)")
-                        time.sleep(wait)
-                    else:
-                        raise
-        else:
-            response = requests.post(
-                f"{self.ollama_url}/api/generate",
-                json={"model": self.ollama_model, "prompt": prompt, "stream": False, "temperature": 0.1},
-                timeout=OLLAMA_TIMEOUT
-            )
-            if response.status_code != 200:
-                raise RuntimeError(f"Ollama error: {response.status_code}")
-            return response.json().get('response', '').strip()
+        """Call AWS Bedrock via the Converse API (works for all model families)."""
+        import boto3
+        aws_key = os.getenv("AWS_ACCESS_KEY_ID")
+        model = os.getenv("BEDROCK_MODEL", "meta.llama3-8b-instruct-v1:0")
+        region = os.getenv("AWS_REGION", os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
+        client = boto3.client(
+            service_name="bedrock-runtime",
+            region_name=region,
+            aws_access_key_id=aws_key,
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        )
+        for attempt in range(5):
+            try:
+                response = client.converse(
+                    modelId=model,
+                    messages=[{"role": "user", "content": [{"text": prompt}]}],
+                    inferenceConfig={"maxTokens": 2048 , "temperature": 0.1},
+                )
+                return response["output"]["message"]["content"][0]["text"].strip()
+            except Exception as e:
+                err = str(e)
+                is_throttle = "ThrottlingException" in err or "429" in err
+                is_overload = "ServiceUnavailableException" in err or "503" in err
+                if (is_throttle or is_overload) and attempt < 4:
+                    wait = 60 if is_overload else 30 * (attempt + 1)
+                    print(f"    ⚠ Bedrock {'overloaded' if is_overload else 'rate limit'}... retrying in {wait}s ({attempt+1}/4)")
+                    time.sleep(wait)
+                else:
+                    raise
 
     def _extract_entities_batch(self, chunks: List[Dict], relation_config) -> List[tuple]:
         """
@@ -365,7 +368,7 @@ class MultiRelationKGBuilder:
             return []
 
     def extract_entities_with_llm(self, text: str, relation_config):
-        """Single-chunk extraction (used for Ollama path)."""
+        """Single-chunk extraction."""
         prompt = relation_config.extraction_prompt_template.format(
             text=text,
             main_company=self.main_company
@@ -417,14 +420,14 @@ class MultiRelationKGBuilder:
             value = str(entity.get('value', '')).strip()
             if not metric or not value:
                 return False
-            
+
             # Clean value for matching (remove commas, decimals)
             value_clean = value.replace(',', '').replace('.', '')
-            
+
             # Check if the numeric value appears in text
             # Handle both regular numbers and currency symbols (₹, #, $)
-            import re
-            
+            # (re is imported at the top of the module)
+
             # More flexible patterns - look for the core digits
             # Extract just the significant digits (first 4-5 digits)
             core_digits = re.sub(r'[^\d]', '', value)[:5]  # First 5 digits
@@ -453,21 +456,19 @@ class MultiRelationKGBuilder:
             risk_type = str(entity.get('risk_type', '')).strip()
             if not risk_type:
                 return False
-            
-            # Risk type must be explicitly mentioned or strongly implied
-            risk_keywords = risk_type.lower().split()
-            # At least 2 keywords from risk name must appear in text (or 1 if risk name is short)
-            significant_keywords = [k for k in risk_keywords if len(k) > 3]
-            if not significant_keywords:
-                return True  # If no significant keywords, accept it
-            
-            matches = sum(1 for kw in significant_keywords if kw in text_lower)
-            required_matches = min(2, len(significant_keywords))
-            
-            if matches < required_matches:
-                print(f"      ⚠ Risk validation failed: {risk_type} not grounded in text")
-                return False
-            
+
+            # Validate that the description is grounded in the source text,
+            # not that the category name (e.g. "Geopolitical_Risk") literally appears.
+            description = str(entity.get('description', '')).strip()
+            if description:
+                desc_words = [w for w in re.split(r'\W+', description.lower()) if len(w) > 4]
+                if desc_words:
+                    matches = sum(1 for w in desc_words if w in text_lower)
+                    # Require at least 25% of significant description words to appear in text
+                    if matches < max(1, len(desc_words) // 4):
+                        print(f"      ⚠ Risk validation failed: description not grounded in text ({matches}/{len(desc_words)} words matched)")
+                        return False
+
             return True
         
         elif relation_type == 'OPERATES_IN':
@@ -523,8 +524,10 @@ class MultiRelationKGBuilder:
             print(f"✗ Unknown relation: {relation_name}")
             return {"error": "Unknown relation"}
         
+        relation_start = time.time()
         self._log(f"\n{'='*80}")
         self._log(f"EXTRACTING RELATION: {relation_config.name}")
+        self._log(f"Started: {time.strftime('%Y-%m-%d %H:%M:%S')}")
         self._log(f"{'='*80}")
         self._log(f"Source: {relation_config.source_entity_type}")
         self._log(f"Target: {relation_config.target_entity_type}")
@@ -549,18 +552,15 @@ class MultiRelationKGBuilder:
         created = set()
         ceo_candidates = []
 
-        use_gemini = bool(os.getenv("GOOGLE_API_KEY"))
+        chunk_entity_pairs = []
+        n_batches = (len(filtered_chunks) + MAX_CHUNKS_PER_LLM_BATCH - 1) // MAX_CHUNKS_PER_LLM_BATCH
+        for batch_idx in range(n_batches):
+            batch = filtered_chunks[batch_idx * MAX_CHUNKS_PER_LLM_BATCH:(batch_idx + 1) * MAX_CHUNKS_PER_LLM_BATCH]
+            print(f"\n  Bedrock batch {batch_idx + 1}/{n_batches}: sending {len(batch)} chunks...")
+            batch_results = self._extract_entities_batch(batch, relation_config)
+            chunk_entity_pairs.extend(batch_results)
 
         with self.driver.session() as session:
-            # Gemini: one API call for all chunks
-            if use_gemini:
-                print(f"\n  Gemini batch: sending {len(filtered_chunks)} chunks in one call...")
-                batch_results = self._extract_entities_batch(filtered_chunks, relation_config)
-                # Reconstruct per-chunk iteration for the rest of the existing logic
-                chunk_entity_pairs = [(entity, chunk) for entity, chunk in batch_results]
-            else:
-                chunk_entity_pairs = []
-
             for i, chunk in enumerate(filtered_chunks, 1):
                 self._log(f"\nChunk {i}/{len(filtered_chunks)} (similarity: {chunk['similarity']:.3f})")
                 self._log(f"  Section: {chunk['section_title']}")
@@ -576,11 +576,7 @@ class MultiRelationKGBuilder:
 
                 print(f"\nChunk {i}/{len(filtered_chunks)} | Similarity: {chunk['similarity']:.3f} | Section: {chunk['section_title']}")
 
-                if use_gemini:
-                    # Pull entities that were matched to this chunk
-                    entities = [e for e, c in chunk_entity_pairs if c is chunk]
-                else:
-                    entities = self.extract_entities_with_llm(chunk['text'], relation_config)
+                entities = [e for e, c in chunk_entity_pairs if c is chunk]
 
                 if not entities:
                     self._log("    ✗ No entities extracted")
@@ -709,7 +705,15 @@ class MultiRelationKGBuilder:
                     self._log(log_msg)
                     print(log_msg)
         
-        summary = f"\n{'='*80}\nEXTRACTION COMPLETE: {relation_name}\n{'='*80}\nEntities: {total_entities}\nRelationships: {total_relationships}\n"
+        relation_elapsed = time.time() - relation_start
+        summary = (
+            f"\n{'='*80}\n"
+            f"EXTRACTION COMPLETE: {relation_name}\n"
+            f"{'='*80}\n"
+            f"Entities     : {total_entities}\n"
+            f"Relationships: {total_relationships}\n"
+            f"Duration     : {relation_elapsed:.1f}s ({relation_elapsed/60:.1f} min)\n"
+        )
         self._log(summary)
         print(summary)
         return {"relation": relation_name, "entities": total_entities, "relationships": total_relationships}
@@ -744,12 +748,12 @@ def main():
     parser.add_argument("--all", action="store_true", help="Extract all relations")
     parser.add_argument("--list", action="store_true", help="List available relations")
     parser.add_argument("--clear", action="store_true", help="Clear database first")
-    parser.add_argument("--collection", default="financial_docs", help="ChromaDB collection name")
-    parser.add_argument("--db-path", default="./chroma_db", help="ChromaDB persist directory")
+    parser.add_argument("--collection", default="financial_docs", help="Qdrant collection name")
+    parser.add_argument("--qdrant-host", default="localhost", help="Qdrant host")
+    parser.add_argument("--qdrant-port", type=int, default=6333, help="Qdrant port")
     parser.add_argument("--embedding-model", default="all-MiniLM-L6-v2", help="Sentence transformer model")
-    parser.add_argument("--ollama-url", default=None, help="Ollama API URL")
-    parser.add_argument("--ollama-model", default=None, help="Ollama model name")
     parser.add_argument("--main-company", default=None, help="Main company name for OPERATES_IN extraction")
+    parser.add_argument("--source-file", default="", help="Source document filename used to name the relationships log")
     
     args = parser.parse_args()
     
@@ -764,11 +768,11 @@ def main():
         neo4j_user=os.getenv("NEO4J_USERNAME", "neo4j"),
         neo4j_password=os.getenv("NEO4J_PASSWORD", "Lexical12345"),
         collection_name=args.collection,
-        persist_directory=args.db_path,
+        qdrant_host=args.qdrant_host or os.getenv("QDRANT_HOST", "localhost"),
+        qdrant_port=args.qdrant_port or int(os.getenv("QDRANT_PORT", "6333")),
         embedding_model=args.embedding_model,
-        ollama_url=args.ollama_url or os.getenv("OLLAMA_URL", OLLAMA_URL),
-        ollama_model=args.ollama_model or os.getenv("OLLAMA_MODEL", OLLAMA_MODEL),
-        main_company=args.main_company or os.getenv("MAIN_COMPANY", "the Company")
+        main_company=args.main_company or os.getenv("MAIN_COMPANY", "the Company"),
+        source_file=args.source_file or os.getenv("SOURCE_FILE", "")
     )
     
     try:

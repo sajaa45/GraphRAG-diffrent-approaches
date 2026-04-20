@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Unified Pipeline: Chunk + Store in Vector DB Simultaneously
-No intermediate JSON files with embeddings - goes straight to ChromaDB
-Uses the production chunking system from chunking.py
-"""
 
 import json
 import argparse
@@ -16,8 +10,11 @@ import os
 from chunking import llamaindex_chunker, get_embedding_model
 
 # Vector store
-import chromadb
-from chromadb.config import Settings
+from qdrant_client import QdrantClient
+from qdrant_client.models import (
+    VectorParams, Distance, PointStruct,
+    Filter, FieldCondition, MatchValue
+)
 
 
 class UnifiedPipeline:
@@ -25,21 +22,24 @@ class UnifiedPipeline:
     
     def __init__(self,
                  collection_name: str = "financial_docs",
-                 persist_directory: str = "./chroma_db",
+                 qdrant_host: str = "localhost",
+                 qdrant_port: int = 6333,
                  buffer_size: int = 1,
-                 threshold: int = 70):
+                 threshold: int = 70,
+                 clear: bool = False):
         """
         Initialize unified pipeline
         
         Args:
-            collection_name: ChromaDB collection name
-            persist_directory: Where to store the database
+            collection_name: Qdrant collection name
+            qdrant_host: Qdrant server host
+            qdrant_port: Qdrant server port
             buffer_size: LlamaIndex buffer size
             threshold: LlamaIndex threshold
         """
         print("Initializing Unified Pipeline...")
         print(f"  Collection: {collection_name}")
-        print(f"  Database: {persist_directory}")
+        print(f"  Qdrant: {qdrant_host}:{qdrant_port}")
         
         # Store chunking parameters
         self.buffer_size = buffer_size
@@ -54,104 +54,87 @@ class UnifiedPipeline:
             print("  ✗ Failed to load embedding model")
             raise Exception("Embedding model required for pipeline")
         
-        # Initialize ChromaDB
-        print("  Connecting to ChromaDB...")
-        self.client = chromadb.PersistentClient(
-            path=persist_directory,
-            settings=Settings(
-                anonymized_telemetry=False,
-                allow_reset=True
-            )
-        )
-        
+        # Determine vector size from a test encode
+        sample_vec = self.embed_model.encode(["test"])[0]
+        self.vector_size = len(sample_vec)
+
+        # Initialize Qdrant
+        print("  Connecting to Qdrant...")
+        self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
+        self.collection_name = collection_name
+
         # Get or create collection
-        try:
-            self.collection = self.client.get_collection(name=collection_name)
-            print(f"  ✓ Using existing collection: {collection_name}")
-        except:
-            self.collection = self.client.create_collection(
-                name=collection_name,
-                metadata={"hnsw:space": "cosine"}
+        existing = [c.name for c in self.client.get_collections().collections]
+        if collection_name in existing:
+            if clear:
+                self.client.delete_collection(collection_name)
+                print(f"  ✓ Cleared existing collection: {collection_name}")
+            else:
+                print(f"  ✓ Using existing collection: {collection_name}")
+        if collection_name not in existing or clear:
+            self.client.create_collection(
+                collection_name=collection_name,
+                vectors_config=VectorParams(size=self.vector_size, distance=Distance.COSINE)
             )
             print(f"  ✓ Created new collection: {collection_name}")
         
         print("✓ Pipeline initialized\n")
     
-    def process_section(self, section: Dict, section_idx: int, total_sections: int, pages_data: Dict = None):
+    def process_section(self, section: Dict, section_idx: int, total_sections: int):
         """
-        Process a single section: chunk using chunking.py and store immediately
-        Also stores section-level embedding for hierarchical search
-        
-        Args:
-            section: Section dictionary
-            section_idx: Current section index
-            total_sections: Total number of sections
-            pages_data: Optional dictionary mapping page numbers to text for page-by-page chunking
+        Process a single section: chunk its text and store in Qdrant immediately.
+        Also stores a section-level embedding for hierarchical search.
+        Sections with explicit page_contents are chunked page-by-page for exact page tracking;
+        all others (including those whose text was pre-populated from a pages JSON) are
+        chunked as a single unit.
         """
         section_title = section.get('title', 'Untitled')
         section_text = section.get('text', '')
-        
+
         print(f"[{section_idx}/{total_sections}] Processing: {section_title}")
-        
-        # Check if we can do page-by-page chunking
-        has_page_contents = 'page_contents' in section and section['page_contents']
-        section_pages = section.get('pages', [])
-        
-        # Determine if we should use page-by-page chunking
-        use_page_by_page = (has_page_contents or (pages_data and section_pages))
-        
-        if not use_page_by_page and (not section_text or not section_text.strip()):
-            print(f"  ⚠ Empty section and no page data, skipping")
+
+        has_page_contents = bool(section.get('page_contents'))
+        use_page_by_page = has_page_contents
+
+        if not use_page_by_page and not section_text.strip():
+            print(f"  ⚠ Empty section, skipping")
             return 0
-        
-        # Store section-level embedding for hierarchical search (if we have meaningful text)
-        if section_text and len(section_text) > 50:  # More than just a placeholder
-            section_id = f"section_{section_idx}"
-            section_embedding = self.embed_model.encode([section_text])[0].tolist()
-            
-            self.collection.add(
-                documents=[section_text[:1000]],  # Store preview of section text
-                ids=[section_id],
-                metadatas=[{
-                    "type": "section",
-                    "section_id": section_idx,
-                    "title": section_title,
-                    "level": section.get('level', 0),
-                    "start_page": section.get('start_page', 0),
-                    "end_page": section.get('end_page', 0),
-                    "char_count": len(section_text)
-                }],
-                embeddings=[section_embedding]
+
+        # Store section-level embedding for hierarchical search
+        if section_text and len(section_text) > 50:
+            section_embedding = self.embed_model.encode([section_title])[0].tolist()
+            self.client.upsert(
+                collection_name=self.collection_name,
+                points=[PointStruct(
+                    id=section_idx,
+                    vector=section_embedding,
+                    payload={
+                        "type": "section",
+                        "section_id": section_idx,
+                        "title": section_title,
+                        "text": section_text[:1000],
+                        "level": section.get('level', 0),
+                        "start_page": section.get('start_page', 0),
+                        "end_page": section.get('end_page', 0),
+                        "char_count": len(section_text)
+                    }
+                )]
             )
-        
+
         chunk_texts = []
         chunk_ids = []
         chunk_metadatas = []
         chunk_embeddings = []
-        chunk_counter = 1
         total_filtered = 0
-        
+
         if use_page_by_page:
-            # Process page-by-page for exact page tracking
-            print(f"  Processing {len(section_pages)} pages individually...")
-            
-            for page_num in section_pages:
-                # Get page text
-                page_text = None
-                
-                if has_page_contents:
-                    page_content = next((p for p in section['page_contents'] if p['page_number'] == page_num), None)
-                    if page_content:
-                        page_text = page_content.get('content', '')
-                elif pages_data:
-                    page_key = str(page_num)
-                    if page_key in pages_data:
-                        page_text = pages_data[page_key]
-                
-                if not page_text or not page_text.strip():
+            print(f"  Processing {len(section['page_contents'])} pages individually...")
+            for chunk_counter, page_content in enumerate(section['page_contents'], 1):
+                page_num = page_content['page_number']
+                page_text = page_content.get('content', '')
+                if not page_text.strip():
                     continue
-                
-                # Chunk this page
+
                 filtered_chunks, filtering_stats = llamaindex_chunker(
                     text=page_text,
                     buffer_size=self.buffer_size,
@@ -159,14 +142,10 @@ class UnifiedPipeline:
                     embed_model=self.embed_model,
                     debug=False
                 )
-                
-                # Track filtering stats
                 total_filtered += sum(filtering_stats.values())
-                
-                # Add chunks from this page
+
                 for i, chunk_data in enumerate(filtered_chunks, 1):
-                    chunk_id = f"section_{section_idx}_chunk_{chunk_counter}"
-                    
+                    chunk_id = f"section_{section_idx}_chunk_{chunk_counter}_{i}"
                     chunk_texts.append(chunk_data['text'])
                     chunk_ids.append(chunk_id)
                     chunk_metadatas.append({
@@ -174,22 +153,19 @@ class UnifiedPipeline:
                         "section_id": section_idx,
                         "section_title": section_title,
                         "section_level": section.get('level', 0),
-                        "source_page": page_num,  # Exact page this chunk came from
-                        "section_page_range": section.get('page_range', f"{section.get('start_page', 0)}-{section.get('end_page', 0)}"),
-                        "start_page": section.get('start_page', 0),  # Keep for compatibility
-                        "end_page": section.get('end_page', 0),  # Keep for compatibility
+                        "source_page": page_num,
+                        "start_page": section.get('start_page', 0),
+                        "end_page": section.get('end_page', 0),
                         "chunk_index": chunk_counter,
                         "chunk_index_in_page": i,
                         "total_chunks_in_page": len(filtered_chunks),
                         "char_count": len(chunk_data['text'])
                     })
                     chunk_embeddings.append(chunk_data['embedding'])
-                    chunk_counter += 1
-            
+
             if total_filtered > 0:
                 print(f"  Filtered: {total_filtered} chunks across all pages")
         else:
-            # Fallback: chunk entire section text (old behavior)
             filtered_chunks, filtering_stats = llamaindex_chunker(
                 text=section_text,
                 buffer_size=self.buffer_size,
@@ -197,12 +173,11 @@ class UnifiedPipeline:
                 embed_model=self.embed_model,
                 debug=False
             )
-            
+
             if not filtered_chunks:
                 print(f"  ⚠ No chunks after filtering")
                 return 0
-            
-            # Show filtering stats
+
             total_filtered = sum(filtering_stats.values())
             if total_filtered > 0:
                 print(f"  Filtered: {total_filtered} chunks (small:{filtering_stats.get('small',0)}, "
@@ -210,11 +185,9 @@ class UnifiedPipeline:
                       f"TOC:{filtering_stats.get('toc',0)}, "
                       f"meaningless:{filtering_stats.get('meaningless',0)}, "
                       f"repetitive:{filtering_stats.get('repetitive',0)})")
-            
-            # Prepare data for ChromaDB
+
             for i, chunk_data in enumerate(filtered_chunks, 1):
                 chunk_id = f"section_{section_idx}_chunk_{i}"
-                
                 chunk_texts.append(chunk_data['text'])
                 chunk_ids.append(chunk_id)
                 chunk_metadatas.append({
@@ -234,18 +207,22 @@ class UnifiedPipeline:
             print(f"  ⚠ No chunks after filtering")
             return 0
         
-        # Store directly in ChromaDB (no JSON intermediate)
-        self.collection.add(
-            documents=chunk_texts,
-            ids=chunk_ids,
-            metadatas=chunk_metadatas,
-            embeddings=chunk_embeddings
-        )
+        # Store directly in Qdrant (no JSON intermediate)
+        # Chunk IDs are strings like "section_1_chunk_3" — hash them to ints for Qdrant
+        points = [
+            PointStruct(
+                id=abs(hash(chunk_ids[i])) % (2**63),
+                vector=chunk_embeddings[i],
+                payload={**chunk_metadatas[i], "text": chunk_texts[i]}
+            )
+            for i in range(len(chunk_texts))
+        ]
+        self.client.upsert(collection_name=self.collection_name, points=points)
         
         print(f"  ✓ Stored section embedding + {len(chunk_texts)} filtered chunks in vector DB")
         return len(chunk_texts)
     
-    def process_sections_file(self, sections_file: str, save_metadata: bool = True, save_chunks: bool = True):
+    def process_sections_file(self, sections_file: str, save_chunks: bool = True):
         """
         Process entire sections file
         
@@ -301,57 +278,46 @@ class UnifiedPipeline:
                     except Exception as e:
                         print(f"⚠ Error loading pages: {e}")
         
-        # If sections don't have meaningful text, we'll use pages_data for page-by-page chunking
+        # If sections don't have meaningful text, extract it from pages_data
         if not has_text:
             print("⚠ Sections don't have text content")
-            
+
             if not pages_data:
                 print("✗ No pages_data available - cannot proceed")
                 return
-            
-            print("✓ Will use pages_data for page-by-page chunking")
-            # Add minimal placeholder text and ensure pages field exists
-            for section in sections:
-                if not section.get('text') or len(section.get('text', '')) < 100:
-                    section['text'] = f"Section: {section.get('title', 'Untitled')}"  # Placeholder
-                # Ensure pages field exists
-                if 'pages' not in section:
-                    start = section.get('start_page', 0)
-                    end = section.get('end_page', 0)
-                    section['pages'] = list(range(start, end + 1))
+
+            print("✓ Extracting section text from pages data (start_page → end_page)...")
+            sections = self._add_text_to_sections(sections, pages_data)
+            populated = sum(1 for s in sections if len(s.get('text', '')) > 100)
+            print(f"✓ Populated text for {populated}/{len(sections)} sections")
         
         print()
         
         # Process each section
         total_chunks = 0
-        metadata_records = []
-        all_chunk_details = []  # For detailed chunk files
-        cumulative_filtering_stats = {'small': 0, 'toc': 0, 'meaningless': 0, 'repetitive': 0, 'decorative': 0}
-        
+        all_chunk_details = []
+
         for idx, section in enumerate(sections, 1):
-            chunks_count = self.process_section(section, idx, len(sections), pages_data)
+            chunks_count = self.process_section(section, idx, len(sections))
             total_chunks += chunks_count
-            
-            # Save lightweight metadata (no embeddings)
-            if save_metadata:
-                metadata_records.append({
-                    "section_id": idx,
-                    "title": section.get('title', 'Untitled'),
-                    "level": section.get('level', 0),
-                    "start_page": section.get('start_page', 0),
-                    "end_page": section.get('end_page', 0),
-                    "chunks_count": chunks_count
-                })
             
             # Collect detailed chunk info for chunk files (if enabled)
             if save_chunks and chunks_count > 0:
-                # Get only the chunks (not the section) we just stored from ChromaDB
-                section_chunks = self.collection.get(
-                    where={"$and": [{"section_id": idx}, {"type": "chunk"}]},
-                    include=["documents", "metadatas"]
+                # Get only the chunks we just stored from Qdrant
+                section_chunks, _ = self.client.scroll(
+                    collection_name=self.collection_name,
+                    scroll_filter=Filter(must=[
+                        FieldCondition(key="type", match=MatchValue(value="chunk")),
+                        FieldCondition(key="section_id", match=MatchValue(value=idx))
+                    ]),
+                    limit=chunks_count,
+                    with_payload=True,
+                    with_vectors=False
                 )
                 
-                for i, (doc, meta) in enumerate(zip(section_chunks['documents'], section_chunks['metadatas'])):
+                for point in section_chunks:
+                    meta = point.payload
+                    doc = meta.get("text", "")
                     chunk_detail = {
                         'text': doc,
                         'length': len(doc),
@@ -362,7 +328,6 @@ class UnifiedPipeline:
                         'method': 'SemanticSplitterNodeParser'
                     }
                     
-                    # Add page information (prefer source_page if available)
                     if 'source_page' in meta:
                         chunk_detail['source_page'] = meta['source_page']
                         chunk_detail['section_page_range'] = meta.get('section_page_range', '')
@@ -374,25 +339,6 @@ class UnifiedPipeline:
                         chunk_detail['total_chunks'] = meta.get('total_chunks', 0)
                     
                     all_chunk_details.append(chunk_detail)
-        
-        # Save lightweight metadata file (no embeddings!)
-        if save_metadata and metadata_records:
-            output_dir = Path(sections_file).parent
-            metadata_file = output_dir / "chunks_metadata.json"
-            
-            metadata = {
-                "source_file": str(sections_file),
-                "total_sections": len(sections),
-                "total_chunks": total_chunks,
-                "created_at": time.strftime('%Y-%m-%d %H:%M:%S'),
-                "sections": metadata_records
-            }
-            
-            with open(metadata_file, 'w', encoding='utf-8') as f:
-                json.dump(metadata, f, indent=2)
-            
-            print(f"\n✓ Saved lightweight metadata to: {metadata_file}")
-            print(f"  (No embeddings in JSON - they're in the vector DB)")
         
         # Save detailed chunk files (JSON and TXT without embeddings)
         if save_chunks and all_chunk_details:
@@ -425,7 +371,7 @@ class UnifiedPipeline:
                 f.write(f"Total sections: {len(sections)}\n")
                 f.write(f"Total chunks: {len(all_chunk_details)}\n")
                 f.write(f"Created at: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"Embeddings stored in: ChromaDB vector store\n")
+                f.write(f"Embeddings stored in: Qdrant vector store\n")
                 f.write("=" * 80 + "\n\n")
                 
                 for i, chunk in enumerate(all_chunk_details, 1):
@@ -462,7 +408,7 @@ class UnifiedPipeline:
         print(f"Chunks created: {total_chunks}")
         if total_chunks > 0:
             print(f"Processing speed: {total_chunks/total_time:.1f} chunks/sec")
-        print(f"\n✓ All embeddings stored in ChromaDB")
+        print(f"\n✓ All embeddings stored in Qdrant")
         print(f"✓ Detailed chunk files saved (without embeddings)")
         print(f"✓ Ready for fast semantic search!")
     
@@ -478,14 +424,18 @@ class UnifiedPipeline:
             Sections with text content added
         """
         for section in sections:
-            # Get text from pages
             section_text = ""
+            page_contents = []
             for page_num in range(section['start_page'], section['end_page'] + 1):
-                page_key = str(page_num)
-                if page_key in pages_data:
-                    section_text += pages_data[page_key] + "\n"
-            
+                # pages_data keys may be strings or ints depending on the source
+                page_text = pages_data.get(str(page_num)) or pages_data.get(page_num)
+                if page_text:
+                    section_text += page_text + "\n"
+                    page_contents.append({'page_number': page_num, 'content': page_text})
+
             section['text'] = section_text
+            if page_contents:
+                section['page_contents'] = page_contents
             
             # Process subsections recursively
             if 'subsections' in section and section['subsections']:
@@ -508,12 +458,18 @@ def main():
     parser.add_argument(
         "--collection", "-c",
         default="financial_docs",
-        help="ChromaDB collection name (default: financial_docs)"
+        help="Qdrant collection name (default: financial_docs)"
     )
     parser.add_argument(
-        "--db-path", "-d",
-        default="./chroma_db",
-        help="Database path (default: ./chroma_db)"
+        "--qdrant-host",
+        default="localhost",
+        help="Qdrant host (default: localhost)"
+    )
+    parser.add_argument(
+        "--qdrant-port",
+        type=int,
+        default=6333,
+        help="Qdrant port (default: 6333)"
     )
     parser.add_argument(
         "--buffer-size",
@@ -532,20 +488,26 @@ def main():
         action="store_true",
         help="Don't save detailed chunk JSON/TXT files"
     )
+    parser.add_argument(
+        "--clear",
+        action="store_true",
+        help="Delete and recreate the Qdrant collection before processing"
+    )
     
     args = parser.parse_args()
     
     # Initialize and run pipeline
     pipeline = UnifiedPipeline(
         collection_name=args.collection,
-        persist_directory=args.db_path,
+        qdrant_host=args.qdrant_host,
+        qdrant_port=args.qdrant_port,
         buffer_size=args.buffer_size,
-        threshold=args.threshold
+        threshold=args.threshold,
+        clear=args.clear
     )
     
     pipeline.process_sections_file(
         args.sections_file,
-        save_metadata=True,
         save_chunks=not args.no_chunk_files
     )
 

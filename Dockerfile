@@ -11,8 +11,6 @@ RUN pip install --upgrade pip && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir google-genai
-
 
 # Copy all application files
 COPY sections_merging_pages.py .
@@ -25,7 +23,8 @@ COPY domain_multi_relation_kg_builder.py .
 COPY lexical_wrapper_kg.py .
 COPY lexical_kG_building.py .
 COPY lexical_graphrag_system.py .
-
+COPY peers_kg_builder.py .
+COPY graphrag_credit_risk.py .
 # Create directories for input, output, and samples
 RUN mkdir -p /app/input /app/output /app/samples
 
